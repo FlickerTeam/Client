@@ -1,0 +1,27 @@
+.home-button {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.home-button a {
+    font-size: 15px;
+    text-decoration: underline dotted;
+    color: var(--accent-primary);
+}
+
+.home-button a:hover {
+    color: rgb(227, 132, 253); /* Make this a var */
+}
+
+.separator {
+    margin-top: 20px;
+    width: 70%;
+}
+
+.guild-icon.active {
+    border-radius: 30%;
+    transform: translateY(-2px);
+    background-color: var(--accent-primary);
+    color: var(--bg-main);
+    border-left: 6px solid #854fbb; /* Make this a var*/
+}

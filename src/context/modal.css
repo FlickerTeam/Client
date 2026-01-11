@@ -1,0 +1,70 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-container {
+    background: var(--bg-alt);
+    width: 440px;
+    border-radius: 8px;
+    padding: 28px;
+    color: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.join-server-modal h2 {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.join-server-modal p {
+    color: #b5bac1;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.join-server-modal input {
+    width: 100%;
+    padding: 10px;
+    background: #1e1f22;
+    border: none;
+    color: white;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-dark-alt);
+    margin: 28px -28px -28px -28px;
+    padding: 16px 28px;
+    border-radius: 0 0 8px 8px;
+}
+
+.join-btn {
+    background-color: var(--bg-offline);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+}

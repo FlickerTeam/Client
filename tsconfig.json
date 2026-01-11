@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2024",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "ESNext", 
+    "moduleResolution": "bundler",
+    "target": "es2024",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": false,
+    "noImplicitAny": true
+  },
+  "include": ["src"], 
+  "exclude": ["node_modules"]
+}
