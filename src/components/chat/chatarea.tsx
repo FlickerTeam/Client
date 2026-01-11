@@ -191,7 +191,7 @@ const ChatArea = ({ selectedChannel } : {
         return messages.map((msg: any, index: number) => {
             const prevMsg = messages[index - 1];
             const isNewGroup = !prevMsg ||  prevMsg.author.id !== msg.author.id || new Date(msg.timestamp).getTime() - new Date(prevMsg.timestamp).getTime() > 420000;
-            const avatarUrl = msg.author?.avatar ? `${localStorage.getItem("selectedCdnUrl")!}/avatars/${msg.author.id}/${msg.author.avatar}.png` : `https://cdn.oldcordapp.com/assets/${getDefaultAvatar(msg.author)}.png`;
+            const avatarUrl = msg.author?.avatar ? `${localStorage.getItem("selectedAssetsUrl")!}/avatars/${msg.author.id}/${msg.author.avatar}.png` : `${localStorage.getItem("selectedCdnUrl")!}/assets/${getDefaultAvatar(msg.author)}.png`;
 
             if (isNewGroup) {
                 return (

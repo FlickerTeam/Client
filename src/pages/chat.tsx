@@ -14,16 +14,10 @@ const ChatApp = (): JSX.Element => {
     const { isReady, guilds, user, user_settings, requestMembers }: GatewayContextType = useGateway();
     const { guildId, channelId } = useParams();
     const navigate = useNavigate();
-    const [cdnUrl, setCdnUrl] = useState("");
     const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {
-        setCdnUrl(localStorage.getItem("selectedCdnUrl")!);
-    }, []);
-
-    useEffect(() => {
         if (isReady && guildId && channelId && requestMembers) {
-            console.log("Requesting members for:", guildId, channelId);
             requestMembers(guildId, channelId);
         }
     }, [guildId, channelId, isReady]);
@@ -53,13 +47,12 @@ const ChatApp = (): JSX.Element => {
                 <div className='chat-layout'>
                     <GuildSidebar
                         guilds={guilds}
-                        cdnUrl={cdnUrl}
                         selectedGuildId={guildId}
                         onSelectGuild={handleSelectGuild}
                     />
                     <ChannelSidebar selectedGuild={selectedGuild} selectedChannel={selectedChannel} onSelectChannel={handleSelectChannel} user={user} onSettingsClicked={() => setShowSettings(true)} status={user_settings.status || "online"}/>
                     <ChatArea selectedChannel={selectedChannel} />
-                    <MemberList selectedGuild={selectedGuild} selectedChannel={selectedChannel} cdnUrl={cdnUrl} />
+                    <MemberList selectedGuild={selectedGuild} selectedChannel={selectedChannel} />
                 </div>
             )}
 

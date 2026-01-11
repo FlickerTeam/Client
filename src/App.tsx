@@ -63,7 +63,8 @@ function App(): JSX.Element {
         let response: DomainsResponse = await metadataCheck.json();
 
         localStorage.setItem("selectedGatewayUrl", response.gateway);
-        localStorage.setItem("selectedCdnUrl", response.cdn);
+        localStorage.setItem("selectedCdnUrl", response.cdn); // for non user uploaded icons, etc
+        localStorage.setItem("selectedAssetsUrl", response.assets ?? response.cdn); //for user made assets 
         localStorage.setItem("defaultApiVersion", "v" + response.defaultApiVersion);
       } catch (err) {
         if (!isPublicPath) {

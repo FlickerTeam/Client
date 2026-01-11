@@ -8,7 +8,8 @@ const CurrentUser = ({ user, status, onSettingsClicked } : {
     onSettingsClicked?: any
 }) : JSX.Element => {
     const cdnUrl = localStorage.getItem("selectedCdnUrl")!;
-    const avatarUrl = user?.avatar ? `${cdnUrl}/avatars/${user.id}/${user.avatar}.png` : `${cdnUrl}/assets/${getDefaultAvatar(user)}.png`;
+    const assetsUrl = localStorage.getItem("selectedAssetsUrl")!;
+    const avatarUrl = user?.avatar ? `${assetsUrl}/avatars/${user.id}/${user.avatar}.png` : `${cdnUrl}/assets/${getDefaultAvatar(user)}.png`;
 
     return (
         <section className="user-settings-panel">

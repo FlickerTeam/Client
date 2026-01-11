@@ -3,13 +3,12 @@ import './memberlist.css'
 import { useGateway } from "../../context/gateway";
 import { getDefaultAvatar } from "../../utils/avatar";
 
-const MemberListItem = ({ member, cdnUrl, isTyping }: {
+const MemberListItem = ({ member, isTyping }: {
     member: any,
-    cdnUrl: string,
     isTyping: boolean
 }): JSX.Element => {
     const status = member.presence?.status || "offline";
-    const avatarUrl = (member.avatar || member.user.avatar) ? `${cdnUrl}/avatars/${member.id}/${member.user.avatar}.png` : `https://cdn.oldcordapp.com/assets/${getDefaultAvatar(member.user)}.png`; //This needs to not be hard coded ASAP.
+    const avatarUrl = (member.avatar || member.user.avatar) ? `${localStorage.getItem("selectedAssetsUrl")!}/avatars/${member.id}/${member.user.avatar}.png` : `${localStorage.getItem("selectedCdnUrl")!}/assets/${getDefaultAvatar(member.user)}.png`; //This needs to not be hard coded ASAP.
      
     return (
         <div className="member-list-item-wrapper">
@@ -34,7 +33,7 @@ const MemberListItem = ({ member, cdnUrl, isTyping }: {
     )
 }
 
-const MemberList = ({ selectedGuild, selectedChannel, cdnUrl }: any): JSX.Element => {
+const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
     const { memberLists, requestMembers, typingUsers } = useGateway();
     const [rangeIndex, setRangeIndex] = useState(0);
 
@@ -88,7 +87,6 @@ const MemberList = ({ selectedGuild, selectedChannel, cdnUrl }: any): JSX.Elemen
                             <MemberListItem 
                                 key={`${item.member.user.id}-${index}`} 
                                 member={item.member} 
-                                cdnUrl={cdnUrl}
                                 isTyping={!!currentChannelTyping[item.member.user.id]}
                             />
                         );

@@ -4,9 +4,8 @@ import { Guild } from "../../interfaces/guild";
 import { JSX, useEffect } from "react";
 import { useModal } from '../../context/modal';
 
-const GuildSidebar = ({ guilds, cdnUrl, selectedGuildId, onSelectGuild }: {
+const GuildSidebar = ({ guilds, selectedGuildId, onSelectGuild }: {
   guilds: Guild[],
-  cdnUrl: string,
   selectedGuildId?: string | null,
   onSelectGuild: any
 }): JSX.Element => {
@@ -40,7 +39,7 @@ const GuildSidebar = ({ guilds, cdnUrl, selectedGuildId, onSelectGuild }: {
           onClick={() => onSelectGuild(guild)}
         >
           {guild.icon ? (
-            <img className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''}`} src={`${cdnUrl}/icons/${guild.id}/${guild.icon}.png`} alt={guild.name} />
+            <img className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''}`} src={`${localStorage.getItem("selectedAssetsUrl")!}/icons/${guild.id}/${guild.icon}.png`} alt={guild.name} />
           ) : (
             <div className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''} no-icon`}>{guild.name.charAt(0)}</div>
           )}

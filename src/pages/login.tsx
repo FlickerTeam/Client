@@ -115,7 +115,6 @@ function Login(): JSX.Element {
             }
 
             localStorage.setItem("Authorization", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
             
             window.location.href = '/';
         } catch (err) {
