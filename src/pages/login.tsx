@@ -62,9 +62,9 @@ function Login(): JSX.Element {
         }
     };
 
-    let authToken = localStorage.getItem('Authorization');
+    let Authorization = localStorage.getItem('Authorization');
 
-    if (authToken) {
+    if (Authorization) {
         return <Navigate to="/" />;
     }
 
@@ -91,7 +91,7 @@ function Login(): JSX.Element {
                 return;
             }
 
-            localStorage.setItem("authToken", data.authToken);
+            localStorage.setItem("Authorization", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
             
             window.location.href = '/';

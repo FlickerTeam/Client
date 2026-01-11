@@ -69,9 +69,9 @@ function Register(): JSX.Element {
         }
     }, [customInstance, instance]);
 
-    let authToken = localStorage.getItem('Authorization');
+    let Authorization = localStorage.getItem('Authorization');
 
-    if (authToken) {
+    if (Authorization) {
         return <Navigate to="/" />;
     }
 
