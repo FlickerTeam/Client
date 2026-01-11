@@ -9,7 +9,7 @@ const MemberListItem = ({ member, cdnUrl, isTyping }: {
     isTyping: boolean
 }): JSX.Element => {
     const status = member.presence?.status || "offline";
-    const avatarUrl = member.avatar ? `${cdnUrl}/avatars/${member.id}/${member.user.avatar}.png` : `https://cdn.oldcordapp.com/assets/${getDefaultAvatar(member.user)}.png`; //This needs to not be hard coded ASAP.
+    const avatarUrl = (member.avatar || member.user.avatar) ? `${cdnUrl}/avatars/${member.id}/${member.user.avatar}.png` : `https://cdn.oldcordapp.com/assets/${getDefaultAvatar(member.user)}.png`; //This needs to not be hard coded ASAP.
      
     return (
         <div className="member-list-item-wrapper">
