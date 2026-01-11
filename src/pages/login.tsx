@@ -90,7 +90,7 @@ function Login(): JSX.Element {
                 password: password
             }
 
-            let apiVersion = localStorage.getItem("defaultApiVersion"); //6
+            let apiVersion = localStorage.getItem("defaultApiVersion")?.split('v')[1]; //6
 
             if (apiVersion && parseInt(apiVersion) > 6) {
                 loginRequest.login = email;
