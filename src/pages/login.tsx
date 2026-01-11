@@ -75,7 +75,7 @@ function Login(): JSX.Element {
                 password: password
             }
 
-            const response = await fetch("/api/login", {
+            const response = await fetch(`${localStorage.getItem('selectedInstanceUrl')}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginRequest)
