@@ -4,11 +4,13 @@ import { Instance } from '../../interfaces/instance';
 import { ErrorStatusFields } from '../../interfaces/errorstatusfields';
 import { JSX } from 'react';
 
-const LoginForm = ({ handleInstanceSelect, handleSignin, instances, instance, errorMsg, status, email, setEmail, password, setPassword } : {
+const LoginForm = ({ handleInstanceSelect, handleSignin, instances, instance, customInstance, setCustomInstance, errorMsg, status, email, setEmail, password, setPassword } : {
     handleSignin: any,
     handleInstanceSelect: any,
     instances: Instance[] | [],
     instance: any,
+    customInstance: any,
+    setCustomInstance: any,
     errorMsg: any,
     status: ErrorStatusFields,
     email: string,
@@ -16,6 +18,17 @@ const LoginForm = ({ handleInstanceSelect, handleSignin, instances, instance, er
     password: string,
     setPassword: any,
 }) : JSX.Element => {
+    const renderStatus = () => {
+        if (!status.instance) return null;
+        return (
+            <span className={`status-msg ${status.instance}`}>
+                {status.instance === 'checking' && "Checking..."}
+                {status.instance === 'error' && (errorMsg.instance || "Request timed out")}
+                {status.instance === 'valid' && "Instance is online"}
+            </span>
+        );
+    };
+    
     return (
         <div className="register-form">
             <div className="form-header">
@@ -23,19 +36,28 @@ const LoginForm = ({ handleInstanceSelect, handleSignin, instances, instance, er
             </div>
             <div className="form-body">
                 <span>Instance</span>
-                <select value={instance} onChange={handleInstanceSelect}>
+                 <select value={instance} onChange={handleInstanceSelect}>
                     {instances.map((instance) => (
                         <option key={instance.url} value={instance.url}>
                             {instance.name}
                         </option>
                     ))}
+                    <option key={'custom'} value={'custom-instance'}>
+                        Custom Instance
+                    </option>
                 </select>
-                {status.instance && (
-                    <span className={`status-msg ${status.instance}`}>
-                        {status.instance === 'checking' && "Checking..."}
-                        {status.instance === 'error' && errorMsg.instance}
-                        {status.instance === 'valid' && "Instance is online"}
-                    </span>
+                {instance !== 'custom-instance' && renderStatus()}
+                {instance === 'custom-instance' && (
+                    <>
+                        <span>Instance URL</span>
+                        <input 
+                            type="text" 
+                            value={customInstance} 
+                            placeholder="example.com" 
+                            onChange={(e) => setCustomInstance(e.target.value)} 
+                        />
+                        {renderStatus()}
+                    </>
                 )}
                 <span>Email</span>
                 <input type="email" value={email} placeholder="Email" onChange={(e) => {

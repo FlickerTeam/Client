@@ -29,7 +29,7 @@ export const CreateServerModal = () : JSX.Element => {
         };
 
         const baseUrl = localStorage.getItem("selectedInstanceUrl");
-        const url = `${baseUrl}/guilds`;
+        const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/guilds`;
         
         try {
             const request = await fetch(url, {

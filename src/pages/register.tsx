@@ -100,7 +100,7 @@ function Register(): JSX.Element {
                 email: email
             };
 
-            const response = await fetch(`${localStorage.getItem('selectedInstanceUrl')}/auth/register`, {
+            const response = await fetch(`${localStorage.getItem('selectedInstanceUrl')}/${localStorage.getItem('defaultApiVersion')}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registerRequest)

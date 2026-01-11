@@ -64,6 +64,7 @@ function App(): JSX.Element {
 
         localStorage.setItem("selectedGatewayUrl", response.gateway);
         localStorage.setItem("selectedCdnUrl", response.cdn);
+        localStorage.setItem("defaultApiVersion", "v" + response.defaultApiVersion);
       } catch (err) {
         if (!isPublicPath) {
           navigate("/login", { replace: true });

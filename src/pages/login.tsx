@@ -12,6 +12,7 @@ function Login(): JSX.Element {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [instance, setInstance] = useState<Instance | null | string>("");
+    const [customInstance, setCustomInstance] = useState("");
     const [instances, setInstances] = useState<Instance[] | []>([]);
     const [errorMsg, setErrorMsg] = useState({});
     const [status, setStatus] = useState<ErrorStatusFields>({
@@ -26,39 +27,54 @@ function Login(): JSX.Element {
         setInstances(instances_);
         setInstance(instances_[0]);
     }, []);
-    
-    const handleInstanceSelect = async (e: any) => {
-        let instance_url = e.target.value;
 
-        setInstance(instance_url);
+    const checkInstance = async (url: string) => {
+        if (!url) return;
+        
         setStatus(prev => ({ ...prev, instance: 'checking' }));
 
+        const hasProtocol = /^(http|https):\/\//.test(url);
+        const finalUrl = hasProtocol ? `${url}/.well-known/spacebar` : `${window.location.protocol}//${url}/.well-known/spacebar`;
+
         try {
-            const response = await fetch(`https://${instance_url}/.well-known/spacebar`);
+            const response = await fetch(finalUrl);
 
             if (!response.ok) {
-                setStatus(prev => ({ ...prev, instance: 'error' }));
-                setErrorMsg(prev => ({ ...prev, instance: 'API returned an error' }));
-                return;
+                throw new Error();
             }
 
-            let metadata: SpacebarResponse = await response.json();
+            let metadata = await response.json();
 
-            if (!metadata || !metadata.api) {
-                setStatus(prev => ({ ...prev, instance: 'error' }));
-                setErrorMsg(prev => ({ ...prev, instance: 'API returned an error' }));
-                return;
-            }
+            if (!metadata || !metadata.api) throw new Error();
 
             localStorage.setItem("selectedInstanceUrl", metadata.api);
 
             setStatus(prev => ({ ...prev, instance: 'valid' }));
-        }
-        catch (error) {
-            console.error("Could not resolve instance metadata:", error);
-
+        } catch (error) {
             setStatus(prev => ({ ...prev, instance: 'error' }));
             setErrorMsg(prev => ({ ...prev, instance: 'Request timed out' }));
+        }
+    };
+
+    useEffect(() => {
+        if (instance === 'custom-instance' && customInstance.length > 3) {
+            const delayDebounceFn = setTimeout(() => {
+                checkInstance(customInstance);
+            }, 800);
+
+            return () => clearTimeout(delayDebounceFn);
+        }
+    }, [customInstance, instance]);
+    
+    const handleInstanceSelect = (e: any) => {
+        const selected = e.target.value;
+
+        setInstance(selected);
+
+        if (selected !== 'custom-instance') {
+            checkInstance(selected);
+        } else {
+            setStatus(prev => ({ ...prev, instance: null }));
         }
     };
 
@@ -71,11 +87,18 @@ function Login(): JSX.Element {
     const handleSignin = async () => {
         try {
             const loginRequest: LoginRequest = {
-                email: email,
                 password: password
             }
 
-            const response = await fetch(`${localStorage.getItem('selectedInstanceUrl')}/auth/login`, {
+            let apiVersion = localStorage.getItem("defaultApiVersion"); //6
+
+            if (apiVersion && parseInt(apiVersion) > 6) {
+                loginRequest.login = email;
+            } else {
+                loginRequest.email = email;
+            }
+
+            const response = await fetch(`${localStorage.getItem('selectedInstanceUrl')}/${localStorage.getItem('defaultApiVersion')}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginRequest)
@@ -110,6 +133,8 @@ function Login(): JSX.Element {
                         handleSignin={handleSignin}
                         instances={instances}
                         instance={instance}
+                        customInstance={customInstance}
+                        setCustomInstance={setCustomInstance}
                         email={email}
                         setEmail={setEmail}
                         password={password}

@@ -27,7 +27,7 @@ const ChatArea = ({ selectedChannel } : {
 
     const fetchMessages = async (limit: number, before?: string) => {
         const baseUrl = localStorage.getItem("selectedInstanceUrl");
-        const url = `${baseUrl}/channels/${selectedChannel.id}/messages?limit=${limit}${before ? `&before=${before}` : ''}`;
+        const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/messages?limit=${limit}${before ? `&before=${before}` : ''}`;
         
         const response = await fetch(url, {
             headers: { 'Authorization': localStorage.getItem("Authorization")! }
@@ -46,7 +46,7 @@ const ChatArea = ({ selectedChannel } : {
         if (!chatMessage.trim()) return;
 
         const baseUrl = localStorage.getItem("selectedInstanceUrl");
-        const url = `${baseUrl}/channels/${selectedChannel.id}/messages`;
+        const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/messages`;
         const content = chatMessage;
 
         setChatMessage('');
@@ -229,7 +229,7 @@ const ChatArea = ({ selectedChannel } : {
 
     const sendTypingStart = async () => {
         const baseUrl = localStorage.getItem("selectedInstanceUrl");
-        const url = `${baseUrl}/channels/${selectedChannel.id}/typing`;
+        const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/typing`;
         
         try {
             await fetch(url, {
