@@ -9,6 +9,7 @@ import { GatewayProvider } from './context/gateway';
 import { Instance } from './interfaces/instance';
 import { DomainsResponse } from './interfaces/domainsresponse';
 import { ModalProvider } from './context/modal';
+import { ContextMenuProvider } from './context/contextMenu';
 
 function App(): JSX.Element {
   const navigate = useNavigate();
@@ -85,15 +86,17 @@ function App(): JSX.Element {
   return (
     <GatewayProvider>
       <ModalProvider>
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<ChatApp />}>
-            <Route path="channels/@me" element={<ChatApp />} />
-            <Route path="channels/:guildId" element={<ChatApp />} />
-            <Route path="channels/:guildId/:channelId" element={<ChatApp />} />
-          </Route>
-        </Routes>
+        <ContextMenuProvider>
+          <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ChatApp />}>
+              <Route path="channels/@me" element={<ChatApp />} />
+              <Route path="channels/:guildId" element={<ChatApp />} />
+              <Route path="channels/:guildId/:channelId" element={<ChatApp />} />
+            </Route>
+          </Routes>
+        </ContextMenuProvider>
       </ModalProvider>
     </GatewayProvider>
   );

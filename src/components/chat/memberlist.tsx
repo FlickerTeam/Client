@@ -85,7 +85,7 @@ const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
                         return <div key={`placeholder-${index}`} style={{ height: '44px' }} />;
                     }
 
-                    if (item.group) {
+                    if (item.group && item.group.count > 0) {
                         return (
                             <div key={`group-${item.group.id}`} className="role-title">
                                 {item.group.id.toUpperCase()} — {item.group.count}
