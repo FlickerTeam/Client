@@ -72,7 +72,7 @@ export const JoinServerModal = () : JSX.Element => {
 
             if (!inviteCode) {
                 setError({ code: 400, message: "Please enter a valid invite" });
-                
+
                 return;
             }
 
@@ -120,10 +120,10 @@ export const JoinServerModal = () : JSX.Element => {
             <p>It may look like...</p>
             <ul>
                 <li>
-                    <span>{localStorage.getItem("selectedAssetsUrl")}/invite/NbaaJFnBTpuH</span>
+                    <span>{`${window.location.protocol}//${window.location.host}`}/invite/NbaaJFnBTpuH</span>
                 </li>
                 <li>
-                    <span>{localStorage.getItem("selectedAssetsUrl")}/invite/cool-people-r-us</span>
+                    <span>{`${window.location.protocol}//${window.location.host}`}/invite/cool-people-r-us</span>
                 </li>
                 <li>
                     <span>NbaaJFnBTpuH</span>
