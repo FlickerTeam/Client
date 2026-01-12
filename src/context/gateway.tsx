@@ -94,6 +94,8 @@ export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) =>
             case "GUILD_CREATE":
                 window.dispatchEvent(new CustomEvent('gateway_guild_create', { detail: data }));
                 break;
+            case "GUILD_DELETE":
+                window.dispatchEvent(new CustomEvent('gateway_guild_delete', { detail: data }));
             case "GUILD_MEMBER_LIST_UPDATE":
                 setMemberLists(prev => {
                     const existing = prev[data.guild_id] || { ops: [], member_count: 0, groups: [] };

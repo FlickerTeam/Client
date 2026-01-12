@@ -1,5 +1,6 @@
 import { CreateServerModal } from "../components/modals/createserver";
 import { JoinOrCreateServerModal } from "../components/modals/joinorcreateserver";
+import { JoinServerModal } from "../components/modals/joinserver";
 import { useModal } from "./modal";
 
 export const ModalRoot = () => {
@@ -12,6 +13,7 @@ export const ModalRoot = () => {
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                 {modalType === 'WHATS_IT_GONNA_BE' && <JoinOrCreateServerModal />}
                 {modalType === 'CREATE_SERVER' && <CreateServerModal />}
+                {modalType === 'JOIN_SERVER' && <JoinServerModal />}
             </div>
         </div>
     );

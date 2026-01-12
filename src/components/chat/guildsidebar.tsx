@@ -11,18 +11,6 @@ const GuildSidebar = ({ guilds, selectedGuildId, onSelectGuild }: {
 }): JSX.Element => {
   const { openModal } = useModal();
 
-  useEffect(() => {
-    const handleNewGuild = (event: any) => {
-      const newGuild = event.detail;
-
-      if (guilds.some(x => x.id === newGuild.id)) return;
-
-      guilds.push(...[newGuild]);
-    };
-
-    window.addEventListener('gateway_guild_create', handleNewGuild);
-  }, [guilds]);
-
   return (
     <div id="guilds-column">
       <div className="home-button">

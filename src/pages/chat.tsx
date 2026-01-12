@@ -15,6 +15,7 @@ const ChatApp = (): JSX.Element => {
     const { guildId, channelId } = useParams();
     const navigate = useNavigate();
     const [showSettings, setShowSettings] = useState(false);
+    const [passedGuilds, setPassedGuilds] = useState<Guild[]>([]);
 
     useEffect(() => {
         if (isReady && guildId && channelId && requestMembers) {
@@ -22,11 +23,55 @@ const ChatApp = (): JSX.Element => {
         }
     }, [guildId, channelId, isReady]);
 
+    useEffect(() => {
+        if (guilds && guilds.length > 0) {
+            setPassedGuilds(guilds);
+        }
+    }, [guilds]);
+
+    useEffect(() => {
+        const handleNewGuild = (event: any) => {
+            const newGuild = event.detail;
+
+            setPassedGuilds(prev => {
+                if (prev.some(x => x.id === newGuild.id)) return prev;
+
+                const firstTextChannel = newGuild.channels?.find((c: any) => c.type === 0);
+
+                if (firstTextChannel) {
+                    navigate(`/channels/${newGuild.id}/${firstTextChannel.id}`);
+                } else {
+                    navigate(`/channels/${newGuild.id}`);
+                }
+
+                return [...prev, newGuild];
+            });
+        };
+
+        const handleGuildRemove = (event: any) => {
+            const deletedId = event.detail.id;
+
+            setPassedGuilds(prev => prev.filter(guild => guild.id !== deletedId));
+
+            if (window.location.pathname.includes(deletedId)) {
+                navigate('/channels/@me');
+            }
+        };
+
+        window.addEventListener('gateway_guild_create', handleNewGuild);
+        window.addEventListener('gateway_guild_delete', handleGuildRemove);
+
+        return () => {
+            window.removeEventListener('gateway_guild_create', handleNewGuild);
+            window.removeEventListener('gateway_guild_delete', handleGuildRemove);
+        };
+    }, []);
+
     if (!isReady) {
         return <LoadingScreen />;
     }
 
-    const selectedGuild = guilds.find(g => g.id === guildId) || null;
+    const selectedGuild = passedGuilds.find(g => g.id === guildId) || null;
     const selectedChannel = selectedGuild?.channels?.find(c => c.id === channelId) || null;
 
     const handleSelectGuild = (guild: Guild) => {
@@ -46,11 +91,11 @@ const ChatApp = (): JSX.Element => {
             {!showSettings && (
                 <div className='chat-layout'>
                     <GuildSidebar
-                        guilds={guilds}
+                        guilds={passedGuilds}
                         selectedGuildId={guildId}
                         onSelectGuild={handleSelectGuild}
                     />
-                    <ChannelSidebar selectedGuild={selectedGuild} selectedChannel={selectedChannel} onSelectChannel={handleSelectChannel} user={user} onSettingsClicked={() => setShowSettings(true)} status={user_settings.status || "online"}/>
+                    <ChannelSidebar selectedGuild={selectedGuild} selectedChannel={selectedChannel} onSelectChannel={handleSelectChannel} user={user} onSettingsClicked={() => setShowSettings(true)} status={user_settings.status || "online"} />
                     <ChatArea selectedChannel={selectedChannel} />
                     <MemberList selectedGuild={selectedGuild} selectedChannel={selectedChannel} />
                 </div>

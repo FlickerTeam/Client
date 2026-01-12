@@ -27,29 +27,6 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-.join-server-modal h2 {
-    text-align: center;
-    margin-bottom: 8px;
-    font-size: 24px;
-}
-
-.join-server-modal p {
-    color: #b5bac1;
-    font-size: 14px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.join-server-modal input {
-    width: 100%;
-    padding: 10px;
-    background: #1e1f22;
-    border: none;
-    color: white;
-    border-radius: 3px;
-    margin-bottom: 20px;
-}
-
 .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -60,11 +37,7 @@
     border-radius: 0 0 8px 8px;
 }
 
-.join-btn {
-    background-color: var(--bg-offline);
-    color: white;
-    padding: 10px 24px;
-    border-radius: 3px;
-    border: none;
-    cursor: pointer;
+.modal-error {
+    text-align: right;
+    margin-top: -10px;
 }

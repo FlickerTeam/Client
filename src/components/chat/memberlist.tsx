@@ -37,6 +37,17 @@ const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
     const { memberLists, requestMembers, typingUsers } = useGateway();
     const [rangeIndex, setRangeIndex] = useState(0);
 
+    useEffect(() => {
+        if (selectedGuild?.id && selectedChannel?.id && requestMembers) {
+            const hasData = memberLists && memberLists[selectedGuild.id];
+            
+            if (!hasData) {
+                setRangeIndex(0);
+                requestMembers(selectedGuild.id, selectedChannel.id, [[0, 99]]);
+            }
+        }
+    }, [selectedGuild?.id, selectedChannel?.id, requestMembers, memberLists]);
+
     if (!selectedGuild || !selectedChannel) return <></>;
 
     const currentChannelTyping = typingUsers[selectedChannel.id] || {};
