@@ -3,10 +3,18 @@ import { Channel } from '../../interfaces/channel';
 import './chatarea.css';
 import { getDefaultAvatar } from '../../utils/avatar';
 import { useGateway } from '../../context/gateway';
+import { useModal } from '../../context/modal';
+
+interface MediaAttachment {
+    file: File;
+    preview: string;
+    id: string;
+};
 
 const ChatArea = ({ selectedChannel } : {
     selectedChannel: Channel
 }) : JSX.Element => {
+    const { openModal } = useModal();
     const scrollerRef = useRef<HTMLDivElement>(null);
     const { typingUsers, user, memberLists } = useGateway();
     const [messages, setMessages] = useState<any[]>([]);
@@ -14,6 +22,37 @@ const ChatArea = ({ selectedChannel } : {
     const lastTypingSent = useRef<number>(0);
     const isloadingMore = useRef(false);
     const isFirstLoad = useRef(true);
+
+    const [attachments, setAttachments] = useState<MediaAttachment[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+
+        const files = Array.from(e.target.files);
+        const newAttachments: MediaAttachment[] = files.map(file => ({
+            file,
+            preview: URL.createObjectURL(file),
+            id: Math.random().toString(36).substring(7)
+        }));
+
+        setAttachments(prev => [...prev, ...newAttachments]);
+
+        e.target.value = '';
+    };
+
+    const removeAttachment = (id: string) => {
+        setAttachments(prev => {
+            const filtered = prev.filter(a => a.id !== id);
+            const removed = prev.find(a => a.id === id);
+
+            if (removed) {
+                URL.revokeObjectURL(removed.preview);
+            }
+
+            return filtered;
+        });
+    };
 
     const scrollToBottom = () => {
         if (scrollerRef.current) {
@@ -43,29 +82,47 @@ const ChatArea = ({ selectedChannel } : {
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!chatMessage.trim()) return;
+        if (!chatMessage.trim() && attachments.length === 0) return;
 
         const baseUrl = localStorage.getItem("selectedInstanceUrl");
         const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/messages`;
-        const content = chatMessage;
+
+        const formData = new FormData();
+        
+        const payload = {
+            content: chatMessage,
+            nonce: Math.floor(Math.random() * 1000000000).toString(),
+            tts: false,
+            embeds: []
+        };
+
+        formData.append('payload_json', JSON.stringify(payload));
+
+        attachments.forEach((at, index) => {
+            formData.append(`files[${index}]`, at.file);
+        });
 
         setChatMessage('');
+
+        const toCleanup = [...attachments];
+
+        setAttachments([]);
 
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 
                     'Authorization': localStorage.getItem("Authorization")!,
-                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
-                    content: content
-                 })
+                body: formData
             });
+
+            toCleanup.forEach(at => URL.revokeObjectURL(at.preview));
 
             if (!response.ok) {
                 console.error("Failed to send message");
             }
+            
         } catch (error) {
             console.error("Error sending message:", error);
         }
@@ -193,6 +250,45 @@ const ChatArea = ({ selectedChannel } : {
             const isNewGroup = !prevMsg ||  prevMsg.author.id !== msg.author.id || new Date(msg.timestamp).getTime() - new Date(prevMsg.timestamp).getTime() > 420000;
             const avatarUrl = msg.author?.avatar ? `${localStorage.getItem("selectedAssetsUrl")!}/avatars/${msg.author.id}/${msg.author.avatar}.png` : `${localStorage.getItem("selectedCdnUrl")!}/assets/${getDefaultAvatar(msg.author)}.png`;
 
+            const msgContent = <>
+                <div className="message-content">
+                    {msg.content}
+                    {msg.attachments && msg.attachments.length > 0 && (
+                        <div className="message-attachments">
+                            {msg.attachments.map((attachment: any) => {
+                                const isVideo = attachment.filename.match(/\.(mp4|webm|mov)$/i);
+
+                                return (
+                                    <div key={attachment.id} className="attachment-item">
+                                        {isVideo ? (
+                                            <video
+                                                src={attachment.url}
+                                                controls
+                                                className="chat-video"
+                                                style={{ maxWidth: attachment.width || '100%' }}
+                                            />
+                                        ) : (
+                                            <a href={attachment.url} target="_blank" rel="noreferrer">
+                                                <img
+                                                    src={attachment.url}
+                                                    alt={attachment.filename}
+                                                    className="chat-image"
+                                                    style={{
+                                                        width: attachment.width,
+                                                        height: 'auto',
+                                                        maxHeight: 400
+                                                    }}
+                                                />
+                                            </a>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </>
+
             if (isNewGroup) {
                 return (
                     <div key={msg.id} className="message-group">
@@ -202,7 +298,7 @@ const ChatArea = ({ selectedChannel } : {
                                 <span className="author-name">{msg.author.username}</span>
                                 <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
                             </div>
-                            <div className="message-content">{msg.content}</div>
+                            {msgContent}
                         </div>
                     </div>
                 );
@@ -210,7 +306,7 @@ const ChatArea = ({ selectedChannel } : {
 
             return (
                 <div key={msg.id} className="message-sub">
-                    <div className="message-content">{msg.content}</div>
+                    {msgContent}
                 </div>
             );
         });
@@ -280,7 +376,34 @@ const ChatArea = ({ selectedChannel } : {
                 </div>
                 <form className="chat-input-area" onSubmit={handleSendMessage}>
                    <div className="input-wrapper">
-                         <input type="text" placeholder={`Message #${selectedChannel.name}`} value={chatMessage} onChange={(e) => updateChat(e.target.value)}/>
+                         {attachments.length > 0 && (
+                            <div className="attachment-shelf">
+                                {attachments.map((at) => (
+                                    <div key={at.id} className="attachment-container">
+                                        <img src={at.preview} className='attachment-preview' />
+                                        <div className="attachment-remove" onClick={() => removeAttachment(at.id)}>
+                                            X
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <div className="input-row">
+                            <div className="add-media-btn" onClick={() => fileInputRef.current?.click()}>+</div>
+                            <input 
+                                type="text" 
+                                placeholder={`Message #${selectedChannel.name}`} 
+                                value={chatMessage} 
+                                onChange={(e) => updateChat(e.target.value)}
+                            />
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                onChange={handleFileChange} 
+                                style={{ display: 'none' }} 
+                                multiple
+                            />
+                        </div>
                     </div>
                 </form>
                 <div className="typing-status-wrapper">

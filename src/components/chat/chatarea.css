@@ -41,6 +41,83 @@
     border: 1px solid var(--border-color);
 }
 
+.attachment-shelf {
+    gap: 12px;
+    padding: 10px 0;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow-x: auto;
+    display: flex;
+    width: 100%;
+}
+
+.attachment-container {
+    position: relative;
+    background: var(--bg-alt);
+    border-radius: 4px;
+    padding: 8px;
+    flex-shrink: 0;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.attachment-preview {
+    max-height: 200px;
+    max-width: 200px;
+    border-radius: 4px;
+    display: block;
+}
+
+.attachment-remove {
+    position: absolute;
+    top: -8px;
+    right: 0px;
+    background: var(--bg-dnd);
+    color: white;
+    border-radius: 4px;
+    padding: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /*Var */
+    width: 20px;
+    text-align: center;
+    user-select: none;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.message-attachments {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.chat-image, .chat-video {
+    border-radius: 8px;
+    max-width: 100%;
+    cursor: zoom-in;
+}
+
+.add-media-btn {
+    cursor: pointer;
+    color: var(--text-muted);
+    user-select: none;
+    transition: 0.3s all;
+    opacity: 0.5;
+}
+
+.add-media-btn:hover {
+    opacity: 1;
+}
+
 .input-wrapper input {
     background: transparent;
     border: none;
