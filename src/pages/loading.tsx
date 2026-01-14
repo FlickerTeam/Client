@@ -2,7 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import Brand from '../components/common/brand';
 
 const LoadingScreen = ({ message, children } : {
-  message: string | null,
+  message?: string | null,
   children?: React.ReactNode
 }): JSX.Element => {
   const [loadingText, setLoadingText] = useState("Loading...");

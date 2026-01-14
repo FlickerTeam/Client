@@ -9,12 +9,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Settings from '../components/chat/settings';
 import { Guild } from '../interfaces/guild';
 import { Channel } from '../interfaces/channel';
+import { FriendsList } from '../components/chat/friendslist';
 
 const ChatApp = (): JSX.Element => {
-    const { isReady, guilds, user, user_settings, requestMembers }: GatewayContextType = useGateway();
+    const { isReady, guilds, user, user_settings, relationships, requestMembers }: GatewayContextType = useGateway();
     const { guildId, channelId } = useParams();
     const navigate = useNavigate();
     const [showSettings, setShowSettings] = useState(false);
+    const [localFriends, setLocalFriends] = useState<any[] | []>([]);
     const [passedGuilds, setPassedGuilds] = useState<Guild[]>([]);
 
     useEffect(() => {
@@ -28,6 +30,12 @@ const ChatApp = (): JSX.Element => {
             setPassedGuilds(guilds);
         }
     }, [guilds]);
+
+    useEffect(() => {
+        if (relationships) {
+            setLocalFriends(relationships);
+        }
+    }, [relationships]);
 
     useEffect(() => {
         const handleNewGuild = (event: any) => {
@@ -58,14 +66,44 @@ const ChatApp = (): JSX.Element => {
             }
         };
 
+        const handleRelationshipAdd = (event: any) => {
+            const newRelationship = event.detail;
+
+            setLocalFriends(prev => {
+                if (prev.some(f => f.id === newRelationship.id)) {
+                    return prev.map(f => f.id === newRelationship.id ? newRelationship : f);
+                }
+
+                return [...prev, newRelationship];
+            });
+        };
+
+        const handleRelationshipRemove = (event: any) => {
+            const removedRelationship = event.detail;
+            
+            setLocalFriends(prev => prev.filter(f => f.id !== removedRelationship.id));
+        };
+
+        window.addEventListener('gateway_relationship_add', handleRelationshipAdd);
+        window.addEventListener('gateway_relationship_remove', handleRelationshipRemove);
         window.addEventListener('gateway_guild_create', handleNewGuild);
         window.addEventListener('gateway_guild_delete', handleGuildRemove);
 
         return () => {
             window.removeEventListener('gateway_guild_create', handleNewGuild);
             window.removeEventListener('gateway_guild_delete', handleGuildRemove);
+            window.removeEventListener('gateway_relationship_add', handleRelationshipAdd);
+            window.removeEventListener('gateway_relationship_remove', handleRelationshipRemove);
         };
     }, []);
+
+    const handleManualRemoveFriend = (userId: string) => {
+        setLocalFriends(prev => prev.filter(f => f.id !== userId));
+    };
+
+    const handleManualUpdateFriend = (updatedFriend: any) => {
+        setLocalFriends(prev => prev.map(f => f.id === updatedFriend.id ? updatedFriend : f));
+    };
 
     if (!isReady) {
         return <LoadingScreen />;
@@ -95,8 +133,15 @@ const ChatApp = (): JSX.Element => {
                         selectedGuildId={guildId}
                         onSelectGuild={handleSelectGuild}
                     />
-                    <ChannelSidebar selectedGuild={selectedGuild} selectedChannel={selectedChannel} onSelectChannel={handleSelectChannel} user={user} onSettingsClicked={() => setShowSettings(true)} status={user_settings.status || "online"} />
-                    <ChatArea selectedChannel={selectedChannel} />
+                    <ChannelSidebar selectedGuild={selectedGuild} selectedChannel={selectedChannel} onSelectChannel={handleSelectChannel} user={user} onSettingsClicked={() => setShowSettings(true)} status={user_settings.status || "online"} relationships={relationships}/>
+                    
+                   {selectedChannel ? (
+                        <ChatArea selectedChannel={selectedChannel} />
+                    ) : !selectedGuild ? (
+                        <FriendsList friends={localFriends} onRequestUpdate={handleManualUpdateFriend} onRequestDelete={handleManualRemoveFriend} />
+                    ) : (
+                        <></>
+                    )}
                     <MemberList selectedGuild={selectedGuild} selectedChannel={selectedChannel} />
                 </div>
             )}

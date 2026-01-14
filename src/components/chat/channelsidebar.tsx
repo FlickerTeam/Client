@@ -4,11 +4,12 @@ import { Guild } from "../../interfaces/guild";
 import { Channel } from "../../interfaces/channel";
 import { JSX, useState } from "react";
 
-const ChannelSidebar = ({ selectedGuild, selectedChannel, onSelectChannel, user, status, onSettingsClicked }: {
+const ChannelSidebar = ({ selectedGuild, selectedChannel, onSelectChannel, user, relationships, status, onSettingsClicked }: {
     selectedGuild?: Guild | null,
     selectedChannel?: Channel | null,
     onSelectChannel: any,
     user: any,
+    relationships: any,
     status: any,
     onSettingsClicked: any
 }): JSX.Element => {
@@ -19,7 +20,10 @@ const ChannelSidebar = ({ selectedGuild, selectedChannel, onSelectChannel, user,
             <div id="channels-column">
                 <header className="header-base">Direct Messages</header>
                 <div className="scroller">
-                    <div className="channel-item">Friends</div>
+                    <div className={`channel-item ${!selectedChannel ? 'active' : ''}`} onClick={() => onSelectChannel(null)}>
+                        <span className="channel-hash">({relationships.filter((x: any) => x.type === 1).length ?? 0})</span>
+                        <span className="channel-name">Friends</span>
+                    </div>
                 </div>
                 <CurrentUser user={user} onSettingsClicked={onSettingsClicked} status={status} />
             </div>

@@ -6,6 +6,7 @@ export interface GatewayContextType {
     isReady: boolean | null;
     guilds: Guild[] | [];
     user: any | null;
+    relationships: any[] | [];
     user_settings: any;
     requestMembers?: (guildId: string, channelId: string, ranges?: number[][]) => void;
     typingUsers: Record<string, Record<string, number>>;
@@ -19,6 +20,7 @@ export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) =>
     const [isReady, setIsReady] = useState(false);
     const [guilds, setGuilds] = useState([]);
     const [user, setUser] = useState(null);
+    const [relationships, setRelationships] = useState([]);
     const [userSettings, setUserSettings] = useState(null);
     const [memberLists, setMemberLists] = useState<Record<string, any>>({});
     const [typingUsers, setTypingUsers] = useState<Record<string, Record<string, number>>>({});
@@ -76,6 +78,7 @@ export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) =>
             case "READY":
                 console.log("Gateway Ready", data);
                 setUser(data.user);
+                setRelationships(data.relationships);
                 setUserSettings(data.user_settings);
                 setGuilds(data.guilds);
                 setIsReady(true);
@@ -111,6 +114,12 @@ export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) =>
                     };
                 });
             break;
+            case "RELATIONSHIP_ADD":
+                window.dispatchEvent(new CustomEvent('gateway_relationship_add', { detail: data }));
+                break;
+             case "RELATIONSHIP_REMOVE":
+                window.dispatchEvent(new CustomEvent('gateway_relationship_remove', { detail: data }));
+                break;
             case "TYPING_START":
                 setTypingUsers(prev => {
                     const channelId = data.channel_id;
@@ -146,6 +155,7 @@ export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) =>
         isReady,
         guilds,
         user,
+        relationships,
         user_settings: userSettings,
         requestMembers,
         typingUsers,

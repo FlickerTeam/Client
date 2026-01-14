@@ -91,8 +91,8 @@ function App(): JSX.Element {
   if (loading) {
     return (<>
       <LoadingScreen message={loadingStatus}>
-              {cantLoad && (
-        <button onClick={() => openModal('CLEAR_SELECTED_INSTANCE')}>Clear</button>
+        {cantLoad && (
+          <button onClick={() => openModal('CLEAR_SELECTED_INSTANCE')}>Clear</button>
       )}
       </LoadingScreen>
     </>)
