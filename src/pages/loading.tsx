@@ -1,7 +1,10 @@
 import { JSX, useEffect, useState } from 'react';
 import Brand from '../components/common/brand';
 
-const LoadingScreen = (): JSX.Element => {
+const LoadingScreen = ({ message, children } : {
+  message: string | null,
+  children?: React.ReactNode
+}): JSX.Element => {
   const [loadingText, setLoadingText] = useState("Loading...");
   const [fullMessage, setFullMessage] = useState("");
 
@@ -30,7 +33,8 @@ const LoadingScreen = (): JSX.Element => {
       <div className="loading-content">
         <Brand />
         <div className="spinner"></div>
-        <p>{loadingText}</p>
+        <p>{message ?? loadingText}</p>
+        {children}
       </div>
     </div>
   );

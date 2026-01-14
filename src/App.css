@@ -171,6 +171,7 @@ body {
   color: white;
   text-align: center;
   animation: breathing 1.5s ease-in-out infinite;
+  min-height: 100vh;
 }
 
 .spinner {

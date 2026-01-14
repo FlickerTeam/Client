@@ -1,3 +1,4 @@
+import { ClearSelectedInstanceModal } from "../components/modals/clearselectedinstance";
 import { ConfirmationDeleteModal } from "../components/modals/confirmationdelete";
 import { ConfirmationLeaveModal } from "../components/modals/confirmationleave";
 import { CreateServerModal } from "../components/modals/createserver";
@@ -16,6 +17,7 @@ export const ModalRoot = () => {
                 {modalType === 'WHATS_IT_GONNA_BE' && <JoinOrCreateServerModal />}
                 {modalType === 'CREATE_SERVER' && <CreateServerModal />}
                 {modalType === 'JOIN_SERVER' && <JoinServerModal />}
+                {modalType === 'CLEAR_SELECTED_INSTANCE' && <ClearSelectedInstanceModal/>}
                 {modalType === 'CONFIRMATION_LEAVE' && (
                     <ConfirmationLeaveModal {...modalData} />
                 )}
