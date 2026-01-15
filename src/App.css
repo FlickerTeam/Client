@@ -279,12 +279,15 @@ html, body, #root, .page-wrapper {
 
 #channels-column {
     background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--border-color);
-    display: flex;
     flex-direction: column;
     margin: 8px 8px 8px 0;
     border-radius: 12px;
     border: 1px solid var(--border-color);
+    width: 240px; 
+    min-width: 240px;
+    max-width: 320px;
+    display: flex;
+    overflow: hidden;
 }
 
 #channels-column .scroller {
