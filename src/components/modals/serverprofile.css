@@ -1,0 +1,86 @@
+.profile-modal-root {
+    width: 600px;
+    background: var(--bg-alt);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--accent-primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: modal-appear 0.2s ease-out;
+}
+
+@keyframes modal-appear {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.profile-modal-header {
+    height: 120px;
+    background-color: var(--bg-header);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-modal-avatar-wrapper {
+    position: absolute;
+    bottom: -40px;
+    left: 20px;
+    padding: 6px;
+    background: var(--bg-alt);
+    border-radius: 50%;
+}
+
+.modal-avatar-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-status-dot {
+    position: absolute;
+    bottom: 10px;
+    right: 0px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-alt);
+}
+
+.profile-modal-body {
+    padding: 60px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-user-info {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal-username { color: white; }
+.modal-discriminator { color: var(--text-muted); }
+
+.modal-pronouns {
+    font-size: 14px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.modal-about-content {
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.modal-note {
+    width: 100%;
+    min-height: 60px;
+}
+
+.modal-user-info {
+    margin-top: -20px;
+}

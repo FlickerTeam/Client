@@ -3,7 +3,7 @@ import { ModalRoot } from './modalroot';
 
 import './modal.css';
 
-type ModalType = 'JOIN_SERVER' |'CREATE_SERVER' | 'USER_PROFILE' | 'USER_PROFILE_SHORT' | 'WHATS_IT_GONNA_BE' | 'CONFIRMATION_LEAVE' | 'CLEAR_SELECTED_INSTANCE' | 'CONFIRMATION_DELETE' | null;
+type ModalType = 'JOIN_SERVER' | 'CREATE_SERVER' | 'USER_PROFILE' | 'WHATS_IT_GONNA_BE' | 'CONFIRMATION_LEAVE' | 'CLEAR_SELECTED_INSTANCE' | 'CONFIRMATION_DELETE' | 'SERVER_PROFILE' | null;
 
 interface ModalContextType {
     modalType: ModalType;

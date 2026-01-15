@@ -13,13 +13,13 @@
 }
 
 .modal-container {
-    background: var(--bg-alt);
-    width: 440px;
+    min-width: 440px;
     border-radius: 8px;
     padding: 28px;
     color: white;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--bg-alt);
     border: 1px dashed color-mix(in srgb, var(--accent-primary), transparent 20%);
     background-clip: padding-box;
 }
@@ -69,4 +69,12 @@
     background: none;
   border: 1px solid var(--bg-panel);
   margin: 0px;
+}
+
+.modal-container.modal-container-profile {
+    padding: 0;
+    background: none; 
+    border: none;
+    box-shadow: none;
+    min-width: unset;
 }
