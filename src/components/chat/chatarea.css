@@ -71,6 +71,15 @@
     display: block;
 }
 
+.attachment-item {
+    width: auto;
+    height: auto;
+    max-width: 550px; 
+    max-height: 600px;
+    object-fit: contain; 
+    border-radius: 8px;
+}
+
 .attachment-remove {
     position: absolute;
     top: -8px;

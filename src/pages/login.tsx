@@ -54,6 +54,9 @@ function Login(): JSX.Element {
                 apiUrl = `${targetProtocol}//${apiUrl.replace(/^\/\//, "")}`;
             }
 
+            apiUrl = apiUrl.replace(/\/v\d+$/, "");
+            apiUrl = apiUrl.replace(/\/$/, "");
+            
             localStorage.setItem("selectedInstanceUrl", apiUrl);
 
             const domainsRes = await fetch(`${apiUrl}/policies/instance/domains`);
