@@ -75,7 +75,7 @@ const MemberListItem = ({ member, isTyping, roles }: {
                     <div className="popout-header">
                         <div className={`avatar-wrapper-centered ${member.user.banner ? 'overlap' : ''}`} onMouseOver={(e) => e.currentTarget.classList.add("avatar-img-text")} onMouseLeave={(e) => e.currentTarget.classList.remove("avatar-img-text")} onClick={(e) => handleProfileOpen(e)}>
                             <img src={avatarUrl} alt="Avatar" className="avatar-img-large" />
-                            <div className={`status-dot-large ${status}`}></div>
+                            <div className={`status-dot-large ${status}`} title={status}></div>
                         </div>
                         <div className="user-details-centered">
                             <span className="username">{member.user.username}</span>

@@ -60,6 +60,16 @@
     border: 1px solid var(--bg-header-alt);
 }
 
+.status-dot-large {
+    position: absolute;
+    bottom: 8px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--bg-header-alt);
+}
+
 .online { background-color: var(--bg-online); }
 .idle   { background-color: var(--bg-idle); }
 .dnd    { background-color: var(--bg-dnd); }
