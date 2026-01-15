@@ -30,29 +30,49 @@ function Login(): JSX.Element {
 
     const checkInstance = async (url: string) => {
         if (!url) return;
-        
+
         setStatus(prev => ({ ...prev, instance: 'checking' }));
 
-        const hasProtocol = /^(http|https):\/\//.test(url);
-        const finalUrl = hasProtocol ? `${url}/.well-known/spacebar` : `${window.location.protocol}//${url}/.well-known/spacebar`;
+        let cleanUrl = url.replace(/^(http|https):\/\//, "").replace(/\/$/, "");
+
+        const isTargetLocal = cleanUrl.includes("localhost") || cleanUrl.includes("127.0.0.1");
+        const targetProtocol = isTargetLocal ? "http:" : "https:";
+        const wellKnownUrl = `${targetProtocol}//${cleanUrl}/.well-known/spacebar`;
 
         try {
-            const response = await fetch(finalUrl);
+            const response = await fetch(wellKnownUrl);
 
-            if (!response.ok) {
-                throw new Error();
-            }
+            if (!response.ok) throw new Error();
 
             let metadata = await response.json();
 
             if (!metadata || !metadata.api) throw new Error();
 
-            localStorage.setItem("selectedInstanceUrl", metadata.api);
+            let apiUrl = metadata.api;
+
+            if (!apiUrl.startsWith("http")) {
+                apiUrl = `${targetProtocol}//${apiUrl.replace(/^\/\//, "")}`;
+            }
+
+            localStorage.setItem("selectedInstanceUrl", apiUrl);
+
+            const domainsRes = await fetch(`${apiUrl}/policies/instance/domains`);
+
+            if (domainsRes.ok) {
+                const domains = await domainsRes.json();
+
+                localStorage.setItem("selectedGatewayUrl", domains.gateway);
+                localStorage.setItem("selectedCdnUrl", domains.cdn);
+                localStorage.setItem("selectedAssetsUrl", domains.assets ?? domains.cdn);
+                localStorage.setItem("defaultApiVersion", "v" + domains.defaultApiVersion);
+            }
 
             setStatus(prev => ({ ...prev, instance: 'valid' }));
         } catch (error) {
+            console.error("Instance validation failed", error);
+
             setStatus(prev => ({ ...prev, instance: 'error' }));
-            setErrorMsg(prev => ({ ...prev, instance: 'Request timed out' }));
+            setErrorMsg(prev => ({ ...prev, instance: 'Invalid instance or connection error' }));
         }
     };
 
