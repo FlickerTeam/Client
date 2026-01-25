@@ -1,21 +1,30 @@
 #channels-column {
-  color: var(--text-main) !important;
+  color: var(--text-main);
 }
 
 .channel-item {
   border-radius: 4px;
-  padding: 10px;
   transition: 0.5s all;
   cursor: pointer;
+  margin: 2px 8px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
 }
 
 .channel-item:hover {
   background: var(--bg-panel);
+  background-color: rgb(78 80 88 / 30%);
+  color: var(--text-bright);
 }
 
 .channel-item.active {
   border-left: 2px solid var(--accent-primary);
   background: var(--bg-panel);
+  background-color: rgb(78 80 88 / 60%);
+  color: white;
 }
 
 .category-wrapper {
@@ -42,27 +51,6 @@
   font-size: 16px;
   width: 12px;
   margin-right: 2px;
-}
-
-.channel-item {
-  margin: 2px 8px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.channel-item:hover {
-  background-color: rgba(78, 80, 88, 0.3);
-  color: var(--text-bright);
-}
-
-.channel-item.active {
-  background-color: rgba(78, 80, 88, 0.6);
-  color: white;
 }
 
 .channel-hash {

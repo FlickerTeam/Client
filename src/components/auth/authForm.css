@@ -7,7 +7,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
 }
 
 .center {
@@ -29,7 +29,7 @@ body {
 }
 
 .register-form .form-header {
-  background: rgba(187, 154, 247, 0.1);
+  background: rgb(187 154 247 / 10%);
   border: 1px dashed var(--accent-primary);
   padding: 15px;
   text-align: center;

@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  animation: settingsFadeIn 0.2s ease-out;
+  animation: settings-fade-in 0.2s ease-out;
 }
 
 .settings-sidebar-wrapper {
@@ -17,20 +17,20 @@
 
 .settings-sidebar {
   width: 225px;
-  padding: 30px 0px 0px 10px;
+  padding: 30px 0 0 10px;
   overflow-y: auto;
 }
 
 .sidebar-category {
-  color: rgb(227, 132, 253); /* Make this a var */
+  color: rgb(227 132 253); /* Make this a var */
   font-size: 12px;
   font-weight: 700;
-  padding: 8px 8px;
+  padding: 8px;
 }
 
 .sidebar-item {
   color: #b5bac1; /* Make this a var */
-  padding: 8px 8px;
+  padding: 8px;
   margin-bottom: 2px;
   border-radius: 4px;
   cursor: pointer;
@@ -39,7 +39,7 @@
 
 .sidebar-item:hover {
   background-color: var(--bg-panel);
-  color: #dbdee1; /* Make this a var*/
+  color: #dbdee1; /* Make this a var */
 }
 
 .sidebar-item.active {
@@ -51,17 +51,16 @@
   display: flex;
   position: relative;
   flex: 1 1;
-  margin: 0px 0px 0px -30px;
+  margin: 0 0 0 -30px;
   background-color: var(--bg-panel);
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 30%);
 }
 
 .settings-main-content {
   flex-grow: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
 }
 
 .account-card {
@@ -112,7 +111,7 @@
 
 .settings-header {
   color: var(--accent-primary);
-  padding: 20px 20px 20px;
+  padding: 20px;
   width: 100%;
   border-bottom: 1px dashed #9b75e1f5; /* Var */
   background: var(--bg-main);
@@ -133,7 +132,7 @@
 
 .field-group label {
   display: block;
-  color: #b5bac1;
+  color: var(--accent-primary);
   font-size: 12px;
   font-weight: 700;
   margin-bottom: 8px;
@@ -147,11 +146,7 @@
 }
 
 .small-edit-btn {
-  width: 100px !important;
-}
-
-.field-group label {
-  color: var(--accent-primary);
+  width: 100px;
 }
 
 .close-button-wrapper {
@@ -193,11 +188,12 @@
   font-weight: 700;
 }
 
-@keyframes settingsFadeIn {
+@keyframes settings-fade-in {
   from {
     opacity: 0;
     transform: scale(1.1);
   }
+
   to {
     opacity: 1;
     transform: scale(1);

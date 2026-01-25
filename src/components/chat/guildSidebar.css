@@ -10,7 +10,7 @@
 }
 
 .home-button a:hover {
-  color: rgb(227, 132, 253); /* Make this a var */
+  color: rgb(227 132 253); /* Make this a var */
 }
 
 .separator {
@@ -23,5 +23,5 @@
   transform: translateY(-2px);
   background-color: var(--accent-primary);
   color: var(--bg-main);
-  border-left: 6px solid #854fbb; /* Make this a var*/
+  border-left: 6px solid #854fbb; /* Make this a var */
 }

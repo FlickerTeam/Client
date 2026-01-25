@@ -33,10 +33,11 @@
 .friend-item-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 10px;
   border-top: 1px solid var(--border-color);
   cursor: pointer;
+  align-items: baseline;
+  gap: 2px;
 }
 
 .friend-actions {
@@ -56,12 +57,6 @@
 .friend-item-row:hover {
   background: var(--bg-alt);
   border-radius: 8px;
-}
-
-.friend-item-row {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
 }
 
 .friend-info {
@@ -139,7 +134,7 @@
 }
 
 .action-button.online {
-  background-color: rgba(35, 165, 89, 0.15);
+  background-color: rgb(35 165 89 / 15%);
   color: #40c463;
 }
 
@@ -149,7 +144,7 @@
 }
 
 .action-button.dnd {
-  background-color: rgba(242, 63, 66, 0.15);
+  background-color: rgb(242 63 66 / 15%);
   color: #f23f42;
 }
 

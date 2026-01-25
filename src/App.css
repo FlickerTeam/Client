@@ -6,8 +6,8 @@
   --accent-secondary: #7aa2f7;
   --text-main: #a9b1d6;
   --text-bright: #c0caf5;
-  --bg-bright: var(--bg-bright);
-  --border-color: rgba(187, 154, 247, 0.2);
+  --bg-bright: #e5e4d9;
+  --border-color: rgb(187 154 247 / 20%);
   --bg-dark-alt: #1a1b26;
   --bg-alt: #323449;
   --bg-input: #1a1b26;
@@ -18,14 +18,13 @@
   --bg-offline: #80848e;
   --text-muted: #949ba4;
   --text-dim: #565f89;
-  --shadow-main: rgba(0, 0, 0, 0.3);
+  --shadow-main: rgb(0 0 0 / 30%);
 }
 
 body {
-  background: var(--bg-alt);
   background-color: var(--bg-bright);
   opacity: 0.8;
-  background:
+  background-image:
     radial-gradient(
       circle,
       transparent 20%,
@@ -35,16 +34,20 @@ body {
       transparent
     ),
     radial-gradient(
-        circle,
-        transparent 20%,
-        var(--bg-bright) 20%,
-        var(--bg-bright) 80%,
-        transparent 80%,
-        transparent
-      )
-      25px 25px,
-    linear-gradient(#444cf7 2px, transparent 2px) 0 -1px,
-    linear-gradient(90deg, #444cf7 2px, var(--bg-bright) 2px) -1px 0;
+      circle,
+      transparent 20%,
+      var(--bg-bright) 20%,
+      var(--bg-bright) 80%,
+      transparent 80%,
+      transparent
+    ),
+    linear-gradient(#444cf7 2px, transparent 2px),
+    linear-gradient(90deg, #444cf7 2px, var(--bg-bright) 2px);
+  background-position:
+    0 0,
+    25px 25px,
+    0 -1px,
+    -1px 0;
   background-size:
     50px 50px,
     50px 50px,
@@ -53,8 +56,8 @@ body {
 }
 
 .center {
-  top: 50%;
   position: absolute;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -91,11 +94,12 @@ body {
   opacity: 0.6;
 }
 
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.login-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--accent-secondary);
+  text-decoration: none;
 }
 
 .credits {
@@ -128,22 +132,14 @@ body {
   text-decoration: underline;
 }
 
-.login-link {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--accent-secondary);
-  text-decoration: none;
-}
-
 .error {
   text-align: right;
-  color: rgb(240, 104, 104); /* Var */
+  color: rgb(240 104 104); /* Var */
 }
 
 .valid {
   text-align: left;
-  color: rgb(147, 240, 104); /* Var */
+  color: rgb(147 240 104); /* Var */
 }
 
 .status-msg {
@@ -164,39 +160,43 @@ body {
   content: '';
   width: 3px;
   height: 3px;
-  background-color: currentColor;
+  background-color: currentcolor;
   border-radius: 50%;
-  animation: loadingDots 1.5s infinite;
+  animation: loading-dots 1.5s infinite;
 }
 
 @keyframes breathing {
   0%,
   100% {
     opacity: 0.4;
-    text-shadow: 0 0 0px rgba(86, 95, 137, 0); /* Var */
+    text-shadow: 0 0 0 rgb(86 95 137 / 0%); /* Var */
   }
+
   50% {
     opacity: 1;
-    text-shadow: 0 0 5px rgba(86, 95, 137, 0.5); /* Var */
+    text-shadow: 0 0 5px rgb(86 95 137 / 50%); /* Var */
   }
 }
 
-@keyframes loadingDots {
+@keyframes loading-dots {
   0% {
     box-shadow:
       8px 0 0 -2px,
       16px 0 0 -2px;
   }
+
   25% {
     box-shadow:
       8px 0 0 0,
       16px 0 0 -2px;
   }
+
   50% {
     box-shadow:
       8px 0 0 0,
       16px 0 0 0;
   }
+
   100% {
     box-shadow:
       8px 0 0 -2px,
@@ -217,7 +217,7 @@ body {
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.1); /* Var */
+  border: 4px solid rgb(255 255 255 / 10%); /* Var */
   border-left-color: var(--accent-primary);
   border-radius: 50%;
   margin: 20px auto;
@@ -236,19 +236,22 @@ body {
   border-radius: 50%;
   margin-bottom: 8px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  background: rgba(187, 154, 247, 0.05); /* Var */
-  border: 1px dashed var(--accent-primary);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
   color: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 20%); /* Var */
 }
 
 .guild-icon:hover {
   border-radius: 30%;
+  transform: translateY(-2px);
   background-color: var(--accent-primary);
   color: var(--bg-main);
-  box-shadow: 0 0 15px rgba(187, 154, 247, 0.4); /* Var */
+  box-shadow: 0 6px 15px rgb(187 154 247 / 40%); /* Var */
   border-style: solid;
 }
 
@@ -257,7 +260,7 @@ body {
   height: 2px;
   background: var(--border-color);
   border: none;
-  margin: 4px 0 30px 0;
+  margin: 4px 0 30px;
   border-radius: 1px;
 }
 
@@ -283,10 +286,9 @@ body,
   padding-top: 12px;
   flex-shrink: 0;
   overflow-y: auto;
-  border: none;
   background-color: var(--bg-sidebar);
   width: 100px;
-  margin: 8px 8px 8px 8px;
+  margin: 8px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
 }
@@ -298,27 +300,10 @@ body,
   width: 100%;
 }
 
-.guild-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-color);
-  color: var(--accent-primary);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Var */
-}
-
-.guild-icon:hover {
-  border-radius: 30%;
-  transform: translateY(-2px);
-  background-color: var(--accent-primary);
-  color: var(--bg-main);
-  box-shadow: 0 6px 15px rgba(187, 154, 247, 0.4); /* Var */
+.scroller {
+  padding: 15px;
+  overflow-y: auto;
+  height: 100%;
 }
 
 #channels-column {
@@ -342,20 +327,25 @@ body,
 
 .user-settings-panel {
   flex-shrink: 0;
-  background: rgba(22, 22, 30, 0.8);
+  background: rgb(22 22 30 / 80%); /* Var */
   backdrop-filter: blur(10px);
   margin: 8px;
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .chat-main {
   flex: 1;
-  margin: 8px 8px 8px 0px;
+  margin: 8px 8px 8px 0;
   background-color: var(--bg-panel);
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Var */
+  box-shadow: 0 8px 32px rgb(0 0 0 / 30%); /* Var */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -379,19 +369,6 @@ body,
   padding: 5px;
 }
 
-.user-settings-panel {
-  background: rgba(22, 22, 30, 0.8); /* Var */
-  backdrop-filter: blur(10px);
-  margin: 8px;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
 .user-info .name {
   color: var(--text-bright);
   font-weight: 600;
@@ -399,17 +376,11 @@ body,
 
 .header-base {
   color: var(--accent-primary);
-  padding: 20px 20px 20px;
+  padding: 20px;
   border-bottom: 1px dashed #9b75e1f5; /* Var */
   background: var(--bg-main);
   display: flex;
   justify-content: space-between;
-}
-
-.scroller {
-  padding: 15px;
-  overflow-y: overlay;
-  height: 100%;
 }
 
 .disabled-btn {

@@ -88,7 +88,13 @@ export default defineConfig([
     language: 'css/css',
     extends: ['css/recommended'],
     rules: {
-      'css/no-duplicate-imports': 'error',
+      'css/no-invalid-properties': [
+        'error',
+        {
+          allowUnknownVariables: true,
+        },
+      ],
+      'css/use-baseline': 'off',
     },
   },
   configPrettier,
