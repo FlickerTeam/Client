@@ -8,6 +8,8 @@ import ChatApp from './pages/chat';
 import LoadingScreen from './pages/loading';
 import Login from './pages/login';
 import Register from './pages/register';
+import type { Instance } from './types/instance';
+import { DomainsResponse } from './types/responses';
 
 function App(): JSX.Element {
   const { openModal } = useModal();
@@ -46,7 +48,7 @@ function App(): JSX.Element {
         setLoading(false);
 
         if (!isPublicPath) {
-          navigate('/login', { replace: true });
+          void navigate('/login', { replace: true });
         }
 
         return;
@@ -56,7 +58,7 @@ function App(): JSX.Element {
 
       if (!selectedUrl) {
         if (!isPublicPath) {
-          navigate('/login', { replace: true });
+          void navigate('/login', { replace: true });
         }
         setLoading(false);
         return;
@@ -73,11 +75,14 @@ function App(): JSX.Element {
           return;
         }
 
-        const response: DomainsResponse = await metadataCheck.json();
+        const response: DomainsResponse = DomainsResponse.parse(await metadataCheck.json());
 
         localStorage.setItem('selectedGatewayUrl', response.gateway);
-        localStorage.setItem('selectedCdnUrl', response.cdn); // for non user uploaded icons, etc
-        localStorage.setItem('selectedAssetsUrl', response.assets ?? response.cdn); //for user made assets
+        localStorage.setItem('selectedCdnUrl', response.cdn); // for user uploaded icons and attachments
+        localStorage.setItem(
+          'selectedAssetsUrl',
+          JSON.stringify(response.assets ?? ['https://cdn.oldcordapp.com']),
+        ); //for non user uploaded icons, etc. this is a cascading property where the first url loads first
         localStorage.setItem('defaultApiVersion', 'v' + response.defaultApiVersion);
 
         setLoading(false);
@@ -90,7 +95,7 @@ function App(): JSX.Element {
       }
     };
 
-    initializeApp();
+    void initializeApp();
   }, [location, navigate]);
 
   if (loading) {
