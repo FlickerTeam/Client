@@ -13,7 +13,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['**/node_modules/**', 'dist/**', 'build/**']),
+  globalIgnores(['**/node_modules/**', 'dist/**', 'build/**', '**/package-lock.json']),
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}'],
     extends: [js.configs.recommended],
