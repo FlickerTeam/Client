@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const DomainsResponse = z.object({
+export const DomainsResponseSchema = z.object({
   cdn: z.string(),
   assets: z.array(z.string()).nullish(),
   gateway: z.string(),
@@ -8,7 +8,7 @@ export const DomainsResponse = z.object({
   apiEndpoint: z.string(),
 });
 
-export type DomainsResponse = z.infer<typeof DomainsResponse>;
+export type DomainsResponse = z.infer<typeof DomainsResponseSchema>;
 
 export interface ErrorResponse {
   code?: number;

@@ -9,7 +9,7 @@ import LoadingScreen from './pages/loading';
 import Login from './pages/login';
 import Register from './pages/register';
 import type { Instance } from './types/instance';
-import { DomainsResponse } from './types/responses';
+import { type DomainsResponse, DomainsResponseSchema } from './types/responses';
 
 function App(): JSX.Element {
   const { openModal } = useModal();
@@ -75,7 +75,7 @@ function App(): JSX.Element {
           return;
         }
 
-        const response: DomainsResponse = DomainsResponse.parse(await metadataCheck.json());
+        const response: DomainsResponse = DomainsResponseSchema.parse(await metadataCheck.json());
 
         localStorage.setItem('selectedGatewayUrl', response.gateway);
         localStorage.setItem('selectedCdnUrl', response.cdn); // for user uploaded icons and attachments
