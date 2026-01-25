@@ -1,26 +1,22 @@
+import css from '@eslint/css';
 import js from '@eslint/js';
-import globals from 'globals';
+import json from '@eslint/json';
+import markdown from '@eslint/markdown';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import tseslint from 'typescript-eslint';
+import configPrettier from 'eslint-config-prettier';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
-import configPrettier from 'eslint-config-prettier';
-import json from '@eslint/json';
-import markdown from '@eslint/markdown';
-import css from '@eslint/css';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   globalIgnores(['**/node_modules/**', 'dist/**', 'build/**']),
   {
-    files: ['**/*.{js,mjs,cjs,ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.strictTypeChecked,
-      tseslint.configs.stylisticTypeChecked,
-    ],
+    files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}'],
+    extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -28,10 +24,6 @@ export default defineConfig([
         ...globals.browser,
         ...globals.node,
         ...globals.es2026,
-      },
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
@@ -41,6 +33,16 @@ export default defineConfig([
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'prefer-const': 'error',
+    },
+  },
+  {
+    files: ['**/*.{ts,mts,cts,tsx}'],
+    extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
   {
