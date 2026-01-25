@@ -1,12 +1,9 @@
-import { JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import RegisterForm from '../components/auth/registerform';
+import RegisterForm from '../components/auth/registerForm';
 import Brand from '../components/common/brand';
 import Footer from '../components/common/footer';
-import { ErrorStatusFields } from '../interfaces/errorstatusfields';
-import { Instance } from '../interfaces/instance';
-import { RegisterRequest } from '../interfaces/registerrequest';
 
 function Register(): JSX.Element {
   const [username, setUsername] = useState('');

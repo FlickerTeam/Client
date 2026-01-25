@@ -1,37 +1,30 @@
 import './authform.css';
 
-import { JSX } from 'react';
+import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ErrorStatusFields } from '../../interfaces/errorstatusfields';
-import { Instance } from '../../interfaces/instance';
-
-const RegisterForm = ({
+const LoginForm = ({
   handleInstanceSelect,
-  handleSignup,
+  handleSignin,
   instances,
   instance,
-  errorMsg,
-  status,
   customInstance,
   setCustomInstance,
-  setUsername,
-  username,
+  errorMsg,
+  status,
   email,
   setEmail,
   password,
   setPassword,
 }: {
+  handleSignin: any;
   handleInstanceSelect: any;
-  handleSignup: any;
   instances: Instance[] | [];
   instance: any;
-  errorMsg: any;
-  status: ErrorStatusFields;
   customInstance: any;
   setCustomInstance: any;
-  setUsername: any;
-  username: string;
+  errorMsg: any;
+  status: ErrorStatusFields;
   email: string;
   setEmail: any;
   password: string;
@@ -50,7 +43,7 @@ const RegisterForm = ({
 
   return (
     <div className='register-form'>
-      <div className='form-header'>Register an account</div>
+      <div className='form-header'>Login to an account</div>
       <div className='form-body'>
         <span>Instance</span>
         <select value={instance} onChange={handleInstanceSelect}>
@@ -76,20 +69,6 @@ const RegisterForm = ({
             {renderStatus()}
           </>
         )}
-        <span>Username</span>
-        <input
-          type='text'
-          value={username}
-          placeholder='Username'
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-        />
-        {status.username && (
-          <span className={`status-msg ${status.username}`}>
-            {status.username === 'error' && errorMsg.username}
-          </span>
-        )}
         <span>Email</span>
         <input
           type='email'
@@ -99,11 +78,6 @@ const RegisterForm = ({
             setEmail(e.target.value);
           }}
         />
-        {status.email && (
-          <span className={`status-msg ${status.email}`}>
-            {status.email === 'error' && errorMsg.email}
-          </span>
-        )}
         <span>Password</span>
         <input
           type='password'
@@ -115,28 +89,21 @@ const RegisterForm = ({
         />
         {status.password && (
           <span className={`status-msg ${status.password}`}>
-            {status.password === 'checking' && 'Signing up...'}
+            {status.password === 'checking' && 'Logging in...'}
             {status.password === 'error' && errorMsg.password}
           </span>
         )}
       </div>
-
       <div className='form-footer'>
-        <div className='agreement'>
-          <input type='checkbox' id='terms' />
-          <label htmlFor='terms'>
-            I have read the <a href='#'>Terms and Conditions</a> of this instance.
-          </label>
-        </div>
         <div className='actions'>
-          <button onClick={handleSignup}>Register</button>
+          <button onClick={handleSignin}>Login</button>
         </div>
-        <Link to='/login' className='login-link'>
-          Already have an account?
+        <Link to='/register' className='login-link'>
+          Don't have an account?
         </Link>
       </div>
     </div>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

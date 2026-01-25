@@ -1,22 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-
-import { GatewayProviderProps } from '../interfaces/gatewayproviderprops';
-import { Guild } from '../interfaces/guild';
-
-export interface GatewayContextType {
-  isReady: boolean | null;
-  guilds: Guild[] | [];
-  user: any | null;
-  relationships: any[] | [];
-  user_settings: any;
-  requestMembers?: (guildId: string, channelId: string, ranges?: number[][]) => void;
-  typingUsers: Record<string, Record<string, number>>;
-  memberLists?: Record<string, any>;
-}
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 const GatewayContext = createContext<GatewayContextType | null>(null);
 
-export const GatewayProvider = ({ children, ...props }: GatewayProviderProps) => {
+export const GatewayProvider = ({ children }: GatewayProviderProps) => {
   const socket: any = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [guilds, setGuilds] = useState([]);

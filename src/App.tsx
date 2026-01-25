@@ -1,13 +1,9 @@
 import './App.css';
 
-import React, { JSX, useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { type JSX, useEffect, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
-import { ContextMenuProvider } from './context/contextMenu';
-import { GatewayProvider } from './context/gateway';
-import { ModalProvider, useModal } from './context/modal';
-import { DomainsResponse } from './interfaces/domainsresponse';
-import { Instance } from './interfaces/instance';
+import { useModal } from './context/modal';
 import ChatApp from './pages/chat';
 import LoadingScreen from './pages/loading';
 import Login from './pages/login';

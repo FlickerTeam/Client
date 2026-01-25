@@ -1,10 +1,9 @@
 import './chatarea.css';
 
-import { JSX, useEffect, useRef, useState } from 'react';
+import { type JSX, useEffect, useRef, useState } from 'react';
 
 import { useGateway } from '../../context/gateway';
 import { useModal } from '../../context/modal';
-import { Channel } from '../../interfaces/channel';
 import { getDefaultAvatar } from '../../utils/avatar';
 
 interface MediaAttachment {

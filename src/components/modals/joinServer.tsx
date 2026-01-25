@@ -1,9 +1,8 @@
 import './joinserver.css';
 
-import { JSX, useRef, useState } from 'react';
+import { type JSX, useState } from 'react';
 
 import { useModal } from '../../context/modal';
-import { ErrorResponse } from '../../interfaces/errorresponse';
 
 export interface InviteResponseQuery {
   code: string;

@@ -1,10 +1,8 @@
 import './channelsidebar.css';
 
-import { JSX, useState } from 'react';
+import { type JSX, useState } from 'react';
 
-import { Channel } from '../../interfaces/channel';
-import { Guild } from '../../interfaces/guild';
-import CurrentUser from './currentuser';
+import CurrentUser from './currentUser';
 
 const ChannelSidebar = ({
   selectedGuild,

@@ -1,13 +1,9 @@
-import { JSX, useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { type JSX, useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
-import LoginForm from '../components/auth/loginform';
+import LoginForm from '../components/auth/loginForm';
 import Brand from '../components/common/brand';
 import Footer from '../components/common/footer';
-import { ErrorStatusFields } from '../interfaces/errorstatusfields';
-import { Instance } from '../interfaces/instance';
-import { LoginRequest } from '../interfaces/loginrequest';
-import { SpacebarResponse } from '../interfaces/spacebarresponse';
 
 function Login(): JSX.Element {
   const [email, setEmail] = useState('');

@@ -1,4 +1,4 @@
-export interface ErrorStatusFields {
+interface ErrorStatusFields {
   instance?: string | null;
   username?: string | null;
   email?: string | null;

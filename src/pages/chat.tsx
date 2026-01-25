@@ -1,15 +1,13 @@
-import { JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ChannelSidebar from '../components/chat/channelsidebar';
-import ChatArea from '../components/chat/chatarea';
-import { FriendsList } from '../components/chat/friendslist';
-import GuildSidebar from '../components/chat/guildsidebar';
-import MemberList from '../components/chat/memberlist';
+import ChannelSidebar from '../components/chat/channelSidebar';
+import ChatArea from '../components/chat/chatArea';
+import { FriendsList } from '../components/chat/friendsList';
+import GuildSidebar from '../components/chat/guildSidebar';
+import MemberList from '../components/chat/memberList';
 import Settings from '../components/chat/settings';
-import { GatewayContextType, useGateway } from '../context/gateway';
-import { Channel } from '../interfaces/channel';
-import { Guild } from '../interfaces/guild';
+import { useGateway } from '../context/gateway';
 import LoadingScreen from './loading';
 
 const ChatApp = (): JSX.Element => {

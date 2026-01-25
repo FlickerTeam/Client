@@ -1,12 +1,11 @@
 import './guildsidebar.css';
 
-import { JSX, useEffect, useState } from 'react';
+import { type JSX } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useContextMenu } from '../../context/contextMenu';
 import { useGateway } from '../../context/gateway';
 import { useModal } from '../../context/modal';
-import { Guild } from '../../interfaces/guild';
 
 const GuildSidebar = ({
   guilds,

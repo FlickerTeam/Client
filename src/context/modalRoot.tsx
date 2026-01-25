@@ -1,10 +1,10 @@
-import { ClearSelectedInstanceModal } from '../components/modals/clearselectedinstance';
-import { ConfirmationDeleteModal } from '../components/modals/confirmationdelete';
-import { ConfirmationLeaveModal } from '../components/modals/confirmationleave';
-import { CreateServerModal } from '../components/modals/createserver';
-import { JoinOrCreateServerModal } from '../components/modals/joinorcreateserver';
-import { JoinServerModal } from '../components/modals/joinserver';
-import { ServerProfileModal } from '../components/modals/serverprofile';
+import { ClearSelectedInstanceModal } from '../components/modals/clearSelectedInstance';
+import { ConfirmationDeleteModal } from '../components/modals/confirmationDelete';
+import { ConfirmationLeaveModal } from '../components/modals/confirmationLeave';
+import { CreateServerModal } from '../components/modals/createServer';
+import { JoinOrCreateServerModal } from '../components/modals/joinOrCreateServer';
+import { JoinServerModal } from '../components/modals/joinServer';
+import { ServerProfileModal } from '../components/modals/serverProfile';
 import { useModal } from './modal';
 
 export const ModalRoot = () => {

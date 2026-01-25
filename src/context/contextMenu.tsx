@@ -1,4 +1,4 @@
-import { createContext, JSX, useContext, useEffect, useState } from 'react';
+import { createContext, type JSX, useContext, useEffect, useState } from 'react';
 
 interface ContextMenuState {
   x: number;
