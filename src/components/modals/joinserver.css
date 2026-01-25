@@ -1,43 +1,43 @@
 .join-server-modal h2 {
-    text-align: center;
-    margin-bottom: 8px;
-    font-size: 24px;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 24px;
 }
 
 .join-server-modal p {
-    color: #b5bac1;
-    font-size: 14px;
-    text-align: center;
+  color: #b5bac1;
+  font-size: 14px;
+  text-align: center;
 }
 
 .join-server-modal input {
-    width: 100%;
-    padding: 10px;
-    background: #1e1f22;
-    border: none;
-    color: white;
-    border-radius: 3px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #1e1f22;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 .join-btn {
-    background-color: var(--bg-offline);
-    color: white;
-    padding: 10px 24px;
-    border-radius: 3px;
-    border: none;
-    cursor: pointer;
+  background-color: var(--bg-offline);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
 }
 
 .join-server-modal ul {
-    background: var(--bg-dark-alt);
-    padding: 10px;
-    border-radius: 3px;
-    color: var(--text-muted);
+  background: var(--bg-dark-alt);
+  padding: 10px;
+  border-radius: 3px;
+  color: var(--text-muted);
 }
 
 .join-server-modal ul li {
-    list-style: circle;
-    margin-left: 20px;
+  list-style: circle;
+  margin-left: 20px;
 }

@@ -1,17 +1,17 @@
 .avatar-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: var(--bg-dark-alt);
-    margin: 0 auto;
-    cursor: pointer;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s opacity;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--bg-dark-alt);
+  margin: 0 auto;
+  cursor: pointer;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s opacity;
 }
 
 .avatar-preview:hover {
-    opacity: 0.5;
+  opacity: 0.5;
 }

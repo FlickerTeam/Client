@@ -1,3 +1,3 @@
 export interface SpacebarResponse {
-    api: string;
+  api: string;
 }

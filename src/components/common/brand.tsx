@@ -1,9 +1,9 @@
-function Brand () {
-    return (
-        <div className="brand">
-            <span>FLICKER</span>
-        </div>
-    );
-};
+function Brand() {
+  return (
+    <div className='brand'>
+      <span>FLICKER</span>
+    </div>
+  );
+}
 
 export default Brand;

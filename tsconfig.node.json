@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  },
+  "include": ["vite.config.ts", "eslint.config.mts"]
+}

@@ -25,8 +25,31 @@ body {
   background: var(--bg-alt);
   background-color: var(--bg-bright);
   opacity: 0.8;
-  background: radial-gradient(circle, transparent 20%, var(--bg-bright) 20%, var(--bg-bright) 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, var(--bg-bright) 20%, var(--bg-bright) 80%, transparent 80%, transparent) 25px 25px, linear-gradient(#444cf7 2px, transparent 2px) 0 -1px, linear-gradient(90deg, #444cf7 2px, var(--bg-bright) 2px) -1px 0;
-  background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+  background:
+    radial-gradient(
+      circle,
+      transparent 20%,
+      var(--bg-bright) 20%,
+      var(--bg-bright) 80%,
+      transparent 80%,
+      transparent
+    ),
+    radial-gradient(
+        circle,
+        transparent 20%,
+        var(--bg-bright) 20%,
+        var(--bg-bright) 80%,
+        transparent 80%,
+        transparent
+      )
+      25px 25px,
+    linear-gradient(#444cf7 2px, transparent 2px) 0 -1px,
+    linear-gradient(90deg, #444cf7 2px, var(--bg-bright) 2px) -1px 0;
+  background-size:
+    50px 50px,
+    50px 50px,
+    25px 25px,
+    25px 25px;
 }
 
 .center {
@@ -37,80 +60,80 @@ body {
 }
 
 .page-wrapper {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .brand {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0.8;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.8;
 }
 
 .brand-logo {
-    height: 30px;
-    width: auto;
+  height: 30px;
+  width: auto;
 }
 
 .brand span {
   font-weight: 800;
-    letter-spacing: 2px;
-    color: var(--text-main);
-    font-size: 14px;
-    border: 1px dashed var(--accent-primary);
-    padding: 5px;
-    opacity: 0.6;
+  letter-spacing: 2px;
+  color: var(--text-main);
+  font-size: 14px;
+  border: 1px dashed var(--accent-primary);
+  padding: 5px;
+  opacity: 0.6;
 }
 
 .center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .credits {
-    position: absolute;
-    bottom: 30px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-dim);
-    font-family: sans-serif;
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-family: sans-serif;
 }
 
 .credits span {
-    display: block;
-    letter-spacing: 0.5px;
+  display: block;
+  letter-spacing: 0.5px;
 }
 
 .credits .login-link {
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease;
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
 .credits .login-link:hover {
-    color: var(--accent-secondary); 
-    text-decoration: underline;
+  color: var(--accent-secondary);
+  text-decoration: underline;
 }
 
 .login-link {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--accent-secondary);
-    text-decoration: none;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--accent-secondary);
+  text-decoration: none;
 }
 
 .error {
@@ -129,39 +152,56 @@ body {
 }
 
 .status-msg.checking {
-    color: var(--text-dim);
-    font-style: italic;
-    animation: breathing 1.5s ease-in-out infinite;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  color: var(--text-dim);
+  font-style: italic;
+  animation: breathing 1.5s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .status-msg .checking::after {
-    content: "";
-    width: 3px;
-    height: 3px;
-    background-color: currentColor;
-    border-radius: 50%;
-    animation: loadingDots 1.5s infinite;
+  content: '';
+  width: 3px;
+  height: 3px;
+  background-color: currentColor;
+  border-radius: 50%;
+  animation: loadingDots 1.5s infinite;
 }
 
 @keyframes breathing {
-    0%, 100% {
-        opacity: 0.4;
-        text-shadow: 0 0 0px rgba(86, 95, 137, 0); /* Var */
-    }
-    50% {
-        opacity: 1;
-        text-shadow: 0 0 5px rgba(86, 95, 137, 0.5); /* Var */
-    }
+  0%,
+  100% {
+    opacity: 0.4;
+    text-shadow: 0 0 0px rgba(86, 95, 137, 0); /* Var */
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 5px rgba(86, 95, 137, 0.5); /* Var */
+  }
 }
 
 @keyframes loadingDots {
-    0% { box-shadow: 8px 0 0 -2px, 16px 0 0 -2px; }
-    25% { box-shadow: 8px 0 0 0, 16px 0 0 -2px; }
-    50% { box-shadow: 8px 0 0 0, 16px 0 0 0; }
-    100% { box-shadow: 8px 0 0 -2px, 16px 0 0 -2px; }
+  0% {
+    box-shadow:
+      8px 0 0 -2px,
+      16px 0 0 -2px;
+  }
+  25% {
+    box-shadow:
+      8px 0 0 0,
+      16px 0 0 -2px;
+  }
+  50% {
+    box-shadow:
+      8px 0 0 0,
+      16px 0 0 0;
+  }
+  100% {
+    box-shadow:
+      8px 0 0 -2px,
+      16px 0 0 -2px;
+  }
 }
 
 .loading-container {
@@ -185,50 +225,55 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .guild-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin-bottom: 8px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    background: rgba(187, 154, 247, 0.05); /* Var */
-    border: 1px dashed var(--accent-primary);
-    color: var(--accent-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(187, 154, 247, 0.05); /* Var */
+  border: 1px dashed var(--accent-primary);
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .guild-icon:hover {
-    border-radius: 30%;
-    background-color: var(--accent-primary);
-    color: var(--bg-main);
-    box-shadow: 0 0 15px rgba(187, 154, 247, 0.4); /* Var */
-    border-style: solid;
+  border-radius: 30%;
+  background-color: var(--accent-primary);
+  color: var(--bg-main);
+  box-shadow: 0 0 15px rgba(187, 154, 247, 0.4); /* Var */
+  border-style: solid;
 }
 
 .separator {
-    width: 32px;
-    height: 2px;
-    background: var(--border-color);
-    border: none;
-    margin: 4px 0 30px 0;
-    border-radius: 1px;
+  width: 32px;
+  height: 2px;
+  background: var(--border-color);
+  border: none;
+  margin: 4px 0 30px 0;
+  border-radius: 1px;
 }
 
-html, body, #root, .page-wrapper {
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
+html,
+body,
+#root,
+.page-wrapper {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
 }
 
 .chat-layout {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 
 #guilds-column {
@@ -247,88 +292,87 @@ html, body, #root, .page-wrapper {
 }
 
 .guild-icon-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .guild-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-panel);
-    border: 1px solid var(--border-color);
-    color: var(--accent-primary);
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Var */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  color: var(--accent-primary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Var */
 }
 
 .guild-icon:hover {
-    border-radius: 30%;
-    transform: translateY(-2px);
-    background-color: var(--accent-primary);
-    color: var(--bg-main);
-    box-shadow: 0 6px 15px rgba(187, 154, 247, 0.4); /* Var */
+  border-radius: 30%;
+  transform: translateY(-2px);
+  background-color: var(--accent-primary);
+  color: var(--bg-main);
+  box-shadow: 0 6px 15px rgba(187, 154, 247, 0.4); /* Var */
 }
 
-
 #channels-column {
-    background-color: var(--bg-sidebar);
-    flex-direction: column;
-    margin: 8px 8px 8px 0;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    width: 240px; 
-    min-width: 240px;
-    max-width: 320px;
-    display: flex;
-    overflow: hidden;
+  background-color: var(--bg-sidebar);
+  flex-direction: column;
+  margin: 8px 8px 8px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  width: 240px;
+  min-width: 240px;
+  max-width: 320px;
+  display: flex;
+  overflow: hidden;
 }
 
 #channels-column .scroller {
-    flex: 1; 
-    overflow-y: auto;
-    min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .user-settings-panel {
-    flex-shrink: 0;
-    background: rgba(22, 22, 30, 0.8);
-    backdrop-filter: blur(10px);
-    margin: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  background: rgba(22, 22, 30, 0.8);
+  backdrop-filter: blur(10px);
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
 .chat-main {
-    flex: 1;
-    margin: 8px 8px 8px 0px;
-    background-color: var(--bg-panel);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Var */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  flex: 1;
+  margin: 8px 8px 8px 0px;
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Var */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .members-column {
-    max-width: 400px;
-    margin: 8px 8px 8px 0;
-    background-color: var(--bg-sidebar);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    min-width: 250px;
+  max-width: 400px;
+  margin: 8px 8px 8px 0;
+  background-color: var(--bg-sidebar);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  min-width: 250px;
 }
 
 .stat-badge {
   background: var(--accent-primary);
-  color: var(--bg-sidebar); 
+  color: var(--bg-sidebar);
   border-radius: 5px;
   text-align: center;
   font-size: 14px;
@@ -336,39 +380,39 @@ html, body, #root, .page-wrapper {
 }
 
 .user-settings-panel {
-    background: rgba(22, 22, 30, 0.8); /* Var */
-    backdrop-filter: blur(10px);
-    margin: 8px;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+  background: rgba(22, 22, 30, 0.8); /* Var */
+  backdrop-filter: blur(10px);
+  margin: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .user-info .name {
-    color: var(--text-bright);
-    font-weight: 600;
+  color: var(--text-bright);
+  font-weight: 600;
 }
 
 .header-base {
-    color: var(--accent-primary);
-    padding: 20px 20px 20px;
-    border-bottom: 1px dashed #9b75e1f5; /* Var */
-    background: var(--bg-main);
-    display: flex;
-    justify-content: space-between;
+  color: var(--accent-primary);
+  padding: 20px 20px 20px;
+  border-bottom: 1px dashed #9b75e1f5; /* Var */
+  background: var(--bg-main);
+  display: flex;
+  justify-content: space-between;
 }
 
 .scroller {
-    padding: 15px;
-     overflow-y: overlay;
-    height: 100%;
+  padding: 15px;
+  overflow-y: overlay;
+  height: 100%;
 }
 
 .disabled-btn {
-    opacity: 0.3;
-    pointer-events: none;
+  opacity: 0.3;
+  pointer-events: none;
 }

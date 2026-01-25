@@ -1,246 +1,254 @@
 .chat-view {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: hidden;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 .messages-scroller {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    overflow-anchor: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  overflow-anchor: none;
 }
 
 .chat-input-area {
-    padding: 0 20px 30px 20px;
-    flex-shrink: 0;
+  padding: 0 20px 30px 20px;
+  flex-shrink: 0;
 }
 
 .no-messages {
-    color: var(--bg-offline);
-    background: #1a1d2296;
-    border-radius: 20px;
-    padding: 10px;
-    border: 1px dashed var(--accent-primary);
-    text-align: center;
-    color: var(--text-main);
+  color: var(--bg-offline);
+  background: #1a1d2296;
+  border-radius: 20px;
+  padding: 10px;
+  border: 1px dashed var(--accent-primary);
+  text-align: center;
+  color: var(--text-main);
 }
 
 .no-messages h1 {
-    font-weight: 400;
+  font-weight: 400;
 }
 
 .input-wrapper {
-    background-color: #1a1d2296; /* Make this a variable */
-    border-radius: 8px;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--border-color);
+  background-color: #1a1d2296; /* Make this a variable */
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
 }
 
 .attachment-shelf {
-    gap: 12px;
-    padding: 10px 0;
-    margin-bottom: 5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    overflow-x: auto;
-    display: flex;
-    width: 100%;
+  gap: 12px;
+  padding: 10px 0;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  display: flex;
+  width: 100%;
 }
 
 .attachment-container {
-    position: relative;
-    background: var(--bg-alt);
-    border-radius: 4px;
-    padding: 8px;
-    flex-shrink: 0;
+  position: relative;
+  background: var(--bg-alt);
+  border-radius: 4px;
+  padding: 8px;
+  flex-shrink: 0;
 }
 
 .input-wrapper {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .attachment-preview {
-    max-height: 200px;
-    max-width: 200px;
-    border-radius: 4px;
-    display: block;
+  max-height: 200px;
+  max-width: 200px;
+  border-radius: 4px;
+  display: block;
 }
 
 .attachment-item {
-    width: auto;
-    height: auto;
-    max-width: 550px; 
-    max-height: 600px;
-    object-fit: contain; 
-    border-radius: 8px;
+  width: auto;
+  height: auto;
+  max-width: 550px;
+  max-height: 600px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .attachment-remove {
-    position: absolute;
-    top: -8px;
-    right: 0px;
-    background: var(--bg-dnd);
-    color: white;
-    border-radius: 4px;
-    padding: 6px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /*Var */
-    width: 20px;
-    text-align: center;
-    user-select: none;
+  position: absolute;
+  top: -8px;
+  right: 0px;
+  background: var(--bg-dnd);
+  color: white;
+  border-radius: 4px;
+  padding: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /*Var */
+  width: 20px;
+  text-align: center;
+  user-select: none;
 }
 
 .input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 .message-attachments {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.chat-image, .chat-video {
-    border-radius: 8px;
-    max-width: 100%;
-    cursor: zoom-in;
+.chat-image,
+.chat-video {
+  border-radius: 8px;
+  max-width: 100%;
+  cursor: zoom-in;
 }
 
 .add-media-btn {
-    cursor: pointer;
-    color: var(--text-muted);
-    user-select: none;
-    transition: 0.3s all;
-    opacity: 0.5;
+  cursor: pointer;
+  color: var(--text-muted);
+  user-select: none;
+  transition: 0.3s all;
+  opacity: 0.5;
 }
 
 .add-media-btn:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .input-wrapper input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text-bright);
-    width: 100%;
-    font-size: 16px;
-    opacity: 0.7;
-    transition: 0.3s all;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-bright);
+  width: 100%;
+  font-size: 16px;
+  opacity: 0.7;
+  transition: 0.3s all;
 }
 
 .input-wrapper input::placeholder {
-    color: var(--border-color)
+  color: var(--border-color);
 }
 
 .input-wrapper input:hover {
-    opacity: 1.0;
+  opacity: 1;
 }
 
 .messages-scroller::before {
-    content: '';
-    margin-top: auto;
+  content: '';
+  margin-top: auto;
 }
 
 .messages-scroller {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 8px;
-    overflow-anchor: none;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 8px;
+  overflow-anchor: none;
 }
 
 .message-group {
-    display: flex;
-    margin-top: 1.0625rem;
-    padding: 5px;
-    gap: 16px;
+  display: flex;
+  margin-top: 1.0625rem;
+  padding: 5px;
+  gap: 16px;
 }
 
-.message-group:hover, .message-sub:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+.message-group:hover,
+.message-sub:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .message-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 2px;
 }
 
 .message-details {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .message-header {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .author-name {
-    color: var(--text-bright);
-    font-weight: 500;
-    font-size: 1rem;
-    cursor: pointer;
+  color: var(--text-bright);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .author-name:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .timestamp {
-    color: var(--text-muted);
-    font-size: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
 }
 
 .message-content {
-    color: var(--text-main);
-    line-height: 1.375rem;
-    white-space: pre-wrap;
-    margin-top: 5px;
-    margin-bottom: -10px;
+  color: var(--text-main);
+  line-height: 1.375rem;
+  white-space: pre-wrap;
+  margin-top: 5px;
+  margin-bottom: -10px;
 }
 
 .message-sub {
-    padding: 0px 0px 0px 55px;
+  padding: 0px 0px 0px 55px;
 }
 
 .typing-status-wrapper {
-    position: absolute;
-    bottom: 8px;
-    left: 32px; 
-    height: 16px;
-    pointer-events: none;
+  position: absolute;
+  bottom: 8px;
+  left: 32px;
+  height: 16px;
+  pointer-events: none;
 }
 
 .typing-status-wrapper p {
-    font-size: 12px;
-    color: #dbdee1;
-    margin: 0;
-    line-height: 16px;
-    animation: fadeIn 0.2s ease-in-out alternate;
+  font-size: 12px;
+  color: #dbdee1;
+  margin: 0;
+  line-height: 16px;
+  animation: fadeIn 0.2s ease-in-out alternate;
 }
 
 .typing-status-wrapper strong {
-    color: #f2f3f5;
-    font-weight: 600;
+  color: #f2f3f5;
+  font-weight: 600;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-2px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
