@@ -1,4 +1,4 @@
-import './friendslist.css';
+import './friendsList.css';
 
 import { useState } from 'react';
 

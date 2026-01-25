@@ -1,9 +1,9 @@
-import './joinserver.css';
+import './joinServer.css';
 
 import { type JSX, useState } from 'react';
-import type { ErrorResponse } from 'react-router-dom';
 
 import { useModal } from '../../context/modal';
+import type { ErrorResponse } from '@/types/responses';
 
 export interface InviteResponseQuery {
   code: string;
@@ -105,6 +105,8 @@ export const JoinServerModal = (): JSX.Element => {
       }
 
       closeModal();
+
+      return;
     } catch (e) {
       console.error('Failed to join server', e);
 

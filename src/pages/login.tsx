@@ -90,6 +90,8 @@ function Login(): JSX.Element {
         clearTimeout(delayDebounceFn);
       };
     }
+
+    return;
   }, [customInstance, instance]);
 
   const handleInstanceSelect = (e: any) => {

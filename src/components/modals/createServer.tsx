@@ -1,4 +1,4 @@
-import './createserver.css';
+import './createServer.css';
 
 import { type JSX, useRef, useState } from 'react';
 

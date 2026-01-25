@@ -44,6 +44,8 @@ export const ConfirmationDeleteModal = ({
     if (type === 'server') {
       return deleteGuild(id);
     } //handle group dms, cuz like how else would you leave something
+
+    return;
   };
 
   return (

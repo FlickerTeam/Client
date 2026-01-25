@@ -1,4 +1,4 @@
-import './memberlist.css';
+import './memberList.css';
 
 import { type JSX, useEffect, useState } from 'react';
 

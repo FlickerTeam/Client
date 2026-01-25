@@ -1,4 +1,4 @@
-import './guildsidebar.css';
+import './guildSidebar.css';
 
 import { type JSX } from 'react';
 import { Link } from 'react-router-dom';

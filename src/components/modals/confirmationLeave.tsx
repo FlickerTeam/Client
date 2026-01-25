@@ -44,6 +44,8 @@ export const ConfirmationLeaveModal = ({
     if (type === 'server') {
       return leaveGuild(id);
     } //handle group dms, cuz like how else would you leave something
+
+    return;
   };
 
   return (

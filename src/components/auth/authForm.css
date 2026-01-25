@@ -144,4 +144,5 @@ button {
 button:hover {
   background: #cbb1ff; /* Var */
   transform: translateY(-1px);
+  color: var(--bg-bright);
 }

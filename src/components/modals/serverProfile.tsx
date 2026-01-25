@@ -1,4 +1,4 @@
-import './serverprofile.css';
+import './serverProfile.css';
 
 import type { JSX } from 'react';
 

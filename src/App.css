@@ -293,6 +293,25 @@ body,
   border: 1px solid var(--border-color);
 }
 
+::-webkit-scrollbar {
+    width: 13px;
+    height: 13px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark-alt)
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 10px;
+    border: 2px solid var(--bg-dark-alt)
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary)
+}
+
 .guild-icon-wrapper {
   position: relative;
   display: flex;

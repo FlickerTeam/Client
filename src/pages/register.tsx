@@ -94,6 +94,8 @@ function Register(): JSX.Element {
         clearTimeout(delayDebounceFn);
       };
     }
+
+    return;
   }, [customInstance, instance]);
 
   const Authorization = localStorage.getItem('Authorization');

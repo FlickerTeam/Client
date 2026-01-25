@@ -1,4 +1,4 @@
-import './chatarea.css';
+import './chatArea.css';
 
 import { type JSX, useEffect, useRef, useState } from 'react';
 

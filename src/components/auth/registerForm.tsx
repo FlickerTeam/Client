@@ -1,4 +1,4 @@
-import './authform.css';
+import './authForm.css';
 
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';

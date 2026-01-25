@@ -32,6 +32,8 @@ const LoadingScreen = ({
         clearTimeout(timeout);
       };
     }
+
+    return;
   }, [loadingText, fullMessage]);
 
   return (

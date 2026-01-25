@@ -1,4 +1,4 @@
-import './channelsidebar.css';
+import './channelSidebar.css';
 
 import { type JSX, useState } from 'react';
 

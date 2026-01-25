@@ -1,4 +1,4 @@
-import './currentuser.css';
+import './currentUser.css';
 
 import type { JSX } from 'react';
 

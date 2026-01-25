@@ -90,6 +90,7 @@ export const GatewayProvider = ({ children }: GatewayProviderProps) => {
         break;
       case 'GUILD_DELETE':
         window.dispatchEvent(new CustomEvent('gateway_guild_delete', { detail: data }));
+        break;
       case 'GUILD_MEMBER_LIST_UPDATE':
         setMemberLists((prev) => {
           const existing = prev[data.guild_id] || { ops: [], member_count: 0, groups: [] };
