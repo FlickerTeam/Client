@@ -1,4 +1,4 @@
-interface DomainsResponse {
+export interface DomainsResponse {
   cdn: string;
   assets?: string;
   gateway: string;
@@ -6,11 +6,11 @@ interface DomainsResponse {
   apiEndpoint: string;
 }
 
-interface ErrorResponse {
+export interface ErrorResponse {
   code?: number;
   message?: string;
 }
 
-interface SpacebarResponse {
+export interface SpacebarResponse {
   api: string;
 }

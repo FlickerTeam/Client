@@ -1,10 +1,10 @@
-interface LoginRequest {
+export interface LoginRequest {
   email?: string;
   login?: string;
   password: string;
 }
 
-interface RegisterRequest {
+export interface RegisterRequest {
   email: string;
   username: string;
   password: string;

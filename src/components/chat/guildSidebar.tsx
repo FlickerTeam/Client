@@ -3,6 +3,8 @@ import './guildsidebar.css';
 import { type JSX } from 'react';
 import { Link } from 'react-router-dom';
 
+import type { Guild } from '@/types/guild';
+
 import { useContextMenu } from '../../context/contextMenu';
 import { useGateway } from '../../context/gateway';
 import { useModal } from '../../context/modal';

@@ -2,6 +2,9 @@ import './channelsidebar.css';
 
 import { type JSX, useState } from 'react';
 
+import type { Channel } from '@/types/channel';
+import type { Guild } from '@/types/guild';
+
 import CurrentUser from './currentUser';
 
 const ChannelSidebar = ({

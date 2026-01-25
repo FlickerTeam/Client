@@ -1,6 +1,6 @@
 import './settings.css';
 
-import React, { JSX, useState } from 'react';
+import { type JSX, useState } from 'react';
 const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element => {
   const [activeTab, setActiveTab] = useState('My Account');
 

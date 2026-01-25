@@ -1,6 +1,6 @@
 import './memberlist.css';
 
-import { JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 
 import { useContextMenu } from '../../context/contextMenu';
 import { useGateway } from '../../context/gateway';
@@ -17,7 +17,7 @@ const MemberListItem = ({
   roles: any[];
 }): JSX.Element => {
   const { openContextMenu, closeContextMenu } = useContextMenu();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
 
   const status = member.presence?.status || 'offline';
   const avatarUrl =

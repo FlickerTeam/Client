@@ -1,6 +1,6 @@
 import './currentuser.css';
 
-import { JSX } from 'react';
+import type { JSX } from 'react';
 
 import { getDefaultAvatar } from '../../utils/avatar';
 

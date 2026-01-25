@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import type { JSX } from 'react';
 
 import { useModal } from '../../context/modal';
 
@@ -11,7 +11,7 @@ export const ConfirmationLeaveModal = ({
   id: string;
   type: string;
 }): JSX.Element => {
-  const { openModal, closeModal } = useModal();
+  const { closeModal } = useModal();
 
   const leaveGuild = async (id: string): Promise<boolean> => {
     try {

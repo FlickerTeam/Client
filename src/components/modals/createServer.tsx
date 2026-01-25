@@ -1,6 +1,6 @@
 import './createserver.css';
 
-import { JSX, useRef, useState } from 'react';
+import { type JSX, useRef, useState } from 'react';
 
 import { useModal } from '../../context/modal';
 

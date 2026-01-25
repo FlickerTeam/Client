@@ -1,6 +1,10 @@
 import { type JSX, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
+import type { ErrorStatusFields } from '@/types/errorStatusFields';
+import type { Instance } from '@/types/instance';
+import type { RegisterRequest } from '@/types/requests';
+
 import RegisterForm from '../components/auth/registerForm';
 import Brand from '../components/common/brand';
 import Footer from '../components/common/footer';

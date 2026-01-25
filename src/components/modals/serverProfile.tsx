@@ -1,11 +1,11 @@
 import './serverprofile.css';
 
-import { JSX } from 'react';
+import type { JSX } from 'react';
 
 import { useModal } from '../../context/modal';
 import { getDefaultAvatar } from '../../utils/avatar';
 export const ServerProfileModal = ({ member }: { member: any }): JSX.Element => {
-  const { closeModal } = useModal();
+  useModal();
 
   const status = member.presence?.status || 'offline';
   const avatarUrl = member.user.avatar

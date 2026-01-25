@@ -1,4 +1,4 @@
-interface Instance {
+export interface Instance {
   url: string;
   name: string;
   description: string;

@@ -3,6 +3,9 @@ import './authform.css';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
+import type { ErrorStatusFields } from '@/types/errorStatusFields';
+import type { Instance } from '@/types/instance';
+
 const LoginForm = ({
   handleInstanceSelect,
   handleSignin,

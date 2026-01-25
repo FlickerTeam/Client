@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
+import type { GatewayContextType, GatewayProviderProps } from '@/types/gateway';
+
 const GatewayContext = createContext<GatewayContextType | null>(null);
 
 export const GatewayProvider = ({ children }: GatewayProviderProps) => {

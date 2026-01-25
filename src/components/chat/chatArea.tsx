@@ -2,6 +2,8 @@ import './chatarea.css';
 
 import { type JSX, useEffect, useRef, useState } from 'react';
 
+import type { Channel } from '@/types/channel';
+
 import { useGateway } from '../../context/gateway';
 import { useModal } from '../../context/modal';
 import { getDefaultAvatar } from '../../utils/avatar';
@@ -13,7 +15,7 @@ interface MediaAttachment {
 }
 
 const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Element => {
-  const { openModal } = useModal();
+  useModal();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const { typingUsers, user, memberLists } = useGateway();
   const [messages, setMessages] = useState<any[]>([]);

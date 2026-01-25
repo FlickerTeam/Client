@@ -1,6 +1,6 @@
 import './modal.css';
 
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, type ReactNode, useContext, useState } from 'react';
 
 import { ModalRoot } from './modalRoot';
 

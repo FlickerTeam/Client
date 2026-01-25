@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 
 import Brand from '../components/common/brand';
 

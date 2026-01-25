@@ -1,4 +1,8 @@
-interface GatewayContextType {
+import type { ReactNode } from 'react';
+
+import type { Guild } from './guild';
+
+export interface GatewayContextType {
   isReady: boolean | null;
   guilds: Guild[] | [];
   user: any | null;
@@ -9,8 +13,8 @@ interface GatewayContextType {
   memberLists?: Record<string, any>;
 }
 
-interface GatewayProviderProps {
-  children?: React.ReactNode;
+export interface GatewayProviderProps {
+  children?: ReactNode;
   isReady?: boolean;
   guilds?: Guild[];
   user?: any;

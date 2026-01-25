@@ -1,6 +1,10 @@
 import { type JSX, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import type { Channel } from '@/types/channel';
+import type { GatewayContextType } from '@/types/gateway';
+import type { Guild } from '@/types/guild';
+
 import ChannelSidebar from '../components/chat/channelSidebar';
 import ChatArea from '../components/chat/chatArea';
 import { FriendsList } from '../components/chat/friendsList';

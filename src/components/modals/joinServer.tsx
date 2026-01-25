@@ -1,6 +1,7 @@
 import './joinserver.css';
 
 import { type JSX, useState } from 'react';
+import type { ErrorResponse } from 'react-router-dom';
 
 import { useModal } from '../../context/modal';
 
