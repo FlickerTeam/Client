@@ -49,7 +49,7 @@ const LoginSettingsSchema = z.object({
 });
 
 export const LoginResponseSchema = z.object({
-  user_id: z.string(),
+  user_id: z.string().nullish(),
   token: z.string().nullish(),
   user_settings: LoginSettingsSchema.nullish(),
   required_actions: z.array(z.string()).nullish(),

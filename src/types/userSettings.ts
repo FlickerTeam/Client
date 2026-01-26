@@ -6,7 +6,7 @@ export const CustomStatusSchema = z.object({
   text: z.string().max(128).nullish(),
   emoji_id: z.string().nullish(),
   emoji_name: z.string().nullish(),
-  expires_at: z.iso.datetime().nullish(),
+  expires_at: z.iso.datetime({ offset: true }).nullish(),
 });
 
 export const FriendSourceFlagsSchema = z.object({

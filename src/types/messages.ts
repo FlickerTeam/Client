@@ -24,7 +24,7 @@ export const EmbedSchema = z.object({
   type: z.string().nullish(),
   description: z.string().max(4096).nullish(),
   url: z.url().nullish(),
-  timestamp: z.iso.datetime().nullish(),
+  timestamp: z.iso.datetime({ offset: true }).nullish(),
   color: z.coerce.number().int().nullish(),
   footer: z
     .object({
@@ -88,7 +88,7 @@ export const PollSchema = z.object({
       }),
     }),
   ),
-  expiry: z.iso.datetime().nullish(),
+  expiry: z.iso.datetime({ offset: true }).nullish(),
   allow_multiselect: z.boolean(),
   layout_type: z.coerce.number().int(),
   results: z
@@ -127,8 +127,8 @@ export const MessageSchema = z.object({
   channel_id: z.string(),
   author: UserSchema.partial(),
   content: z.string(),
-  timestamp: z.iso.datetime(),
-  edited_timestamp: z.iso.datetime().nullish(),
+  timestamp: z.iso.datetime({ offset: true }),
+  edited_timestamp: z.iso.datetime({ offset: true }).nullish(),
   tts: z.boolean(),
   mention_everyone: z.boolean().nullish(),
   mentions: z.array(UserSchema.partial()),

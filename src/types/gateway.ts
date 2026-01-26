@@ -48,7 +48,7 @@ export const GuildMemberListUpdateSchema = z.object({
 });
 
 export const HelloSchema = z.object({
-  _trace: z.array(z.string()),
+  _trace: z.array(z.string()).nullish(),
   heartbeat_interval: z.coerce.number().int(),
 });
 
