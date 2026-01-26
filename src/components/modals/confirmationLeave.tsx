@@ -16,11 +16,11 @@ export const ConfirmationLeaveModal = ({
   const leaveGuild = async (id: string): Promise<boolean> => {
     try {
       const baseUrl = localStorage.getItem('selectedInstanceUrl');
-      const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/guilds/${id}`;
+      const url = `${baseUrl ?? ''}/${localStorage.getItem('defaultApiVersion') ?? ''}/guilds/${id}`;
 
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: { Authorization: localStorage.getItem('Authorization')! },
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
       });
 
       if (!response.ok) {
@@ -59,11 +59,12 @@ export const ConfirmationLeaveModal = ({
           gap: '15px',
         }}
       >
-        <button onClick={closeModal} className='join-btn'>
+        <button onClick={closeModal} className='primary-btn join-btn'>
           Cancel
         </button>
         <button
-          onClick={() => leavePlace(id, type)}
+          className='primary-btn'
+          onClick={() => void leavePlace(id, type)}
           style={{
             backgroundColor: 'var(--bg-dnd)',
             color: 'white',

@@ -29,7 +29,7 @@ export const ClearSelectedInstanceModal = (): JSX.Element => {
       const url = new URL(rawUrl);
 
       return url.host;
-    } catch (e) {
+    } catch {
       return rawUrl.replace(/(^\w+:|^)\/\//, '').split('/')[0];
     }
   };
@@ -42,8 +42,8 @@ export const ClearSelectedInstanceModal = (): JSX.Element => {
         </p>
         <p>
           <b>
-            This will log you out and you won't be able to chat on this instance unless you select
-            it again.
+            This will log you out and you won&rsquo;t be able to chat on this instance unless you
+            select it again.
           </b>
         </p>
         <div
@@ -52,10 +52,11 @@ export const ClearSelectedInstanceModal = (): JSX.Element => {
             gap: '15px',
           }}
         >
-          <button onClick={closeModal} className='join-btn'>
+          <button onClick={closeModal} className='primary-btn join-btn'>
             Cancel
           </button>
           <button
+            className='primary-btn'
             onClick={() => {
               clearSelectedInstance();
             }}

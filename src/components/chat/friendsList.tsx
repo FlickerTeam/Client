@@ -2,17 +2,18 @@ import './friendsList.css';
 
 import { useState } from 'react';
 
+import type { Relationship } from '@/types/relationship';
+
+import { useAssetsUrl } from '../../context/assetsUrl';
 import { getDefaultAvatar } from '../../utils/avatar';
 
-export const FriendsList = ({
-  friends,
-  onRequestUpdate,
-  onRequestDelete,
-}: {
-  friends: any[];
-  onRequestUpdate: any;
-  onRequestDelete: any;
-}) => {
+interface FriendsListProps {
+  friends: Relationship[];
+  onRequestUpdate: (friend: Relationship) => void;
+  onRequestDelete: (friendId: string) => void;
+}
+
+export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: FriendsListProps) => {
   const [filter, setFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -38,15 +39,15 @@ export const FriendsList = ({
     return filtered.sort((a, b) => a.user.username.localeCompare(b.user.username));
   };
 
-  const acceptFriendRequest = async (friend: any) => {
+  const acceptFriendRequest = async (friend: Relationship) => {
     onRequestUpdate({ ...friend, type: 1 });
 
     try {
       const baseUrl = localStorage.getItem('selectedInstanceUrl');
-      const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/users/@me/relationships/${friend.id}`;
+      const url = `${baseUrl ?? ''}/${localStorage.getItem('defaultApiVersion') ?? ''}/users/@me/relationships/${friend.id}`;
 
       const response = await fetch(url, {
-        headers: { Authorization: localStorage.getItem('Authorization')! },
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
         method: 'PUT',
         body: JSON.stringify({}),
       });
@@ -59,15 +60,15 @@ export const FriendsList = ({
     }
   };
 
-  const declineFriendRequest = async (friend: any): Promise<boolean> => {
+  const declineFriendRequest = async (friend: Relationship): Promise<boolean> => {
     onRequestDelete(friend.id);
 
     try {
       const baseUrl = localStorage.getItem('selectedInstanceUrl');
-      const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/users/@me/relationships/${friend.id}`;
+      const url = `${baseUrl ?? ''}/${localStorage.getItem('defaultApiVersion') ?? ''}/users/@me/relationships/${friend.id}`;
 
       const response = await fetch(url, {
-        headers: { Authorization: localStorage.getItem('Authorization')! },
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
         method: 'DELETE',
       });
 
@@ -79,10 +80,24 @@ export const FriendsList = ({
     }
   };
 
-  const getAvatar = (friend: any) => {
-    return friend.avatar
-      ? `${localStorage.getItem('selectedAssetsUrl')!}/avatars/${friend.id}/${friend.avatar}.png`
-      : `${localStorage.getItem('selectedCdnUrl')!}/assets/${getDefaultAvatar(friend)}.png`;
+  const FriendAvatar = ({ friend }: { friend: Relationship }) => {
+    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+      `/assets/${getDefaultAvatar(friend) ?? ''}.png`,
+    );
+    const avatarUrl = friend.user.avatar
+      ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${friend.id}/${friend.user.avatar}.png`
+      : defaultAvatarUrl;
+
+    return (
+      <img
+        src={avatarUrl || ''}
+        className='avatar-img'
+        alt=''
+        onError={() => {
+          rollover();
+        }}
+      />
+    );
   };
 
   const displayFriends = getFilteredFriends();
@@ -147,10 +162,8 @@ export const FriendsList = ({
               <div key={friend.id} className='friend-item-row'>
                 <div className='friend-info'>
                   <div className='avatar-wrapper'>
-                    <img src={getAvatar(friend)} className='avatar-img' alt='' />
-                    {friend.type === 1 && friend.status && (
-                      <div className={`status-dot ${friend.status.toLowerCase()}`} />
-                    )}
+                    <FriendAvatar friend={friend} />
+                    {friend.type === 1 && <div className={`status-dot ${friend.status ?? ''}`} />}
                   </div>
                   <div className='friend-text'>
                     <div className='friend-name-row'>
@@ -158,7 +171,7 @@ export const FriendsList = ({
                       <span className='discriminator'>#{friend.user.discriminator}</span>
                     </div>
 
-                    {(filter === 'PENDING' || (friend.type === 1 && friend.status)) && (
+                    {(filter === 'PENDING' || friend.type === 1) && (
                       <div className='friend-status-row'>
                         <span className='status-text'>
                           {filter === 'PENDING'
@@ -176,18 +189,22 @@ export const FriendsList = ({
                     if (filter === 'PENDING' && friend.type === 3) {
                       return (
                         <>
-                          <div
-                            className='action-button online'
-                            onClick={() => acceptFriendRequest(friend)}
+                          <button
+                            className='action-btn online'
+                            onClick={() => {
+                              void acceptFriendRequest(friend);
+                            }}
                           >
                             ACCEPT
-                          </div>
-                          <div
-                            className='action-button dnd'
-                            onClick={() => declineFriendRequest(friend)}
+                          </button>
+                          <button
+                            className='action-btn dnd'
+                            onClick={() => {
+                              void declineFriendRequest(friend);
+                            }}
                           >
                             DECLINE
-                          </div>
+                          </button>
                         </>
                       );
                     }
@@ -195,12 +212,14 @@ export const FriendsList = ({
                     if (filter === 'PENDING' && friend.type === 4) {
                       return (
                         <>
-                          <div
-                            className='action-button dnd'
-                            onClick={() => declineFriendRequest(friend)}
+                          <button
+                            className='action-btn dnd'
+                            onClick={() => {
+                              void declineFriendRequest(friend);
+                            }}
                           >
                             X
-                          </div>
+                          </button>
                         </>
                       );
                     }

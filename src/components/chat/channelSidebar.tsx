@@ -3,7 +3,10 @@ import './channelSidebar.css';
 import { type JSX, useState } from 'react';
 
 import type { Channel } from '@/types/channel';
-import type { Guild } from '@/types/guild';
+import type { Guild } from '@/types/guilds';
+import type { StatusEnum } from '@/types/presences';
+import type { Relationship } from '@/types/relationship';
+import type { User } from '@/types/users';
 
 import CurrentUser from './currentUser';
 
@@ -18,11 +21,11 @@ const ChannelSidebar = ({
 }: {
   selectedGuild?: Guild | null;
   selectedChannel?: Channel | null;
-  onSelectChannel: any;
-  user: any;
-  relationships: any;
-  status: any;
-  onSettingsClicked: any;
+  onSelectChannel: (channel: Channel | null) => void;
+  user: User | null;
+  relationships: Relationship[];
+  status: StatusEnum;
+  onSettingsClicked: () => void;
 }): JSX.Element => {
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
@@ -31,15 +34,17 @@ const ChannelSidebar = ({
       <div id='channels-column'>
         <header className='header-base'>Direct Messages</header>
         <div className='scroller'>
-          <div
+          <button
             className={`channel-item ${!selectedChannel ? 'active' : ''}`}
-            onClick={() => onSelectChannel(null)}
+            onClick={() => {
+              onSelectChannel(null);
+            }}
           >
             <span className='channel-hash'>
-              ({relationships.filter((x: any) => x.type === 1).length ?? 0})
+              ({relationships.filter((x: Relationship) => x.type === 1).length})
             </span>
             <span className='channel-name'>Friends</span>
-          </div>
+          </button>
         </div>
         <CurrentUser user={user} onSettingsClicked={onSettingsClicked} status={status} />
       </div>
@@ -47,19 +52,21 @@ const ChannelSidebar = ({
   }
 
   const allChannels = selectedGuild.channels;
-  const categoryChannels = allChannels.filter((c: any) => c.type === 4); //Text Channels, Voice Channels, other channels..
-  const categorizedChannels = allChannels.filter((c: any) => c.parent_id !== null);
-  const nonCategorizedChannels = allChannels.filter((c: any) => c.parent_id === null);
+  const categoryChannels = allChannels.filter((c: Channel) => c.type === 4); //Text Channels, Voice Channels, other channels..
+  const categorizedChannels = allChannels.filter((c: Channel) => c.parent_id !== null);
+  const nonCategorizedChannels = allChannels.filter((c: Channel) => c.parent_id === null);
 
   const renderChannel = (channel: Channel) => (
-    <div
+    <button
       key={channel.id}
       className={`channel-item ${selectedChannel?.id === channel.id ? 'active' : ''} ${channel.type === 2 ? 'not-selectable' : ''}`}
-      onClick={() => onSelectChannel(channel)}
+      onClick={() => {
+        onSelectChannel(channel);
+      }}
     >
       <span className='channel-hash'>{channel.type === 2 ? '' : '#'}</span>
       <span className='channel-name'>{channel.name}</span>
-    </div>
+    </button>
   );
 
   const toggleCategory = (categoryId: string) => {
@@ -74,16 +81,16 @@ const ChannelSidebar = ({
       <header className='header-base'>{selectedGuild.name}</header>
       <div className='scroller'>
         {categoryChannels
-          .sort((a: any, b: any) => a.position - b.position)
-          .map((category: any) => {
+          .sort((a: Channel, b: Channel) => (a.position ?? 0) - (b.position ?? 0))
+          .map((category: Channel) => {
             const isCollapsed = collapsedCategories[category.id];
             const children = categorizedChannels
-              .filter((c: any) => c.parent_id === category.id)
-              .sort((a: any, b: any) => a.position - b.position);
+              .filter((c: Channel) => c.parent_id === category.id)
+              .sort((a: Channel, b: Channel) => (a.position ?? 0) - (b.position ?? 0));
 
             return (
               <div key={category.id} className='category-wrapper'>
-                <div
+                <button
                   className='category-header'
                   onClick={() => {
                     toggleCategory(category.id);
@@ -93,8 +100,8 @@ const ChannelSidebar = ({
                   <span className={`arrow ${isCollapsed ? '' : 'expanded'}`}>
                     {isCollapsed ? '›' : '⌄'}
                   </span>
-                  {category.name.toUpperCase()}
-                </div>
+                  {category.name?.toUpperCase()}
+                </button>
                 {!isCollapsed && (
                   <div className='category-children'>{children.map(renderChannel)}</div>
                 )}
@@ -102,7 +109,7 @@ const ChannelSidebar = ({
             );
           })}
 
-        {nonCategorizedChannels.map((channel: any) => (
+        {nonCategorizedChannels.map((channel: Channel) => (
           <div key={`wrapper-${channel.id}`} className='category-children'>
             {renderChannel(channel)}
           </div>

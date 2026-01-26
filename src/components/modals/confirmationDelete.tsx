@@ -16,11 +16,11 @@ export const ConfirmationDeleteModal = ({
   const deleteGuild = async (id: string): Promise<boolean> => {
     try {
       const baseUrl = localStorage.getItem('selectedInstanceUrl');
-      const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/guilds/${id}/delete`;
+      const url = `${baseUrl ?? ''}/${localStorage.getItem('defaultApiVersion') ?? ''}/guilds/${id}/delete`;
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: { Authorization: localStorage.getItem('Authorization')! },
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
       });
 
       if (!response.ok) {
@@ -51,10 +51,10 @@ export const ConfirmationDeleteModal = ({
   return (
     <div className='confirmation-leave-modal'>
       <p>
-        Are you sure you want to delete the {type} "<b>{name}"</b>?
+        Are you sure you want to delete the {type} &ldquo;<b>{name}&rdquo;</b>?
       </p>
       <p>
-        <b>Once it's gone, it's gone.</b>
+        <b>Once it&rsquo;s gone, it&rsquo;s gone.</b>
       </p>
       <div
         className='modal-footer'
@@ -62,11 +62,12 @@ export const ConfirmationDeleteModal = ({
           gap: '15px',
         }}
       >
-        <button onClick={closeModal} className='join-btn'>
+        <button onClick={closeModal} className='primary-btn join-btn'>
           Cancel
         </button>
         <button
-          onClick={() => deletePlace(id, type)}
+          className='primary-btn'
+          onClick={() => void deletePlace(id, type)}
           style={{
             backgroundColor: 'var(--bg-dnd)',
             color: 'white',

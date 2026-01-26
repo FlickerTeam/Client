@@ -234,7 +234,7 @@
   gap: 5px;
 }
 
-.role-removal-button {
+.role-removal-btn {
   opacity: 0;
   display: flex;
   align-items: center;
@@ -244,17 +244,17 @@
   border-radius: 8px;
 }
 
-.role-removal-button:hover {
+.role-removal-btn:hover {
   background-color: rgb(255 255 255 / 10%);
   color: var(--accent-primary);
 }
 
-.role-pill:hover .role-removal-button {
+.role-pill:hover .role-removal-btn {
   right: 4px;
   opacity: 1;
 }
 
-.role-removal-button svg {
+.role-removal-btn svg {
   width: 14px;
   height: 14px;
 }
@@ -270,7 +270,7 @@
   border-color: green;
 }
 
-.add-role-button {
+.add-role-btn {
   cursor: pointer;
   background: var(--bg-panel);
   width: 24px;

@@ -7,7 +7,7 @@ export const JoinOrCreateServerModal = (): JSX.Element => {
 
   return (
     <div className='join-server-modal'>
-      <h2>Let's get the party started!</h2>
+      <h2>Let&rsquo;s get the party started!</h2>
       <p>Do you want to join or create a new server?</p>
       <div
         className='modal-footer'
@@ -16,6 +16,7 @@ export const JoinOrCreateServerModal = (): JSX.Element => {
         }}
       >
         <button
+          className='primary-btn'
           onClick={() => {
             openModal('CREATE_SERVER');
           }}
@@ -26,7 +27,7 @@ export const JoinOrCreateServerModal = (): JSX.Element => {
           onClick={() => {
             openModal('JOIN_SERVER');
           }}
-          className='join-btn'
+          className='primary-btn join-btn'
         >
           Join a Server
         </button>

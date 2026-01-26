@@ -104,6 +104,7 @@ function App(): JSX.Element {
         <LoadingScreen message={loadingStatus}>
           {cantLoad && (
             <button
+              className='primary-btn'
               onClick={() => {
                 openModal('CLEAR_SELECTED_INSTANCE');
               }}

@@ -1,15 +1,15 @@
-.home-button {
+.home-btn {
   margin-top: 10px;
   margin-bottom: 20px;
 }
 
-.home-button a {
+.home-btn a {
   font-size: 15px;
   text-decoration: underline dotted;
   color: var(--accent-primary);
 }
 
-.home-button a:hover {
+.home-btn a:hover {
   color: rgb(227 132 253); /* Make this a var */
 }
 

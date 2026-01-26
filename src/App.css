@@ -294,22 +294,22 @@ body,
 }
 
 ::-webkit-scrollbar {
-    width: 13px;
-    height: 13px;
+  width: 13px;
+  height: 13px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-dark-alt)
+  background: var(--bg-dark-alt);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--accent-primary);
-    border-radius: 10px;
-    border: 2px solid var(--bg-dark-alt)
+  background: var(--accent-primary);
+  border-radius: 10px;
+  border: 2px solid var(--bg-dark-alt);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-secondary)
+  background: var(--accent-secondary);
 }
 
 .guild-icon-wrapper {
@@ -400,6 +400,41 @@ body,
   background: var(--bg-main);
   display: flex;
   justify-content: space-between;
+}
+
+button {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primary-btn {
+  background: var(--accent-primary);
+  color: #16161e;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  width: 100%;
+  transition:
+    transform 0.1s,
+    background 0.2s;
+}
+
+.primary-btn:hover {
+  background: #cbb1ff;
+  transform: translateY(-1px);
+  color: var(--bg-bright);
+}
+
+.plain-btn:hover {
+  background: inherit;
+  transform: none;
+  color: inherit;
+  border: none;
 }
 
 .disabled-btn {

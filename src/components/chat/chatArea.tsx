@@ -1,10 +1,12 @@
 import './chatArea.css';
 
-import { type JSX, useEffect, useRef, useState } from 'react';
+import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 
 import type { Channel } from '@/types/channel';
+import { type Message, MessageListSchema } from '@/types/messages';
 
-import { useGateway } from '../../context/gateway';
+import { useAssetsUrl } from '../../context/assetsUrl';
+import { useGateway } from '../../context/gatewayContext';
 import { useModal } from '../../context/modal';
 import { getDefaultAvatar } from '../../utils/avatar';
 
@@ -18,7 +20,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
   useModal();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const { typingUsers, user, memberLists } = useGateway();
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [chatMessage, setChatMessage] = useState('');
   const lastTypingSent = useRef<number>(0);
   const isloadingMore = useRef(false);
@@ -65,28 +67,31 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
     scrollToBottom();
   }, [messages]);
 
-  const fetchMessages = async (limit: number, before?: string) => {
-    const baseUrl = localStorage.getItem('selectedInstanceUrl');
-    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/messages?limit=${limit}${before ? `&before=${before}` : ''}`;
+  const fetchMessages = useCallback(
+    async (limit: number, before?: string) => {
+      const baseUrl = localStorage.getItem('selectedInstanceUrl') ?? '';
+      const version = localStorage.getItem('defaultApiVersion') ?? '';
+      const url = `${baseUrl}/${version}/channels/${selectedChannel.id}/messages?limit=${String(limit)}${before ? `&before=${before}` : ''}`;
 
-    const response = await fetch(url, {
-      headers: { Authorization: localStorage.getItem('Authorization')! },
-    });
+      const response = await fetch(url, {
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
+      });
 
-    if (!response.ok) return [];
+      if (!response.ok) return [];
 
-    const data = await response.json();
-
-    return data;
-  };
+      const data: unknown = await response.json();
+      return MessageListSchema.parse(data);
+    },
+    [selectedChannel.id],
+  );
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!chatMessage.trim() && attachments.length === 0) return;
 
-    const baseUrl = localStorage.getItem('selectedInstanceUrl');
-    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/messages`;
+    const baseUrl = localStorage.getItem('selectedInstanceUrl') ?? '';
+    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion') ?? ''}/channels/${selectedChannel.id}/messages`;
 
     const formData = new FormData();
 
@@ -100,7 +105,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
     formData.append('payload_json', JSON.stringify(payload));
 
     attachments.forEach((at, index) => {
-      formData.append(`files[${index}]`, at.file);
+      formData.append(`files[${index.toString()}]`, at.file);
     });
 
     setChatMessage('');
@@ -113,7 +118,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          Authorization: localStorage.getItem('Authorization')!,
+          Authorization: localStorage.getItem('Authorization') ?? '',
         },
         body: formData,
       });
@@ -140,7 +145,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
     if (scroller.scrollTop === 0) {
       isloadingMore.current = true;
 
-      const oldestMsgId = messages[0].id;
+      const oldestMsgId = messages[0]?.id;
       const prevHeight = scroller.scrollHeight;
 
       const olderMessages = await fetchMessages(50, oldestMsgId);
@@ -197,7 +202,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
   }, [messages]);
 
   useEffect(() => {
-    if (!selectedChannel?.id) {
+    if (!selectedChannel.id) {
       setMessages([]);
       return;
     }
@@ -206,15 +211,15 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
 
     setMessages([]);
 
-    fetchMessages(50).then((data) => {
-      if (data && data.length > 0) {
-        setMessages(data.reverse());
+    void fetchMessages(50).then((data) => {
+      if (data.length > 0) {
+        setMessages([...data].reverse());
       }
     });
-  }, [selectedChannel?.id]);
+  }, [selectedChannel.id, fetchMessages]);
 
   useEffect(() => {
-    const handleNewMessage = (event: any) => {
+    const handleNewMessage = (event: CustomEvent<Message>) => {
       const newMessage = event.detail;
 
       if (newMessage.channel_id === selectedChannel.id) {
@@ -233,7 +238,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
     return () => {
       window.removeEventListener('gateway_message', handleNewMessage);
     };
-  }, [selectedChannel?.id]);
+  }, [selectedChannel.id]);
 
   const renderMessages = () => {
     if (messages.length === 0) {
@@ -245,24 +250,40 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
       );
     }
 
-    return messages.map((msg: any, index: number) => {
+    const AuthorAvatar = ({ msg }: { msg: Message }) => {
+      const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+        `/assets/${getDefaultAvatar(msg.author) ?? ''}.png`,
+      );
+      const avatarUrl = msg.author.avatar
+        ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${msg.author.id ?? ''}/${msg.author.avatar}.png`
+        : defaultAvatarUrl;
+
+      return (
+        <img
+          src={avatarUrl}
+          className='avatar-img'
+          alt=''
+          onError={() => {
+            rollover();
+          }}
+        />
+      );
+    };
+
+    return messages.map((msg: Message, index: number) => {
       const prevMsg = messages[index - 1];
       const isNewGroup =
-        !prevMsg ||
-        prevMsg.author.id !== msg.author.id ||
-        new Date(msg.timestamp).getTime() - new Date(prevMsg.timestamp).getTime() > 420000;
-      const avatarUrl = msg.author?.avatar
-        ? `${localStorage.getItem('selectedAssetsUrl')!}/avatars/${msg.author.id}/${msg.author.avatar}.png`
-        : `${localStorage.getItem('selectedCdnUrl')!}/assets/${getDefaultAvatar(msg.author)}.png`;
+        prevMsg?.author.id !== msg.author.id ||
+        new Date(msg.timestamp).getTime() - new Date(prevMsg?.timestamp ?? '').getTime() > 420000;
 
       const msgContent = (
         <>
           <div className='message-content'>
             {msg.content}
-            {msg.attachments && msg.attachments.length > 0 && (
+            {msg.attachments.length > 0 && (
               <div className='message-attachments'>
-                {msg.attachments.map((attachment: any) => {
-                  const isVideo = attachment.filename.match(/\.(mp4|webm|mov)$/i);
+                {msg.attachments.map((attachment: NonNullable<Message['attachments']>[number]) => {
+                  const isVideo = /\.(mp4|webm|mov)$/i.exec(attachment.filename);
 
                   return (
                     <div key={attachment.id} className='attachment-item'>
@@ -271,8 +292,10 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
                           src={attachment.url}
                           controls
                           className='chat-video'
-                          style={{ maxWidth: attachment.width || '100%' }}
-                        />
+                          style={{ maxWidth: attachment.width ?? '100%' }}
+                        >
+                          <track kind='captions' />
+                        </video>
                       ) : (
                         <a href={attachment.url} target='_blank' rel='noreferrer'>
                           <img
@@ -280,7 +303,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
                             alt={attachment.filename}
                             className='chat-image'
                             style={{
-                              width: attachment.width,
+                              width: attachment.width ?? 'auto',
                               height: 'auto',
                               maxHeight: 400,
                             }}
@@ -299,7 +322,7 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
       if (isNewGroup) {
         return (
           <div key={msg.id} className='message-group'>
-            <img src={avatarUrl} className='avatar-img' alt='' />
+            <AuthorAvatar msg={msg} />
             <div className='message-details'>
               <div className='message-header'>
                 <span className='author-name'>{msg.author.username}</span>
@@ -326,18 +349,18 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
 
     if (now - lastTypingSent.current > 3000 && message.length > 0) {
       lastTypingSent.current = now;
-      sendTypingStart();
+      void sendTypingStart();
     }
   };
 
   const sendTypingStart = async () => {
-    const baseUrl = localStorage.getItem('selectedInstanceUrl');
-    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/channels/${selectedChannel.id}/typing`;
+    const baseUrl = localStorage.getItem('selectedInstanceUrl') ?? '';
+    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion') ?? ''}/channels/${selectedChannel.id}/typing`;
 
     try {
       await fetch(url, {
         method: 'POST',
-        headers: { Authorization: localStorage.getItem('Authorization')! },
+        headers: { Authorization: localStorage.getItem('Authorization') ?? '' },
       });
     } catch (e) {
       console.error('Failed to send typing status', e);
@@ -345,20 +368,20 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
   };
 
   const handleTypingStatus = () => {
-    if (!selectedChannel?.id) return null;
+    if (!selectedChannel.id) return null;
 
-    const channelTypingMap = typingUsers[selectedChannel.id] || {};
+    const channelTypingMap = typingUsers[selectedChannel.id] ?? {};
     const typingIds = Object.keys(channelTypingMap).filter((id) => id !== user?.id);
 
     if (typingIds.length === 0) return null;
 
     const names = typingIds.map((id) => {
       const guildId = selectedChannel.guild_id;
-      const listData = memberLists?.[guildId!];
-      const items = listData?.ops.find((op: any) => op.op === 'SYNC')?.items || [];
-      const memberEntry = items.find((item: any) => item.member?.user.id === id);
+      const listData = memberLists?.[guildId ?? ''];
+      const items = listData?.ops.find((op) => op.op === 'SYNC')?.items ?? [];
+      const memberEntry = items.find((item) => item.member?.user.id === id);
 
-      return memberEntry?.member.user.username || 'Someone';
+      return memberEntry?.member?.user.username ?? 'Someone';
     });
 
     const reactKeyThing = names.join('-');
@@ -388,61 +411,75 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
   };
 
   return (
-    selectedChannel && (
-      <main className='chat-main'>
-        <header className='header-base'>
-          # {selectedChannel.name}
-          {selectedChannel.topic ? ` | ${selectedChannel.topic}` : ''}
-        </header>
-        <div className='chat-view'>
-          <div className='messages-scroller scroller' ref={scrollerRef} onScroll={handleScroll}>
-            {renderMessages()}
-          </div>
-          <form className='chat-input-area' onSubmit={handleSendMessage}>
-            <div className='input-wrapper'>
-              {attachments.length > 0 && (
-                <div className='attachment-shelf'>
-                  {attachments.map((at) => (
-                    <div key={at.id} className='attachment-container'>
-                      <img src={at.preview} className='attachment-preview' />
-                      <div
-                        className='attachment-remove'
-                        onClick={() => {
-                          removeAttachment(at.id);
-                        }}
-                      >
-                        X
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div className='input-row'>
-                <div className='add-media-btn' onClick={() => fileInputRef.current?.click()}>
-                  +
-                </div>
-                <input
-                  type='text'
-                  placeholder={`Message #${selectedChannel.name}`}
-                  value={chatMessage}
-                  onChange={(e) => {
-                    updateChat(e.target.value);
-                  }}
-                />
-                <input
-                  type='file'
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }}
-                  multiple
-                />
-              </div>
-            </div>
-          </form>
-          <div className='typing-status-wrapper'>{handleTypingStatus()}</div>
+    <main className='chat-main'>
+      <header className='header-base'>
+        # {selectedChannel.name}
+        {selectedChannel.topic ? ` | ${selectedChannel.topic}` : ''}
+      </header>
+      <div className='chat-view'>
+        <div
+          className='messages-scroller scroller'
+          ref={scrollerRef}
+          onScroll={() => {
+            void handleScroll();
+          }}
+        >
+          {renderMessages()}
         </div>
-      </main>
-    )
+        <form
+          className='chat-input-area'
+          onSubmit={(e) => {
+            void handleSendMessage(e);
+          }}
+        >
+          <div className='input-wrapper'>
+            {attachments.length > 0 && (
+              <div className='attachment-shelf'>
+                {attachments.map((at) => (
+                  <div key={at.id} className='attachment-container'>
+                    <img src={at.preview} className='attachment-preview' alt='Attachment preview' />
+                    <button
+                      type='button'
+                      className='attachment-remove'
+                      onClick={() => {
+                        removeAttachment(at.id);
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className='input-row'>
+              <button
+                type='button'
+                className='add-media-btn'
+                onClick={() => fileInputRef.current?.click()}
+              >
+                +
+              </button>
+              <input
+                type='text'
+                placeholder={`Message #${selectedChannel.name ?? ''}`}
+                value={chatMessage}
+                onChange={(e) => {
+                  updateChat(e.target.value);
+                }}
+              />
+              <input
+                type='file'
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+                multiple
+              />
+            </div>
+          </div>
+        </form>
+        <div className='typing-status-wrapper'>{handleTypingStatus()}</div>
+      </div>
+    </main>
   );
 };
 

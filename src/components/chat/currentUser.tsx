@@ -2,6 +2,9 @@ import './currentUser.css';
 
 import type { JSX } from 'react';
 
+import type { User } from '@/types/users';
+
+import { useAssetsUrl } from '../../context/assetsUrl';
 import { getDefaultAvatar } from '../../utils/avatar';
 
 const CurrentUser = ({
@@ -9,32 +12,46 @@ const CurrentUser = ({
   status,
   onSettingsClicked,
 }: {
-  user: any;
+  user: User | null;
   status?: string;
-  onSettingsClicked?: any;
+  onSettingsClicked?: () => void;
 }): JSX.Element => {
-  const cdnUrl = localStorage.getItem('selectedCdnUrl')!;
-  const assetsUrl = localStorage.getItem('selectedAssetsUrl')!;
-  const avatarUrl = user?.avatar
-    ? `${assetsUrl}/avatars/${user.id}/${user.avatar}.png`
-    : `${cdnUrl}/assets/${getDefaultAvatar(user)}.png`;
+  const UserAvatar = ({ user }: { user: User | null }) => {
+    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+      `/assets/${getDefaultAvatar(user) ?? ''}.png`,
+    );
+    const avatarUrl = user?.avatar
+      ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${user.id}/${user.avatar}.png`
+      : defaultAvatarUrl;
+
+    return (
+      <img
+        src={avatarUrl || ''}
+        alt='User Avatar'
+        className='avatar-img'
+        onError={() => {
+          rollover();
+        }}
+      />
+    );
+  };
 
   return (
     <section className='user-settings-panel'>
       <div className='avatar-wrapper'>
-        <img src={avatarUrl} alt='User Avatar' className='avatar-img' />
-        <div className={`status-dot ${status}`}></div>
+        <UserAvatar user={user} />
+        <div className={`status-dot ${status ?? ''}`}></div>
       </div>
 
       <div className='user-info'>
-        <span className='name'>{user?.username}</span>
+        <span className='name'>{user?.username ?? ''}</span>
         <span className='discriminator'>
-          {user?.discriminator !== '0' ? `#${user?.discriminator}` : ''}
+          {user?.discriminator !== '0' ? `#${user?.discriminator ?? ''}` : ''}
         </span>
       </div>
 
       <div className='buttons'>
-        <button title='User Settings' onClick={onSettingsClicked}>
+        <button className='primary-btn' title='User Settings' onClick={onSettingsClicked}>
           Edit
         </button>
       </div>

@@ -89,20 +89,6 @@ body {
   font-size: 10px;
 }
 
-button {
-  background: var(--accent-primary);
-  color: #16161e;
-  border: none;
-  padding: 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition:
-    transform 0.1s,
-    background 0.2s;
-  width: 100%;
-}
-
 .layout-container {
   display: flex;
   align-items: center;
@@ -139,10 +125,4 @@ button {
 .preview-tab.active {
   background: var(--bg-input);
   color: var(--accent-primary);
-}
-
-button:hover {
-  background: #cbb1ff; /* Var */
-  transform: translateY(-1px);
-  color: var(--bg-bright);
 }

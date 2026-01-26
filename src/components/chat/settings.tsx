@@ -1,7 +1,14 @@
 import './settings.css';
 
+import type { User } from '@/types/users';
+
+interface SettingsProps {
+  user: User | null;
+  onClose: () => void;
+}
+
 import { type JSX, useState } from 'react';
-const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element => {
+const Settings = ({ user, onClose }: SettingsProps): JSX.Element => {
   const [activeTab, setActiveTab] = useState('My Account');
 
   const sidebarItems = [
@@ -26,16 +33,16 @@ const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element =
             <div className='account-card'>
               <div className='account-edit-box'>
                 <div className='field-group'>
-                  <label>USERNAME</label>
+                  <span>USERNAME</span>
                   <div className='field-row'>
                     <span>
-                      {user.username}#{user.discriminator}
+                      {user?.username}#{user?.discriminator}
                     </span>
                     <button className='small-edit-btn'>Edit</button>
                   </div>
                 </div>
                 <div className='field-group'>
-                  <label>EMAIL</label>
+                  <span>EMAIL</span>
                   <div className='field-row'>
                     <span>********@gmail.com</span>
                     <button className='small-edit-btn'>Edit</button>
@@ -58,7 +65,7 @@ const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element =
             <div key={group.category} className='sidebar-group'>
               <div className='sidebar-category'>{group.category}</div>
               {group.items.map((item) => (
-                <div
+                <button
                   key={item}
                   className={`sidebar-item ${activeTab === item ? 'active' : ''}`}
                   onClick={() => {
@@ -66,7 +73,7 @@ const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element =
                   }}
                 >
                   {item}
-                </div>
+                </button>
               ))}
             </div>
           ))}
@@ -95,9 +102,9 @@ const Settings = ({ user, onClose }: { user: any; onClose: any }): JSX.Element =
       <div className='settings-content-wrapper'>
         <div className='settings-main-content'>
           {renderTab()}
-          <div className='close-button' onClick={onClose}>
+          <button className='close-btn' onClick={onClose}>
             <div className='close-circle'>✕</div>
-          </div>
+          </button>
         </div>
       </div>
     </div>

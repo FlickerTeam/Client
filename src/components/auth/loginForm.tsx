@@ -3,8 +3,11 @@ import './authForm.css';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-import type { ErrorStatusFields } from '@/types/errorStatusFields';
-import type { Instance } from '@/types/instance';
+import type { AuthFormProps } from '@/types/authFormProps';
+
+interface LoginFormProps extends AuthFormProps {
+  handleSignin: () => void;
+}
 
 const LoginForm = ({
   handleInstanceSelect,
@@ -19,26 +22,13 @@ const LoginForm = ({
   setEmail,
   password,
   setPassword,
-}: {
-  handleSignin: any;
-  handleInstanceSelect: any;
-  instances: Instance[] | [];
-  instance: any;
-  customInstance: any;
-  setCustomInstance: any;
-  errorMsg: any;
-  status: ErrorStatusFields;
-  email: string;
-  setEmail: any;
-  password: string;
-  setPassword: any;
-}): JSX.Element => {
+}: LoginFormProps): JSX.Element => {
   const renderStatus = () => {
     if (!status.instance) return null;
     return (
       <span className={`status-msg ${status.instance}`}>
         {status.instance === 'checking' && 'Checking...'}
-        {status.instance === 'error' && (errorMsg.instance || 'Request timed out')}
+        {status.instance === 'error' && (errorMsg.instance ?? 'Request timed out')}
         {status.instance === 'valid' && 'Instance is online'}
       </span>
     );
@@ -49,7 +39,10 @@ const LoginForm = ({
       <div className='form-header'>Login to an account</div>
       <div className='form-body'>
         <span>Instance</span>
-        <select value={instance} onChange={handleInstanceSelect}>
+        <select
+          value={typeof instance === 'object' ? instance.url : instance}
+          onChange={handleInstanceSelect}
+        >
           {instances.map((instance) => (
             <option key={instance.url} value={instance.url}>
               {instance.name}
@@ -67,7 +60,9 @@ const LoginForm = ({
               type='text'
               value={customInstance}
               placeholder='example.com'
-              onChange={(e) => setCustomInstance(e.target.value)}
+              onChange={(e) => {
+                setCustomInstance(e.target.value);
+              }}
             />
             {renderStatus()}
           </>
@@ -99,10 +94,12 @@ const LoginForm = ({
       </div>
       <div className='form-footer'>
         <div className='actions'>
-          <button onClick={handleSignin}>Login</button>
+          <button className='primary-btn' onClick={handleSignin}>
+            Login
+          </button>
         </div>
         <Link to='/register' className='login-link'>
-          Don't have an account?
+          Don&rsquo;t have an account?
         </Link>
       </div>
     </div>

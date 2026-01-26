@@ -1,10 +1,15 @@
 import './authForm.css';
 
-import type { JSX } from 'react';
+import type { Dispatch, JSX, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 
-import type { ErrorStatusFields } from '@/types/errorStatusFields';
-import type { Instance } from '@/types/instance';
+import type { AuthFormProps } from '@/types/authFormProps';
+
+interface RegisterFormProps extends AuthFormProps {
+  handleSignup: () => void;
+  setUsername: Dispatch<SetStateAction<string>>;
+  username: string;
+}
 
 const RegisterForm = ({
   handleInstanceSelect,
@@ -21,28 +26,13 @@ const RegisterForm = ({
   setEmail,
   password,
   setPassword,
-}: {
-  handleInstanceSelect: any;
-  handleSignup: any;
-  instances: Instance[] | [];
-  instance: any;
-  errorMsg: any;
-  status: ErrorStatusFields;
-  customInstance: any;
-  setCustomInstance: any;
-  setUsername: any;
-  username: string;
-  email: string;
-  setEmail: any;
-  password: string;
-  setPassword: any;
-}): JSX.Element => {
+}: RegisterFormProps): JSX.Element => {
   const renderStatus = () => {
     if (!status.instance) return null;
     return (
       <span className={`status-msg ${status.instance}`}>
         {status.instance === 'checking' && 'Checking...'}
-        {status.instance === 'error' && (errorMsg.instance || 'Request timed out')}
+        {status.instance === 'error' && (errorMsg.instance ?? 'Request timed out')}
         {status.instance === 'valid' && 'Instance is online'}
       </span>
     );
@@ -53,7 +43,10 @@ const RegisterForm = ({
       <div className='form-header'>Register an account</div>
       <div className='form-body'>
         <span>Instance</span>
-        <select value={instance} onChange={handleInstanceSelect}>
+        <select
+          value={typeof instance === 'object' ? instance.url : instance}
+          onChange={handleInstanceSelect}
+        >
           {instances.map((instance) => (
             <option key={instance.url} value={instance.url}>
               {instance.name}
@@ -71,7 +64,9 @@ const RegisterForm = ({
               type='text'
               value={customInstance}
               placeholder='example.com'
-              onChange={(e) => setCustomInstance(e.target.value)}
+              onChange={(e) => {
+                setCustomInstance(e.target.value);
+              }}
             />
             {renderStatus()}
           </>
@@ -125,11 +120,14 @@ const RegisterForm = ({
         <div className='agreement'>
           <input type='checkbox' id='terms' />
           <label htmlFor='terms'>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- Add a link to the instance's T&C later*/}
             I have read the <a href='#'>Terms and Conditions</a> of this instance.
           </label>
         </div>
         <div className='actions'>
-          <button onClick={handleSignup}>Register</button>
+          <button className='primary-btn' onClick={handleSignup}>
+            Register
+          </button>
         </div>
         <Link to='/login' className='login-link'>
           Already have an account?

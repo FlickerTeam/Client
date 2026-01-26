@@ -8,7 +8,7 @@ export const CreateServerModal = (): JSX.Element => {
   const { openModal, closeModal } = useModal();
   const [serverName, setServerName] = useState('');
   const [avatar, setAvatar] = useState<string | ArrayBuffer | null>('');
-  const [previewUrl, setPreviewUrl] = useState<string | ArrayBuffer | null>('');
+  const [previewUrl, setPreviewUrl] = useState<string | null>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +17,7 @@ export const CreateServerModal = (): JSX.Element => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatar(reader.result);
-        setPreviewUrl(reader.result);
+        setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -31,13 +31,13 @@ export const CreateServerModal = (): JSX.Element => {
     };
 
     const baseUrl = localStorage.getItem('selectedInstanceUrl');
-    const url = `${baseUrl}/${localStorage.getItem('defaultApiVersion')}/guilds`;
+    const url = `${baseUrl ?? ''}/${localStorage.getItem('defaultApiVersion') ?? ''}/guilds`;
 
     try {
       const request = await fetch(url, {
         method: 'POST',
         headers: {
-          Authorization: localStorage.getItem('Authorization')!,
+          Authorization: localStorage.getItem('Authorization') ?? '',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -59,19 +59,21 @@ export const CreateServerModal = (): JSX.Element => {
       <h2>New server, alright!</h2>
 
       <div className='avatar-upload-section' style={{ textAlign: 'center', marginTop: '20px' }}>
-        <div
+        <button
           className='avatar-preview'
           onClick={() => fileInputRef.current?.click()}
           style={{
-            backgroundImage: `url(${previewUrl})`,
+            backgroundImage: `url(${previewUrl ?? ''})`,
           }}
         >
           {!previewUrl && <span>+</span>}
-        </div>
+        </button>
         <input
           type='file'
           ref={fileInputRef}
-          onChange={handleFileChange}
+          onChange={(e) => {
+            handleFileChange(e);
+          }}
           style={{ display: 'none' }}
           accept='image/*'
         />
@@ -95,6 +97,7 @@ export const CreateServerModal = (): JSX.Element => {
 
       <div className='modal-footer' style={{ gap: '15px', marginTop: '20px' }}>
         <button
+          className='primary-btn'
           onClick={() => {
             openModal('WHATS_IT_GONNA_BE');
           }}
@@ -105,7 +108,10 @@ export const CreateServerModal = (): JSX.Element => {
         >
           Back
         </button>
-        <button className={!serverName ? 'disabled-btn' : ''} onClick={() => handleCreate()}>
+        <button
+          className={!serverName ? 'primary-btn disabled-btn' : 'primary-btn'}
+          onClick={() => void handleCreate()}
+        >
           Create
         </button>
       </div>

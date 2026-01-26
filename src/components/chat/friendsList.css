@@ -117,7 +117,7 @@
   margin-top: 10px;
 }
 
-.action-button {
+.action-btn {
   border-radius: 4px;
   padding: 6px 12px;
   font-size: 12px;
@@ -133,33 +133,33 @@
   justify-content: center;
 }
 
-.action-button.online {
+.action-btn.online {
   background-color: rgb(35 165 89 / 15%);
   color: #40c463;
 }
 
-.action-button.online:hover {
+.action-btn.online:hover {
   background-color: #23a559;
   color: white;
 }
 
-.action-button.dnd {
+.action-btn.dnd {
   background-color: rgb(242 63 66 / 15%);
   color: #f23f42;
 }
 
-.action-button.dnd:hover {
+.action-btn.dnd:hover {
   background-color: #f23f42;
   color: white;
 }
 
-.action-button.unblock {
+.action-btn.unblock {
   background-color: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-main);
 }
 
-.action-button.unblock:hover {
+.action-btn.unblock:hover {
   background-color: var(--border-color);
   color: var(--text-bright);
 }

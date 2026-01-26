@@ -1,21 +1,98 @@
-import type { ReactNode } from 'react';
+import * as z from 'zod';
 
-import type { Guild } from './guild';
+import { GuildSchema, MemberSchema } from './guilds';
+import { MessageSchema } from './messages';
+import { RelationshipSchema } from './relationship';
+import { UserSchema } from './users';
+import { UserSettingsSchema } from './userSettings';
 
-export interface GatewayContextType {
-  isReady: boolean | null;
-  guilds: Guild[] | [];
-  user: any | null;
-  relationships: any[] | [];
-  user_settings: any;
-  requestMembers?: (guildId: string, channelId: string, ranges?: number[][]) => void;
-  typingUsers: Record<string, Record<string, number>>;
-  memberLists?: Record<string, any>;
-}
+const GuildMemberListGroupSchema = z.object({
+  id: z.string(),
+  count: z.coerce.number(),
+});
 
-export interface GatewayProviderProps {
-  children?: ReactNode;
-  isReady?: boolean;
-  guilds?: Guild[];
-  user?: any;
-}
+const GuildMemberListOperationItemSchema = z.object({
+  group: GuildMemberListGroupSchema.nullish(),
+  member: MemberSchema.nullish(),
+});
+
+const GuildMemberListOperationSchema = z.discriminatedUnion('op', [
+  z.object({
+    op: z.literal('SYNC'),
+    range: z.tuple([z.coerce.number(), z.coerce.number()]),
+    items: z.array(GuildMemberListOperationItemSchema),
+  }),
+  z.object({
+    op: z.literal('INSERT'),
+    index: z.coerce.number(),
+    item: GuildMemberListOperationItemSchema,
+  }),
+  z.object({
+    op: z.literal('UPDATE'),
+    index: z.coerce.number(),
+    item: GuildMemberListOperationItemSchema,
+  }),
+  z.object({ op: z.literal('DELETE'), index: z.coerce.number() }),
+  z.object({ op: z.literal('INVALIDATE'), range: z.tuple([z.coerce.number(), z.coerce.number()]) }),
+]);
+
+export const GuildMemberListUpdateSchema = z.object({
+  guild_id: z.string(),
+  id: z.string(),
+  ops: z.array(GuildMemberListOperationSchema),
+  groups: z.array(GuildMemberListGroupSchema),
+  member_count: z.coerce.number().nullish(),
+});
+
+export const HelloSchema = z.object({
+  _trace: z.array(z.string()),
+  heartbeat_interval: z.coerce.number(),
+});
+
+// TODO: Implement all ReadyEventSchema
+export const ReadyEventSchema = z.looseObject({
+  user: UserSchema,
+  user_settings: UserSettingsSchema,
+  guilds: z.array(GuildSchema),
+  relationships: z.array(RelationshipSchema),
+});
+
+export const MessageCreateSchema = MessageSchema.extend({
+  channel_type: z.coerce.number(),
+  guild_id: z.string().nullish(),
+  member: MemberSchema.partial().nullish(),
+  mentions: z.array(UserSchema.partial()).nullish(),
+  metadata: z.map(z.string(), z.string()).nullish(),
+  moderation_metadata: z.map(z.string(), z.string()).nullish(),
+});
+
+export const MessageUpdateSchema = MessageSchema.extend({
+  channel_type: z.coerce.number(),
+  guild_id: z.string().nullish(),
+  member: MemberSchema.partial().nullish(),
+  mentions: z.array(UserSchema.partial()).nullish(),
+  metadata: z.map(z.string(), z.string()).nullish(),
+  moderation_metadata: z.map(z.string(), z.string()).nullish(),
+  tts: z.preprocess(() => false, z.boolean()), // https://docs.discord.food/topics/gateway-events#message-update -- Check warning
+});
+
+export const TypingStartSchema = z.object({
+  channel_id: z.string(),
+  guild_id: z.string().nullish(),
+  user_id: z.string(),
+  timestamp: z.int(),
+  member: MemberSchema.nullish(),
+});
+
+export const GatewayPayloadSchema = z.object({
+  op: z.coerce.number(),
+  s: z.coerce.number().nullish(),
+  t: z.string().nullish(),
+  d: z.unknown(),
+});
+
+export type GatewayPayload = z.infer<typeof GatewayPayloadSchema>;
+export type GuildMemberList = z.infer<typeof GuildMemberListUpdateSchema>;
+export type GuildMemberListUpdate = z.infer<typeof GuildMemberListUpdateSchema>;
+export type GuildMemberListOperation = z.infer<typeof GuildMemberListOperationSchema>;
+export type GuildMemberListOperationItem = z.infer<typeof GuildMemberListOperationItemSchema>;

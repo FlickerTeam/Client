@@ -2,8 +2,13 @@ import './memberList.css';
 
 import { type JSX, useEffect, useState } from 'react';
 
+import type { Channel } from '@/types/channel';
+import type { GuildMemberListOperation, GuildMemberListOperationItem } from '@/types/gateway';
+import type { Guild, Member, Role } from '@/types/guilds';
+
+import { useAssetsUrl } from '../../context/assetsUrl';
 import { useContextMenu } from '../../context/contextMenu';
-import { useGateway } from '../../context/gateway';
+import { useGateway } from '../../context/gatewayContext';
 import { useModal } from '../../context/modal';
 import { getDefaultAvatar } from '../../utils/avatar';
 
@@ -12,18 +17,35 @@ const MemberListItem = ({
   isTyping,
   roles,
 }: {
-  member: any;
+  member: Member;
   isTyping: boolean;
-  roles: any[];
+  roles?: Role[];
 }): JSX.Element => {
   const { openContextMenu, closeContextMenu } = useContextMenu();
   const { openModal } = useModal();
 
-  const status = member.presence?.status || 'offline';
-  const avatarUrl =
-    member.avatar || member.user.avatar
-      ? `${localStorage.getItem('selectedAssetsUrl')!}/avatars/${member.id}/${member.user.avatar}.png`
-      : `${localStorage.getItem('selectedCdnUrl')!}/assets/${getDefaultAvatar(member.user)}.png`; //This needs to not be hard coded ASAP.
+  const status = member.presence?.status ?? 'offline';
+
+  const MemberAvatar = ({ member, className }: { member: Member; className: string }) => {
+    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+      `/assets/${getDefaultAvatar(member.user) ?? ''}.png`,
+    );
+    const avatarUrl =
+      member.avatar || member.user.avatar
+        ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.id}/${member.user.avatar ?? ''}.png`
+        : defaultAvatarUrl; //This needs to not be hard coded ASAP.
+
+    return (
+      <img
+        src={avatarUrl || ''}
+        alt={`${member.user.username}'s Avatar`}
+        className={className}
+        onError={() => {
+          rollover();
+        }}
+      />
+    );
+  };
 
   const handleRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -70,19 +92,15 @@ const MemberListItem = ({
     const x = rect.left + 30;
     const y = rect.top - 10;
 
-    const bannerUrl = member.user.banner
-      ? `url('${localStorage.getItem('selectedAssetsUrl')!}/avatars/${member.user.id}/${member.user.banner}.png')`
-      : 'none';
+    const bannerUrl =
+      member.user.banner && localStorage.getItem('selectedCdnUrl')
+        ? `url('${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.user.id}/${member.user.banner}.png')`
+        : 'none';
 
     openContextMenu(
       x,
       y,
-      <div
-        className='profile-popout-container'
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+      <div className='profile-popout-container'>
         {member.user.banner && (
           <div
             className='popout-banner'
@@ -93,10 +111,16 @@ const MemberListItem = ({
         )}
         <div className='profile-popout-content'>
           <div className='popout-header'>
-            <div
+            <button
               className={`avatar-wrapper-centered ${member.user.banner ? 'overlap' : ''}`}
               onMouseOver={(e) => {
                 e.currentTarget.classList.add('avatar-img-text');
+              }}
+              onFocus={(e) => {
+                e.currentTarget.classList.add('avatar-img-text');
+              }}
+              onBlur={(e) => {
+                e.currentTarget.classList.remove('avatar-img-text');
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.classList.remove('avatar-img-text');
@@ -105,9 +129,9 @@ const MemberListItem = ({
                 handleProfileOpen(e);
               }}
             >
-              <img src={avatarUrl} alt='Avatar' className='avatar-img-large' />
+              <MemberAvatar member={member} className='avatar-img-large' />
               <div className={`status-dot-large ${status}`} title={status}></div>
-            </div>
+            </button>
             <div className='user-details-centered'>
               <span className='username'>{member.user.username}</span>
               <span className='discriminator'>#{member.user.discriminator || '0000'}</span>
@@ -135,8 +159,8 @@ const MemberListItem = ({
           <div className='popout-section'>
             <span className='section-title'>ROLES</span>
             <div className='roles-container'>
-              {member.roles.map((roleId: any) => {
-                const role = roles.find((r: any) => r.id === roleId);
+              {member.roles.map((roleId: string) => {
+                const role = roles?.find((r: Role) => r.id === roleId);
 
                 if (!role) return null;
 
@@ -150,12 +174,12 @@ const MemberListItem = ({
                         borderColor: color,
                       }}
                     >
-                      <span className='role-removal-button'>×</span> {role.name}
+                      <span className='role-removal-btn'>×</span> {role.name}
                     </div>
                   </>
                 );
               })}
-              <div className='add-role-button'>+</div>
+              <div className='add-role-btn'>+</div>
             </div>
           </div>
           <div className='popout-section'>
@@ -168,7 +192,7 @@ const MemberListItem = ({
   };
 
   return (
-    <div
+    <button
       className='member-list-item-wrapper'
       onContextMenu={(e) => {
         handleRightClick(e);
@@ -179,11 +203,7 @@ const MemberListItem = ({
     >
       <div className={`member-list-item ${status === 'offline' ? 'offline-member' : ''}`}>
         <div className='avatar-wrapper'>
-          <img
-            src={avatarUrl}
-            alt={`${member.user.username}'s Avatar`}
-            className='avatar-img'
-          ></img>
+          <MemberAvatar member={member} className='avatar-img' />
           {isTyping ? (
             <div className={`typing-indicator-dots ${status}`}>
               <span className='dot'></span>
@@ -198,30 +218,36 @@ const MemberListItem = ({
           <span className='name'>{member.user.username}</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
-const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
+const MemberList = ({
+  selectedGuild,
+  selectedChannel,
+}: {
+  selectedGuild: Guild | null;
+  selectedChannel: Channel | null;
+}): JSX.Element => {
   const { memberLists, requestMembers, typingUsers } = useGateway();
   const [rangeIndex, setRangeIndex] = useState(0);
 
   useEffect(() => {
-    if (selectedGuild?.id && selectedChannel?.id && requestMembers) {
-      const hasData = memberLists?.[selectedGuild.id];
+    const guildId = selectedGuild?.id;
+    const channelId = selectedChannel?.id;
+
+    if (guildId && channelId && requestMembers) {
+      const hasData = memberLists?.[guildId];
 
       if (!hasData) {
-        setRangeIndex(0);
-        requestMembers(selectedGuild.id, selectedChannel.id, [[0, 99]]);
+        requestMembers(guildId, channelId, [[0, 99]]);
       }
     }
   }, [selectedGuild?.id, selectedChannel?.id, requestMembers, memberLists]);
 
-  if (!selectedGuild || !selectedChannel) return <></>;
+  const currentChannelTyping = typingUsers[selectedChannel?.id ?? ''];
 
-  const currentChannelTyping = typingUsers[selectedChannel.id] || {};
-
-  const listData = memberLists?.[selectedGuild?.id];
+  const listData = memberLists?.[selectedGuild?.id ?? ''];
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -229,9 +255,9 @@ const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
     if (scrollHeight - scrollTop <= clientHeight + 100) {
       const nextRangeStart = (rangeIndex + 1) * 100;
 
-      if (nextRangeStart < (listData?.member_count || 0)) {
+      if (nextRangeStart < (listData?.member_count ?? 0)) {
         setRangeIndex((prev) => prev + 1);
-        requestMembers?.(selectedGuild.id, selectedChannel.id, [
+        requestMembers?.(selectedGuild?.id ?? '', selectedChannel?.id ?? '', [
           [0, 99],
           [nextRangeStart, nextRangeStart + 99],
         ]);
@@ -247,24 +273,19 @@ const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
     );
   }
 
-  const items = listData.ops.find((op: any) => op.op === 'SYNC')?.items || [];
+  const items = listData.ops.find((op: GuildMemberListOperation) => op.op === 'SYNC')?.items ?? [];
 
   return (
     <aside className='members-column'>
       <header className='header-base'>Members ({listData.member_count})</header>
       <div className='scroller' onScroll={handleScroll}>
-        {items.map((item: any, index: number) => {
-          if (!item) {
-            return <div key={`placeholder-${index}`} style={{ height: '44px' }} />;
-          }
-
+        {items.map((item: GuildMemberListOperationItem, index: number) => {
           if (item.group && item.group.count > 0) {
-            const role = selectedGuild.roles.find((x: any) => x.id === item.group.id);
-            const group_name = role?.name ?? item.group.id;
+            const role = selectedGuild?.roles.find((x: Role) => x.id === item.group?.id);
 
             return (
               <div key={`group-${item.group.id}`} className='role-title'>
-                {group_name} — {item.group.count}
+                {role?.name ?? item.group.id} — {item.group.count}
               </div>
             );
           }
@@ -272,10 +293,10 @@ const MemberList = ({ selectedGuild, selectedChannel }: any): JSX.Element => {
           if (item.member) {
             return (
               <MemberListItem
-                key={`${item.member.user.id}-${index}`}
+                key={`${item.member.user.id}-${index.toString()}`}
                 member={item.member}
-                isTyping={!!currentChannelTyping[item.member.user.id]}
-                roles={selectedGuild.roles}
+                isTyping={!!currentChannelTyping?.[item.member.user.id]}
+                roles={selectedGuild?.roles}
               />
             );
           }

@@ -2,24 +2,46 @@ import './serverProfile.css';
 
 import type { JSX } from 'react';
 
+import type { Member } from '@/types/guilds';
+
+import { useAssetsUrl } from '../../context/assetsUrl';
 import { useModal } from '../../context/modal';
 import { getDefaultAvatar } from '../../utils/avatar';
-export const ServerProfileModal = ({ member }: { member: any }): JSX.Element => {
+export const ServerProfileModal = ({ member }: { member: Member }): JSX.Element => {
   useModal();
 
-  const status = member.presence?.status || 'offline';
-  const avatarUrl = member.user.avatar
-    ? `${localStorage.getItem('selectedAssetsUrl')}/avatars/${member.id}/${member.user.avatar}.png`
-    : `${localStorage.getItem('selectedCdnUrl')}/assets/${getDefaultAvatar(member.user)}.png`;
+  const status = member.presence?.status ?? 'offline';
+
+  const MemberAvatar = ({ member }: { member: Member }) => {
+    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+      `/assets/${getDefaultAvatar(member.user) ?? ''}.png`,
+    );
+    const avatarUrl =
+      member.avatar || member.user.avatar
+        ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.id}/${member.user.avatar ?? ''}.png`
+        : defaultAvatarUrl;
+
+    return (
+      <img
+        src={avatarUrl || ''}
+        alt='Avatar'
+        className='modal-avatar-img'
+        onError={() => {
+          rollover();
+        }}
+      />
+    );
+  };
+
   const bannerUrl = member.user.banner
-    ? `url('${localStorage.getItem('selectedAssetsUrl')}/avatars/${member.user.id}/${member.user.banner}.png')`
+    ? `url('${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.user.id}/${member.user.banner ?? ''}.png')`
     : 'none';
 
   return (
     <div className='profile-modal-root'>
       <div className='profile-modal-header' style={{ backgroundImage: bannerUrl }}>
         <div className='profile-modal-avatar-wrapper'>
-          <img src={avatarUrl} alt='Avatar' className='modal-avatar-img' />
+          <MemberAvatar member={member} />
           <div className={`modal-status-dot ${status}`} />
         </div>
       </div>
@@ -28,7 +50,7 @@ export const ServerProfileModal = ({ member }: { member: any }): JSX.Element => 
         <div className='profile-modal-identity'>
           <div className='modal-user-info'>
             <span className='modal-username'>{member.user.username}</span>
-            <span className='modal-discriminator'>#{member.user.discriminator || '0000'}</span>
+            <span className='modal-discriminator'>#{member.user.discriminator}</span>
           </div>
           {member.user.pronouns && <span className='modal-pronouns'>{member.user.pronouns}</span>}
         </div>

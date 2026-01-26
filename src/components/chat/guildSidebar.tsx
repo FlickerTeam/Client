@@ -3,10 +3,10 @@ import './guildSidebar.css';
 import { type JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-import type { Guild } from '@/types/guild';
+import type { Guild } from '@/types/guilds';
 
 import { useContextMenu } from '../../context/contextMenu';
-import { useGateway } from '../../context/gateway';
+import { useGateway } from '../../context/gatewayContext';
 import { useModal } from '../../context/modal';
 
 const GuildSidebar = ({
@@ -16,7 +16,7 @@ const GuildSidebar = ({
 }: {
   guilds: Guild[];
   selectedGuildId?: string | null;
-  onSelectGuild: any;
+  onSelectGuild: (guild: Guild) => void;
 }): JSX.Element => {
   const { user } = useGateway();
   const { openModal } = useModal();
@@ -33,7 +33,7 @@ const GuildSidebar = ({
   const handleRightClick = (e: React.MouseEvent, guild: Guild) => {
     e.preventDefault();
 
-    const isOwner = guild.owner_id === user.id;
+    const isOwner = guild.owner_id === user?.id;
 
     openContextMenu(
       e.clientX,
@@ -43,30 +43,30 @@ const GuildSidebar = ({
         {!isOwner && (
           <>
             <hr />
-            <div
-              className='button'
+            <button
+              className='primary-btn button'
               style={{ color: 'var(--bg-dnd)' }}
               onClick={() => {
                 handleLeaveServer(guild.name, guild.id);
               }}
             >
               Leave Server
-            </div>
+            </button>
           </>
         )}
         {isOwner && (
           <>
             <hr />
             <div className='button'>Server Settings</div>
-            <div
-              className='button'
+            <button
+              className='primary-button button'
               style={{ color: 'var(--bg-dnd)' }}
               onClick={() => {
                 handleDeleteServer(guild.name, guild.id);
               }}
             >
               Delete Server
-            </div>
+            </button>
           </>
         )}
       </div>,
@@ -75,7 +75,7 @@ const GuildSidebar = ({
 
   return (
     <div id='guilds-column'>
-      <div className='home-button'>
+      <div className='home-btn'>
         <Link to='/channels/@me' className='login-link'>
           Home
         </Link>
@@ -85,10 +85,12 @@ const GuildSidebar = ({
       </div>
       {guilds.length > 0 && <hr className='separator' />}
       {guilds.map((guild: Guild) => (
-        <div
+        <button
           className={`guild-icon-wrapper`}
           key={guild.id}
-          onClick={() => onSelectGuild(guild)}
+          onClick={() => {
+            onSelectGuild(guild);
+          }}
           onContextMenu={(e) => {
             handleRightClick(e, guild);
           }}
@@ -96,7 +98,7 @@ const GuildSidebar = ({
           {guild.icon ? (
             <img
               className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''}`}
-              src={`${localStorage.getItem('selectedAssetsUrl')!}/icons/${guild.id}/${guild.icon}.png`}
+              src={`${localStorage.getItem('selectedCdnUrl') ?? ''}/icons/${guild.id}/${guild.icon}.png`}
               alt={guild.name}
             />
           ) : (
@@ -105,10 +107,10 @@ const GuildSidebar = ({
             </div>
           )}
           <div className='item-pill'></div>
-        </div>
+        </button>
       ))}
       <hr className='separator' />
-      <div
+      <button
         className={`guild-icon-wrapper`}
         key={`add-guild`}
         onClick={() => {
@@ -117,7 +119,7 @@ const GuildSidebar = ({
       >
         <div className={`guild-icon no-icon`}>+</div>
         <div className='item-pill'></div>
-      </div>
+      </button>
     </div>
   );
 };
