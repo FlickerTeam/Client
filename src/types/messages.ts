@@ -130,7 +130,7 @@ export const MessageSchema = z.object({
   timestamp: z.iso.datetime(),
   edited_timestamp: z.iso.datetime().nullish(),
   tts: z.boolean(),
-  mention_everyone: z.boolean(),
+  mention_everyone: z.boolean().nullish(),
   mentions: z.array(UserSchema.partial()),
   mention_roles: z.array(z.string()),
   mention_channels: z.array(z.any()).nullish(),
