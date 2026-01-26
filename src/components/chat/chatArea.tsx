@@ -7,7 +7,7 @@ import { type Message, MessageListSchema } from '@/types/messages';
 
 import { useAssetsUrl } from '../../context/assetsUrl';
 import { useGateway } from '../../context/gatewayContext';
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 import { getDefaultAvatar } from '../../utils/avatar';
 
 interface MediaAttachment {

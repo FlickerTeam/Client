@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 
 import type { Guild } from '@/types/guilds';
 
-import { useContextMenu } from '../../context/contextMenu';
+import { useContextMenu } from '../../context/contextMenuContext';
 import { useGateway } from '../../context/gatewayContext';
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 
 const GuildSidebar = ({
   guilds,

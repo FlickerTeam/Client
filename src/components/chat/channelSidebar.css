@@ -3,6 +3,7 @@
 }
 
 .channel-item {
+  width: 100%;
   border-radius: 4px;
   transition: 0.5s all;
   cursor: pointer;
@@ -10,6 +11,7 @@
   padding: 6px 8px;
   display: flex;
   align-items: center;
+  justify-content: start;
   gap: 6px;
   color: var(--text-muted);
 }
@@ -32,10 +34,12 @@
 }
 
 .category-header {
+  width: 100%;
   padding: 0 8px;
   height: 24px;
   display: flex;
   align-items: center;
+  justify-content: start;
   color: var(--text-muted);
   font-size: 12px;
   font-weight: 600;

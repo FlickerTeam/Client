@@ -5,7 +5,7 @@ import type { JSX } from 'react';
 import type { Member } from '@/types/guilds';
 
 import { useAssetsUrl } from '../../context/assetsUrl';
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 import { getDefaultAvatar } from '../../utils/avatar';
 export const ServerProfileModal = ({ member }: { member: Member }): JSX.Element => {
   useModal();

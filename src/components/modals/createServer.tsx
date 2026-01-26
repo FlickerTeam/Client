@@ -2,7 +2,7 @@ import './createServer.css';
 
 import { type JSX, useRef, useState } from 'react';
 
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 
 export const CreateServerModal = (): JSX.Element => {
   const { openModal, closeModal } = useModal();

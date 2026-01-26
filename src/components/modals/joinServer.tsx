@@ -9,7 +9,7 @@ import {
   InviteResponseSchema,
 } from '@/types/responses';
 
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 
 export const JoinServerModal = (): JSX.Element => {
   const { openModal, closeModal } = useModal();

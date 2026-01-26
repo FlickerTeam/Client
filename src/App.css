@@ -340,7 +340,7 @@ body,
 
 #channels-column .scroller {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden auto;
   min-height: 0;
 }
 

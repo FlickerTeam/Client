@@ -3,7 +3,7 @@ import './App.css';
 import { type JSX, useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
-import { useModal } from './context/modal';
+import { useModal } from './context/modalContext';
 import ChatApp from './pages/chat';
 import LoadingScreen from './pages/loading';
 import Login from './pages/login';

@@ -1,6 +1,6 @@
-export const getDefaultAvatar = (user: any) => {
-  if (!user) return '0e291f67c9274a1abdddeb3fd919cbaa';
+import type { User } from '@/types/users';
 
+export const getDefaultAvatar = (user: User) => {
   const index =
     user.discriminator && user.discriminator !== '0'
       ? parseInt(user.discriminator, 10) % 5
@@ -14,5 +14,5 @@ export const getDefaultAvatar = (user: any) => {
     4: '1cbd08c76f8af6dddce02c5138971129', // Red
   };
 
-  return assetHashes[index] || assetHashes[0];
+  return assetHashes[index] ?? assetHashes[0];
 };

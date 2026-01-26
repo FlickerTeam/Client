@@ -1,4 +1,6 @@
-import { createContext, type JSX, useContext, useEffect, useState } from 'react';
+import { type JSX, type ReactNode, useEffect, useState } from 'react';
+
+import { ContextMenuContext } from './contextMenuContext';
 
 interface ContextMenuState {
   x: number;
@@ -7,14 +9,7 @@ interface ContextMenuState {
   isOpen: boolean;
 }
 
-interface ContextMenuContextType {
-  openContextMenu: (x: number, y: number, content: JSX.Element) => void;
-  closeContextMenu: () => void;
-}
-
-const ContextMenuContext = createContext<ContextMenuContextType | undefined>(undefined);
-
-export const ContextMenuProvider = ({ children }: { children: any }): JSX.Element => {
+export const ContextMenuProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const [menu, setMenu] = useState<ContextMenuState>({ x: 0, y: 0, content: null, isOpen: false });
 
   const openContextMenu = (x: number, y: number, content: JSX.Element) => {
@@ -40,7 +35,7 @@ export const ContextMenuProvider = ({ children }: { children: any }): JSX.Elemen
   }, []);
 
   return (
-    <ContextMenuContext.Provider value={{ openContextMenu, closeContextMenu }}>
+    <ContextMenuContext value={{ openContextMenu, closeContextMenu }}>
       {children}
       {menu.isOpen && (
         <div
@@ -50,16 +45,6 @@ export const ContextMenuProvider = ({ children }: { children: any }): JSX.Elemen
           {menu.content}
         </div>
       )}
-    </ContextMenuContext.Provider>
+    </ContextMenuContext>
   );
-};
-
-export const useContextMenu = () => {
-  const context = useContext(ContextMenuContext);
-
-  if (!context) {
-    throw new Error('useContextMenu must be used within a ContextMenuProvider');
-  }
-
-  return context;
 };

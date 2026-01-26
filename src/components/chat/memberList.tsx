@@ -7,9 +7,9 @@ import type { GuildMemberListOperation, GuildMemberListOperationItem } from '@/t
 import type { Guild, Member, Role } from '@/types/guilds';
 
 import { useAssetsUrl } from '../../context/assetsUrl';
-import { useContextMenu } from '../../context/contextMenu';
+import { useContextMenu } from '../../context/contextMenuContext';
 import { useGateway } from '../../context/gatewayContext';
-import { useModal } from '../../context/modal';
+import { useModal } from '../../context/modalContext';
 import { getDefaultAvatar } from '../../utils/avatar';
 
 const MemberListItem = ({

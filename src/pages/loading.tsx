@@ -10,17 +10,11 @@ const LoadingScreen = ({
   children?: React.ReactNode;
 }): JSX.Element => {
   const [loadingText, setLoadingText] = useState('Loading...');
-  const [fullMessage, setFullMessage] = useState('');
-
-  useEffect(() => {
-    const loadingMessages = [
-      'I just kept spinning...',
-      'Loading...',
-      'Flickering.. wait.. FLICKER??',
-    ];
-
-    setFullMessage(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
-  }, []);
+  const [fullMessage] = useState(() => {
+    const messages = ['I just kept spinning...', 'Loading...', 'Flickering.. wait.. FLICKER??'];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    return randomMessage ?? 'Loading...';
+  });
 
   useEffect(() => {
     if (loadingText.length < fullMessage.length) {

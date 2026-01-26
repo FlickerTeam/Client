@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import { ContextMenuProvider } from './context/contextMenu';
+import { ContextMenuProvider } from './context/contextMenuProvider';
 import { GatewayProvider } from './context/gatewayProvider';
-import { ModalProvider } from './context/modal';
+import { ModalProvider } from './context/modalProvider';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
