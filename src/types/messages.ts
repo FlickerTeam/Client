@@ -132,7 +132,7 @@ export const MessageSchema = z.object({
   tts: z.boolean(),
   mention_everyone: z.boolean().nullish(),
   mentions: z.array(UserSchema.partial()),
-  mention_roles: z.array(z.string()),
+  mention_roles: z.array(z.string()).nullish(),
   mention_channels: z.array(z.any()).nullish(),
   attachments: z.array(AttachmentSchema),
   embeds: z.array(EmbedSchema),

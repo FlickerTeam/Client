@@ -61,7 +61,10 @@ export const ReadyEventSchema = z.looseObject({
 });
 
 export const MessageCreateSchema = MessageSchema.extend({
-  channel_type: z.coerce.number().int(),
+  channel_type: z.preprocess((val) => {
+    const coerced = Number(val);
+    return isNaN(coerced) ? undefined : coerced;
+  }, z.int().nullish()),
   guild_id: z.string().nullish(),
   member: MemberSchema.partial().nullish(),
   mentions: z.array(UserSchema.partial()).nullish(),
@@ -70,7 +73,10 @@ export const MessageCreateSchema = MessageSchema.extend({
 });
 
 export const MessageUpdateSchema = MessageSchema.extend({
-  channel_type: z.coerce.number().int(),
+  channel_type: z.preprocess((val) => {
+    const coerced = Number(val);
+    return isNaN(coerced) ? undefined : coerced;
+  }, z.int().nullish()),
   guild_id: z.string().nullish(),
   member: MemberSchema.partial().nullish(),
   mentions: z.array(UserSchema.partial()).nullish(),
