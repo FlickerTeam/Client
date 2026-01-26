@@ -1,6 +1,8 @@
 import type { User } from '@/types/users';
 
-export const getDefaultAvatar = (user: User) => {
+export const getDefaultAvatar = (user: Partial<User> | null | undefined) => {
+  if (!user?.id) return '0e291f67c9274a1abdddeb3fd919cbaa';
+
   const index =
     user.discriminator && user.discriminator !== '0'
       ? parseInt(user.discriminator, 10) % 5
