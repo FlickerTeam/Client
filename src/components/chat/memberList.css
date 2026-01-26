@@ -18,6 +18,7 @@
 
 .member-list-item-wrapper {
   padding-left: 20px;
+  display: block;
 }
 
 .role-title {

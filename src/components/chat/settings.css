@@ -29,6 +29,8 @@
 }
 
 .sidebar-item {
+  display: block;
+  width: 100%;
   color: #b5bac1; /* Make this a var */
   padding: 8px;
   margin-bottom: 2px;
@@ -130,7 +132,7 @@
   margin-bottom: 20px;
 }
 
-.field-group label {
+.field-title {
   display: block;
   color: var(--accent-primary);
   font-size: 12px;

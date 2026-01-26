@@ -33,7 +33,7 @@ const Settings = ({ user, onClose }: SettingsProps): JSX.Element => {
             <div className='account-card'>
               <div className='account-edit-box'>
                 <div className='field-group'>
-                  <span>USERNAME</span>
+                  <span className='field-title'>USERNAME</span>
                   <div className='field-row'>
                     <span>
                       {user?.username}#{user?.discriminator}
@@ -42,7 +42,7 @@ const Settings = ({ user, onClose }: SettingsProps): JSX.Element => {
                   </div>
                 </div>
                 <div className='field-group'>
-                  <span>EMAIL</span>
+                  <span className='field-title'>EMAIL</span>
                   <div className='field-row'>
                     <span>********@gmail.com</span>
                     <button className='small-edit-btn'>Edit</button>
