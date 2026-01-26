@@ -73,7 +73,7 @@ export const ActivitySchema = z.object({
   id: z.string(),
   name: z.string(),
   type: ActivityTypeEnum,
-  created_at: z.coerce.number(),
+  created_at: z.coerce.number().int(),
   url: z.string().nullish(),
   session_id: z.string().nullish(),
   platform: PlatformEnum.nullish(),
@@ -84,17 +84,17 @@ export const ActivitySchema = z.object({
   assets: ActivityAssetsSchema.nullish(),
   timestamps: z
     .object({
-      start: z.coerce.number().nullish(),
-      end: z.coerce.number().nullish(),
+      start: z.coerce.number().int().nullish(),
+      end: z.coerce.number().int().nullish(),
     })
     .nullish(),
   party: z
     .object({
       id: z.string().nullish(),
-      size: z.tuple([z.coerce.number(), z.coerce.number()]).nullish(),
+      size: z.tuple([z.coerce.number().int(), z.coerce.number().int()]).nullish(),
     })
     .nullish(),
-  flags: z.coerce.number().nullish(),
+  flags: z.coerce.number().int().nullish(),
   sync_id: z.string().nullish(),
   metadata: ActivityMetadataSchema.nullish(),
 });
@@ -124,7 +124,7 @@ export const SessionSchema = z.object({
   client_info: z.object({
     client: PlatformEnum,
     os: z.string(),
-    version: z.coerce.number(),
+    version: z.coerce.number().int(),
   }),
   hidden_activities: z.array(ActivitySchema).nullish(),
   active: z.boolean().nullish(),

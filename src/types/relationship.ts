@@ -5,7 +5,7 @@ import { UserSchema } from './users';
 
 export const RelationshipSchema = z.object({
   id: z.string(),
-  type: z.coerce.number(),
+  type: z.coerce.number().int(),
   user: UserSchema,
   nickname: z.string().nullish(),
   since: z.iso.datetime().nullish(),

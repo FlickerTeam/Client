@@ -33,13 +33,13 @@ export const InviteResponseSchema = z.object({
     id: z.string(),
     guild_id: z.string(),
     name: z.string(),
-    type: z.coerce.number(),
+    type: z.coerce.number().int(),
   }),
-  uses: z.coerce.number(),
+  uses: z.coerce.number().int(),
 });
 
 export const ErrorResponseSchema = z.object({
-  code: z.union([z.string(), z.coerce.number()]).nullish(),
+  code: z.union([z.string(), z.coerce.number().int()]).nullish(),
   message: z.string(),
 });
 

@@ -7,9 +7,9 @@ import { UserSchema } from './users';
 export const RoleSchema = z.object({
   id: z.string(),
   name: z.string(),
-  color: z.coerce.number(),
-  position: z.coerce.number(),
-  permissions: z.union([z.string(), z.coerce.number()]),
+  color: z.coerce.number().int(),
+  position: z.coerce.number().int(),
+  permissions: z.union([z.string(), z.coerce.number().int()]),
 });
 
 export const MemberSchema = z.object({

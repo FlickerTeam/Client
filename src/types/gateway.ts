@@ -8,7 +8,7 @@ import { UserSettingsSchema } from './userSettings';
 
 const GuildMemberListGroupSchema = z.object({
   id: z.string(),
-  count: z.coerce.number(),
+  count: z.coerce.number().int(),
 });
 
 const GuildMemberListOperationItemSchema = z.object({
@@ -19,21 +19,24 @@ const GuildMemberListOperationItemSchema = z.object({
 const GuildMemberListOperationSchema = z.discriminatedUnion('op', [
   z.object({
     op: z.literal('SYNC'),
-    range: z.tuple([z.coerce.number(), z.coerce.number()]),
+    range: z.tuple([z.coerce.number().int(), z.coerce.number().int()]),
     items: z.array(GuildMemberListOperationItemSchema),
   }),
   z.object({
     op: z.literal('INSERT'),
-    index: z.coerce.number(),
+    index: z.coerce.number().int(),
     item: GuildMemberListOperationItemSchema,
   }),
   z.object({
     op: z.literal('UPDATE'),
-    index: z.coerce.number(),
+    index: z.coerce.number().int(),
     item: GuildMemberListOperationItemSchema,
   }),
-  z.object({ op: z.literal('DELETE'), index: z.coerce.number() }),
-  z.object({ op: z.literal('INVALIDATE'), range: z.tuple([z.coerce.number(), z.coerce.number()]) }),
+  z.object({ op: z.literal('DELETE'), index: z.coerce.number().int() }),
+  z.object({
+    op: z.literal('INVALIDATE'),
+    range: z.tuple([z.coerce.number().int(), z.coerce.number().int()]),
+  }),
 ]);
 
 export const GuildMemberListUpdateSchema = z.object({
@@ -41,12 +44,12 @@ export const GuildMemberListUpdateSchema = z.object({
   id: z.string(),
   ops: z.array(GuildMemberListOperationSchema),
   groups: z.array(GuildMemberListGroupSchema),
-  member_count: z.coerce.number().nullish(),
+  member_count: z.coerce.number().int().nullish(),
 });
 
 export const HelloSchema = z.object({
   _trace: z.array(z.string()),
-  heartbeat_interval: z.coerce.number(),
+  heartbeat_interval: z.coerce.number().int(),
 });
 
 // TODO: Implement all ReadyEventSchema
@@ -58,7 +61,7 @@ export const ReadyEventSchema = z.looseObject({
 });
 
 export const MessageCreateSchema = MessageSchema.extend({
-  channel_type: z.coerce.number(),
+  channel_type: z.coerce.number().int(),
   guild_id: z.string().nullish(),
   member: MemberSchema.partial().nullish(),
   mentions: z.array(UserSchema.partial()).nullish(),
@@ -67,7 +70,7 @@ export const MessageCreateSchema = MessageSchema.extend({
 });
 
 export const MessageUpdateSchema = MessageSchema.extend({
-  channel_type: z.coerce.number(),
+  channel_type: z.coerce.number().int(),
   guild_id: z.string().nullish(),
   member: MemberSchema.partial().nullish(),
   mentions: z.array(UserSchema.partial()).nullish(),
@@ -85,8 +88,8 @@ export const TypingStartSchema = z.object({
 });
 
 export const GatewayPayloadSchema = z.object({
-  op: z.coerce.number(),
-  s: z.coerce.number().nullish(),
+  op: z.coerce.number().int(),
+  s: z.coerce.number().int().nullish(),
   t: z.string().nullish(),
   d: z.unknown(),
 });
