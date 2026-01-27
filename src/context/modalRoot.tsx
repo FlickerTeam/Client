@@ -54,5 +54,6 @@ export const ModalRoot = () => {
     );
   } else {
     console.error('Failed to find the modal portal element');
+    throw Error();
   }
 };
