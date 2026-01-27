@@ -51,35 +51,37 @@ export const GatewayProvider = ({ children }: GatewayProviderProps) => {
 
   const connect = useCallback(() => {
     const token = localStorage.getItem('Authorization') ?? '';
-    const gatewayUrl = localStorage.getItem('selectedGatewayUrl') ?? '';
+    const gatewayUrl = localStorage.getItem('selectedGatewayUrl');
 
-    socket.current = new WebSocket(gatewayUrl);
+    if (gatewayUrl && gatewayUrl.length > 0) {
+      socket.current = new WebSocket(gatewayUrl);
 
-    socket.current.onopen = () => {
-      const identifyPayload = {
-        op: 2,
-        d: {
-          token: token,
-          capabilities: 125,
-          properties: { os: 'Windows', browser: 'Chrome' },
-        },
+      socket.current.onopen = () => {
+        const identifyPayload = {
+          op: 2,
+          d: {
+            token: token,
+            capabilities: 125,
+            properties: { os: 'Windows', browser: 'Chrome' },
+          },
+        };
+        socket.current?.send(JSON.stringify(identifyPayload));
       };
-      socket.current?.send(JSON.stringify(identifyPayload));
-    };
 
-    socket.current.onmessage = (event: MessageEvent<string>) => {
-      const payload = GatewayPayloadSchema.parse(JSON.parse(event.data));
-      const { op, t, d } = payload;
+      socket.current.onmessage = (event: MessageEvent<string>) => {
+        const payload = GatewayPayloadSchema.parse(JSON.parse(event.data));
+        const { op, t, d } = payload;
 
-      switch (op) {
-        case 0:
-          handleDispatch(t ?? '', d);
-          break;
-        case 10:
-          startHeartbeat(HelloSchema.parse(d).heartbeat_interval);
-          break;
-      }
-    };
+        switch (op) {
+          case 0:
+            handleDispatch(t ?? '', d);
+            break;
+          case 10:
+            startHeartbeat(HelloSchema.parse(d).heartbeat_interval);
+            break;
+        }
+      };
+    }
     /*
         Discord clients determine that typing has stopped somewhat heuristically. If a message is sent, or if there has been no activity for 5 to 10 seconds, typing is assumed to have stopped.
         */
