@@ -69,6 +69,18 @@ body {
   overflow: hidden;
 }
 
+#modal-portal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
 .brand {
   position: absolute;
   top: 24px;

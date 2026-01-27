@@ -1,3 +1,7 @@
+import './modal.css';
+
+import { createPortal } from 'react-dom';
+
 import { ClearSelectedInstanceModal } from '../components/modals/clearSelectedInstance';
 import { ConfirmationDeleteModal } from '../components/modals/confirmationDelete';
 import { ConfirmationLeaveModal } from '../components/modals/confirmationLeave';
@@ -36,11 +40,19 @@ export const ModalRoot = () => {
 
   const isProfile = modalType === 'SERVER_PROFILE' || modalType === 'USER_PROFILE';
 
-  return (
-    <button className='modal-backdrop' onClick={closeModal}>
-      <div className={`modal-container ${isProfile ? 'modal-container-profile' : ''}`}>
-        {renderModal()}
-      </div>
-    </button>
-  );
+  const modalPortal = document.getElementById('modal-portal');
+
+  if (modalPortal) {
+    return createPortal(
+      <>
+        <button className='modal-backdrop' onClick={closeModal} aria-label='Close modal' />
+        <div className={`modal-container ${isProfile ? 'modal-container-profile' : ''}`}>
+          {renderModal()}
+        </div>
+      </>,
+      modalPortal,
+    );
+  } else {
+    console.error('Failed to find the modal portal element');
+  }
 };

@@ -1,5 +1,3 @@
-import './modal.css';
-
 import { type ReactNode, useState } from 'react';
 
 import { ModalContext, type ModalDataMap, type ModalType } from './modalContext';
