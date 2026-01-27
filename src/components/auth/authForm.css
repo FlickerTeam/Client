@@ -2,7 +2,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--bg-dark-alt);
-  background-image: radial-gradient(var(--bg-panel) 1px, transparent 1px);
+  background-image: radial-gradient(var(--bg-panel) 1px, transparent 3px);
   background-size: 30px 30px;
   display: flex;
   justify-content: center;
@@ -17,25 +17,26 @@ body {
 }
 
 .register-form {
-  background: var(--bg-sidebar);
+  background: var(--bg-alt);
   padding: 24px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   color: var(--text-main);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 25px var(--shadow-main);
+  box-shadow:
+    0 0 15px rgb(167 139 250 / 20%),
+    0 0 40px rgb(167 139 250 / 10%),
+    inset 0 0 4px rgb(167 139 250 / 20%);
+  border: 1.5px dashed var(--accent-primary);
 }
 
 .register-form .form-header {
-  background: rgb(187 154 247 / 10%);
-  border: 1px dashed var(--accent-primary);
   padding: 15px;
   text-align: center;
   border-radius: 8px;
   font-weight: 600;
-  color: var(--accent-primary);
+  color: white;
   font-size: 20px;
 }
 
@@ -86,7 +87,8 @@ body {
 }
 
 .form-body span {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .layout-container {

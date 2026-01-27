@@ -19,7 +19,6 @@ function Register(): JSX.Element {
   const [password, setPassword] = useState('');
   const [customInstance, setCustomInstance] = useState('');
   const [instance, setInstance] = useState<Instance | string | undefined>(undefined);
-  const [showPreview, setShowPreview] = useState(false);
 
   const { instances, status, setStatus, errorMsg, setErrorMsg, checkInstance } = useAuthLogic(
     instance,
@@ -117,14 +116,6 @@ function Register(): JSX.Element {
           setCustomInstance={setCustomInstance}
           setPassword={setPassword}
         />
-        <button
-          className={`preview-tab ${showPreview ? 'active' : ''}`}
-          onClick={() => {
-            setShowPreview(!showPreview);
-          }}
-        >
-          {showPreview ? 'Close Preview' : 'Preview Account'}
-        </button>
       </div>
       <Footer />
     </div>
