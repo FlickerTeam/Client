@@ -6,6 +6,7 @@
   --accent-secondary: #7aa2f7;
   --footer-slash: #a274f4;
   --text-main: #a9b1d6;
+  --text-alt: #b5bac1;
   --text-bright: #c0caf5;
   --bg-bright: #e5e4d9;
   --border-color: rgb(187 154 247 / 20%);
@@ -20,40 +21,6 @@
   --text-muted: #949ba4;
   --text-dim: #565f89;
   --shadow-main: rgb(0 0 0 / 30%);
-}
-
-body {
-  background-color: var(--bg-bright);
-  opacity: 0.8;
-  background-image:
-    radial-gradient(
-      circle,
-      transparent 20%,
-      var(--bg-bright) 20%,
-      var(--bg-bright) 80%,
-      transparent 80%,
-      transparent
-    ),
-    radial-gradient(
-      circle,
-      transparent 20%,
-      var(--bg-bright) 20%,
-      var(--bg-bright) 80%,
-      transparent 80%,
-      transparent
-    ),
-    linear-gradient(#444cf7 2px, transparent 2px),
-    linear-gradient(90deg, #444cf7 2px, var(--bg-bright) 2px);
-  background-position:
-    0 0,
-    25px 25px,
-    0 -1px,
-    -1px 0;
-  background-size:
-    50px 50px,
-    50px 50px,
-    25px 25px,
-    25px 25px;
 }
 
 .center {
@@ -171,6 +138,7 @@ body {
   position: absolute;
   bottom: 0;
   height: 600px;
+  z-index: -9999;
 }
 
 .credits span {
@@ -184,7 +152,7 @@ body {
 .credits .login-link {
   color: white;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   transition: color 0.2s ease;
 }
 

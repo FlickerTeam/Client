@@ -2,7 +2,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--bg-dark-alt);
-  background-image: radial-gradient(var(--bg-panel) 1px, transparent 3px);
+  background-image: radial-gradient(var(--bg-panel) 4px, transparent 3px);
   background-size: 30px 30px;
   display: flex;
   justify-content: center;
@@ -23,7 +23,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  color: var(--text-main);
+  color: var(--text-alt);
   box-shadow:
     0 0 15px rgb(167 139 250 / 20%),
     0 0 40px rgb(167 139 250 / 10%),
@@ -64,7 +64,7 @@ body {
 .register-form a {
   color: var(--accent-secondary);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 14px;
 }
 
 .register-form a:hover {
@@ -87,8 +87,8 @@ body {
 }
 
 .form-body span {
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .layout-container {
