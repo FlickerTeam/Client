@@ -9,7 +9,6 @@ export interface ModalDataMap {
   CONFIRMATION_LEAVE: { name: string; id: string; type: string };
   CLEAR_SELECTED_INSTANCE: undefined;
   CONFIRMATION_DELETE: { name: string; id: string; type: string };
-  USER_PROFILE: { member: Member };
   SERVER_PROFILE: { member: Member };
 }
 

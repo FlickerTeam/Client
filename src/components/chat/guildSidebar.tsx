@@ -5,9 +5,12 @@ import { Link } from 'react-router-dom';
 
 import type { Guild } from '@/types/guilds';
 
+import { useAssetsUrl } from '../../context/assetsUrl';
 import { useContextMenu } from '../../context/contextMenuContext';
 import { useGateway } from '../../context/gatewayContext';
 import { useModal } from '../../context/modalContext';
+import { usePopup } from '../../context/popupContext';
+import { getDefaultAvatar } from '../../utils/avatar';
 
 const GuildSidebar = ({
   guilds,
@@ -21,6 +24,7 @@ const GuildSidebar = ({
   const { user } = useGateway();
   const { openModal } = useModal();
   const { openContextMenu } = useContextMenu();
+  const { openPopup, popupType } = usePopup();
 
   const handleLeaveServer = (guild_name: string, guild_id: string) => {
     openModal('CONFIRMATION_LEAVE', { name: guild_name, id: guild_id, type: 'server' });
@@ -73,53 +77,147 @@ const GuildSidebar = ({
     );
   };
 
+  const UserAvatar = () => {
+    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
+      `/assets/${getDefaultAvatar(user) ?? ''}.png`,
+    );
+    const customAvatarUrl = user?.avatar
+      ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${user.id}/${user.avatar}.png`
+      : defaultAvatarUrl;
+
+    return (
+      <img
+        src={customAvatarUrl || ''}
+        alt='User Avatar'
+        className='guild-user-avatar'
+        onError={() => {
+          rollover();
+        }}
+      />
+    );
+  };
+
+  const isUserPopupOpen = popupType === 'CURRENT_USER_PROFILE';
+
+  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.style.display = 'none';
+  };
+
   return (
     <div id='guilds-column'>
-      <div className='home-btn'>
-        <Link to='/channels/@me' className='login-link'>
-          Home
-        </Link>
-      </div>
-      <div className='quick-guild-stats'>
-        <span className='stat-badge'>{guilds.length} guild(s)</span>
-      </div>
-      {guilds.length > 0 && <hr className='separator' />}
-      {guilds.map((guild: Guild) => (
-        <button
-          className={`guild-icon-wrapper`}
-          key={guild.id}
-          onClick={() => {
-            onSelectGuild(guild);
-          }}
-          onContextMenu={(e) => {
-            handleRightClick(e, guild);
-          }}
-        >
-          {guild.icon ? (
-            <img
-              className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''}`}
-              src={`${localStorage.getItem('selectedCdnUrl') ?? ''}/icons/${guild.id}/${guild.icon}.png`}
-              alt={guild.name}
-            />
-          ) : (
-            <div className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''} no-icon`}>
-              {guild.name.charAt(0)}
+      <div className='home-section'>
+        <button className='guild-icon-wrapper home-wrapper'>
+          {!selectedGuildId && (
+            <div className='selected-indicator-bg'>
+              <div className='selected-gradient' />
             </div>
           )}
-          <div className='item-pill'></div>
+          <Link to='/channels/@me' className='home-btn-link'>
+            <div className='icon-container shadow-container'>
+              <div className='guild-icon home-icon'>
+                <span className='material-symbols-rounded' style={{ fontSize: '28px' }}>
+                  home
+                </span>
+              </div>
+            </div>
+          </Link>
         </button>
-      ))}
-      <hr className='separator' />
-      <button
-        className={`guild-icon-wrapper`}
-        key={`add-guild`}
-        onClick={() => {
-          openModal('WHATS_IT_GONNA_BE');
-        }}
-      >
-        <div className={`guild-icon no-icon`}>+</div>
-        <div className='item-pill'></div>
-      </button>
+        <div className='online-stats'>
+          <span className='stat-text'>1 ONLINE</span>
+          <div className='stat-line' />
+        </div>
+      </div>
+
+      <div className='server-section'>
+        {guilds.map((guild: Guild) => (
+          <button
+            className={`guild-icon-wrapper ${selectedGuildId === guild.id ? 'selected' : ''}`}
+            key={guild.id}
+            onClick={() => {
+              onSelectGuild(guild);
+            }}
+            onContextMenu={(e) => {
+              handleRightClick(e, guild);
+            }}
+          >
+            {selectedGuildId === guild.id && (
+              <div className='selected-indicator-bg'>
+                <div className='selected-gradient' />
+              </div>
+            )}
+            <div className='icon-container'>
+              {guild.icon ? (
+                <img
+                  className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''}`}
+                  src={`${localStorage.getItem('selectedCdnUrl') ?? ''}/icons/${guild.id}/${guild.icon}.png`}
+                  alt={guild.name}
+                  onError={handleImgError}
+                />
+              ) : (
+                <div
+                  className={`guild-icon ${selectedGuildId === guild.id ? 'active' : ''} no-icon`}
+                >
+                  {guild.name.charAt(0)}
+                </div>
+              )}
+            </div>
+          </button>
+        ))}
+
+        <button
+          className={`guild-icon-wrapper`}
+          key={`add-guild`}
+          onClick={() => {
+            openModal('WHATS_IT_GONNA_BE');
+          }}
+        >
+          <div className='icon-container'>
+            <div className={`guild-icon no-icon add-icon`}>
+              <span
+                className='material-symbols-rounded'
+                style={{ fontSize: '24px', color: '#23a559' }}
+              >
+                add
+              </span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div className='user-section'>
+        <button
+          className={`guild-icon-wrapper ${isUserPopupOpen ? 'selected' : ''}`}
+          onClick={(e) => {
+            if (isUserPopupOpen) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            openPopup('CURRENT_USER_PROFILE', {
+              x: 12,
+              y: rect.bottom - 440,
+            });
+          }}
+        >
+          {isUserPopupOpen && (
+            <div className='selected-indicator-bg'>
+              <div className='selected-gradient' />
+            </div>
+          )}
+          <div className='icon-container'>
+            <div className='guild-icon no-icon user-icon-container'>
+              <div className='guild-user-avatar-wrapper'>
+                <UserAvatar />
+              </div>
+              <div className='user-status-indicator'>
+                <span
+                  className='material-symbols-rounded'
+                  style={{ fontSize: '16px', color: '#23a559' }}
+                >
+                  circle
+                </span>
+              </div>
+            </div>
+          </div>
+        </button>
+      </div>
     </div>
   );
 };

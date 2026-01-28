@@ -1,59 +1,71 @@
 import './currentUser.css';
 
-import type { JSX } from 'react';
+import { type JSX, useState } from 'react';
 
-import type { User } from '@/types/users';
+const CurrentUser = ({ onSettingsClicked }: { onSettingsClicked: () => void }): JSX.Element => {
+  const [isOpen, setIsOpen] = useState(false);
 
-import { useAssetsUrl } from '../../context/assetsUrl';
-import { getDefaultAvatar } from '../../utils/avatar';
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
 
-const CurrentUser = ({
-  user,
-  status,
-  onSettingsClicked,
-}: {
-  user: User | null;
-  status?: string;
-  onSettingsClicked?: () => void;
-}): JSX.Element => {
-  const UserAvatar = ({ user }: { user: User | null }) => {
-    const { url: defaultAvatarUrl, rollover } = useAssetsUrl(
-      `/assets/${getDefaultAvatar(user) ?? ''}.png`,
-    );
-    const avatarUrl = user?.avatar
-      ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${user.id}/${user.avatar}.png`
-      : defaultAvatarUrl;
-
-    return (
-      <img
-        src={avatarUrl || ''}
-        alt='User Avatar'
-        className='avatar-img'
-        onError={() => {
-          rollover();
-        }}
-      />
-    );
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleOpen();
+    }
   };
 
   return (
-    <section className='user-settings-panel'>
-      <div className='avatar-wrapper'>
-        <UserAvatar user={user} />
-        <div className={`status-dot ${status ?? ''}`}></div>
-      </div>
+    <section className={`volume-controls-container ${isOpen ? 'open' : ''}`}>
+      <div
+        className='hover-trap'
+        onClick={toggleOpen}
+        onKeyDown={handleKeyDown}
+        role='button'
+        tabIndex={0}
+        aria-label='Expand volume controls'
+      />
 
-      <div className='user-info'>
-        <span className='name'>{user?.username ?? ''}</span>
-        <span className='discriminator'>
-          {user?.discriminator !== '0' ? `#${user?.discriminator ?? ''}` : ''}
-        </span>
-      </div>
+      <div className='slide-wrapper'>
+        <div
+          className='trigger-tab'
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleOpen();
+          }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            handleKeyDown(e);
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label='Toggle volume controls'
+        >
+          <div className='trigger-icon'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              expand_more
+            </span>
+          </div>
+        </div>
 
-      <div className='buttons'>
-        <button className='primary-btn' title='User Settings' onClick={onSettingsClicked}>
-          Edit
-        </button>
+        <div className='volume-controls-panel'>
+          <button className='control-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              videogame_asset
+            </span>
+          </button>
+          <button className='control-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              headset_mic
+            </span>
+          </button>
+          <button className='control-btn' onClick={onSettingsClicked}>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              mic_off
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   );

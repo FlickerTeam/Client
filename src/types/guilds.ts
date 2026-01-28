@@ -25,6 +25,7 @@ export const GuildSchema = z.object({
   id: z.string(),
   name: z.string(),
   icon: z.string().nullish(),
+  banner: z.string().nullish(),
   owner_id: z.string(),
   roles: z.array(RoleSchema),
   channels: z.array(z.lazy(() => ChannelSchema)),

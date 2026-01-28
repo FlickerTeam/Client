@@ -38,7 +38,7 @@ export const ModalRoot = () => {
     }
   };
 
-  const isProfile = modalType === 'SERVER_PROFILE' || modalType === 'USER_PROFILE';
+  const isProfile = modalType === 'SERVER_PROFILE';
 
   const modalPortal = document.getElementById('modal-portal');
 

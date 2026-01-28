@@ -6,6 +6,7 @@ import App from './App';
 import { ContextMenuProvider } from './context/contextMenuProvider';
 import { GatewayProvider } from './context/gatewayProvider';
 import { ModalProvider } from './context/modalProvider';
+import { PopupProvider } from './context/popupProvider';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -15,9 +16,11 @@ if (rootElement) {
       <BrowserRouter>
         <GatewayProvider>
           <ModalProvider>
-            <ContextMenuProvider>
-              <App />
-            </ContextMenuProvider>
+            <PopupProvider>
+              <ContextMenuProvider>
+                <App />
+              </ContextMenuProvider>
+            </PopupProvider>
           </ModalProvider>
         </GatewayProvider>
       </BrowserRouter>

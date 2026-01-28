@@ -1,14 +1,16 @@
-import './chatArea.css';
+import './mainContent.css';
 
 import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 
 import type { Channel } from '@/types/channel';
+import type { Guild } from '@/types/guilds';
 import { type Message, MessageListSchema } from '@/types/messages';
 
 import { useAssetsUrl } from '../../context/assetsUrl';
 import { useGateway } from '../../context/gatewayContext';
 import { useModal } from '../../context/modalContext';
 import { getDefaultAvatar } from '../../utils/avatar';
+import MemberList from './memberList';
 
 interface MediaAttachment {
   file: File;
@@ -16,7 +18,12 @@ interface MediaAttachment {
   id: string;
 }
 
-const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Element => {
+interface MainContentProps {
+  selectedChannel: Channel;
+  selectedGuild: Guild;
+}
+
+const MainContent = ({ selectedChannel, selectedGuild }: MainContentProps): JSX.Element => {
   useModal();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const { typingUsers, user, memberLists } = useGateway();
@@ -412,75 +419,161 @@ const ChatArea = ({ selectedChannel }: { selectedChannel: Channel }): JSX.Elemen
 
   return (
     <main className='chat-main'>
-      <header className='header-base'>
-        # {selectedChannel.name}
-        {selectedChannel.topic ? ` | ${selectedChannel.topic}` : ''}
-      </header>
-      <div className='chat-view'>
-        <div
-          className='messages-scroller scroller'
-          ref={scrollerRef}
-          onScroll={() => {
-            void handleScroll();
-          }}
-        >
-          {renderMessages()}
-        </div>
-        <form
-          className='chat-input-area'
-          onSubmit={(e) => {
-            void handleSendMessage(e);
-          }}
-        >
-          <div className='input-wrapper'>
-            {attachments.length > 0 && (
-              <div className='attachment-shelf'>
-                {attachments.map((at) => (
-                  <div key={at.id} className='attachment-container'>
-                    <img src={at.preview} className='attachment-preview' alt='Attachment preview' />
-                    <button
-                      type='button'
-                      className='attachment-remove'
-                      onClick={() => {
-                        removeAttachment(at.id);
-                      }}
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className='input-row'>
-              <button
-                type='button'
-                className='add-media-btn'
-                onClick={() => fileInputRef.current?.click()}
-              >
-                +
-              </button>
-              <input
-                type='text'
-                placeholder={`Message #${selectedChannel.name ?? ''}`}
-                value={chatMessage}
-                onChange={(e) => {
-                  updateChat(e.target.value);
-                }}
-              />
-              <input
-                type='file'
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-                multiple
-              />
-            </div>
+      <header className='chat-header'>
+        <div className='chat-header-left'>
+          <div className='header-icon'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              tag
+            </span>
           </div>
-        </form>
-        <div className='typing-status-wrapper'>{handleTypingStatus()}</div>
+          <span className='header-title'>{selectedChannel.name}</span>
+          {selectedChannel.topic && (
+            <span className='header-topic'> | {selectedChannel.topic}</span>
+          )}
+        </div>
+        <div className='chat-header-right'>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              forum
+            </span>
+          </button>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              notifications
+            </span>
+          </button>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              push_pin
+            </span>
+          </button>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              group
+            </span>
+          </button>
+          <div className='search-bar'>
+            <input type='text' placeholder='Search' />
+            <span
+              className='material-symbols-rounded search-icon'
+              style={{ fontSize: '20px', position: 'absolute', right: '4px' }}
+            >
+              search
+            </span>
+          </div>
+          <div className='vertical-divider'></div>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              inbox
+            </span>
+          </button>
+        </div>
+      </header>
+
+      <div className='chat-content-row'>
+        <div className='chat-view'>
+          <div
+            className='messages-scroller scroller'
+            ref={scrollerRef}
+            onScroll={() => {
+              void handleScroll();
+            }}
+          >
+            {renderMessages()}
+          </div>
+          <form
+            className='chat-input-area'
+            onSubmit={(e) => {
+              void handleSendMessage(e);
+            }}
+          >
+            <div className='input-wrapper'>
+              {attachments.length > 0 && (
+                <div className='attachment-shelf'>
+                  {attachments.map((at) => (
+                    <div key={at.id} className='attachment-container'>
+                      <img
+                        src={at.preview}
+                        className='attachment-preview'
+                        alt='Attachment preview'
+                      />
+                      <button
+                        type='button'
+                        className='attachment-remove'
+                        onClick={() => {
+                          removeAttachment(at.id);
+                        }}
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className='input-row'>
+                <button
+                  type='button'
+                  className='add-media-btn'
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <div className='add-icon-circle'>
+                    <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                      add_circle
+                    </span>
+                  </div>
+                </button>
+                <input
+                  type='text'
+                  placeholder={`Message #${selectedChannel.name ?? ''}`}
+                  value={chatMessage}
+                  onChange={(e) => {
+                    updateChat(e.target.value);
+                  }}
+                />
+                <div className='input-icons'>
+                  <button type='button' className='input-icon-btn'>
+                    <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                      gif_box
+                    </span>
+                  </button>
+                  <button type='button' className='input-icon-btn'>
+                    <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                      sticky_note_2
+                    </span>
+                  </button>
+                  <button type='button' className='input-icon-btn'>
+                    <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                      mood
+                    </span>
+                  </button>
+                  <button type='button' className='input-icon-btn'>
+                    <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                      interests
+                    </span>
+                  </button>
+                </div>
+
+                <input
+                  type='file'
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                  multiple
+                />
+              </div>
+            </div>
+          </form>
+          <div className='typing-status-wrapper'>{handleTypingStatus()}</div>
+        </div>
+
+        <MemberList
+          key={selectedChannel.id}
+          selectedGuild={selectedGuild}
+          selectedChannel={selectedChannel}
+        />
       </div>
     </main>
   );
 };
 
-export default ChatArea;
+export default MainContent;

@@ -1,6 +1,6 @@
 import './friendsList.css';
 
-import { useState } from 'react';
+import { type JSX, useState } from 'react';
 
 import type { Relationship } from '@/types/relationship';
 
@@ -13,7 +13,11 @@ interface FriendsListProps {
   onRequestDelete: (friendId: string) => void;
 }
 
-export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: FriendsListProps) => {
+export const FriendsList = ({
+  friends,
+  onRequestUpdate,
+  onRequestDelete,
+}: FriendsListProps): JSX.Element => {
   const [filter, setFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -103,47 +107,68 @@ export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: Frien
   const displayFriends = getFilteredFriends();
 
   return (
-    <main className='chat-main'>
-      <header className='header-base'>Friends</header>
-      <div className='header-left'>
-        <button
-          onClick={() => {
-            setFilter('ONLINE');
-          }}
-          className={filter === 'ONLINE' ? 'active' : ''}
-        >
-          Online
-        </button>
-        <button
-          onClick={() => {
-            setFilter('ALL');
-          }}
-          className={filter === 'ALL' ? 'active' : ''}
-        >
-          All
-        </button>
-        <button
-          onClick={() => {
-            setFilter('PENDING');
-          }}
-          className={filter === 'PENDING' ? 'active' : ''}
-        >
-          Pending
-        </button>
-        <button
-          onClick={() => {
-            setFilter('BLOCKED');
-          }}
-          className={filter === 'BLOCKED' ? 'active' : ''}
-        >
-          Blocked
-        </button>
-        <div className='divider' />
-        {/* <button className="add-friend-btn">Add Friend</button> */}
-      </div>
+    <main className='friends-container'>
+      <header className='friends-header'>
+        <div className='header-content-left'>
+          <div className='friends-icon-container'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              group
+            </span>
+          </div>
+          <span className='header-title'>Friends</span>
+          <div className='vertical-divider'></div>
+          <button
+            onClick={() => {
+              setFilter('ONLINE');
+            }}
+            className={filter === 'ONLINE' ? 'active' : ''}
+          >
+            Online
+          </button>
+          <button
+            onClick={() => {
+              setFilter('ALL');
+            }}
+            className={filter === 'ALL' ? 'active' : ''}
+          >
+            All
+          </button>
+          <button
+            onClick={() => {
+              setFilter('PENDING');
+            }}
+            className={filter === 'PENDING' ? 'active' : ''}
+          >
+            Pending
+          </button>
+          <button
+            onClick={() => {
+              setFilter('BLOCKED');
+            }}
+            className={filter === 'BLOCKED' ? 'active' : ''}
+          >
+            Blocked
+          </button>
+          <button className='add-friend-btn'>Add Friend</button>
+        </div>
+        <div className='header-content-right'>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              edit_square
+            </span>
+          </button>
+          <div className='vertical-divider'></div>
+          <button className='icon-btn'>
+            <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+              inbox
+            </span>
+          </button>
+        </div>
+      </header>
+
       <div className='friends-content'>
         <div className='friends-list-column'>
-          <div className='search-bar'>
+          <div className='friends-search-bar'>
             <input
               type='text'
               placeholder='Search'
@@ -151,8 +176,10 @@ export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: Frien
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
-              className='stnd-search'
             />
+            <span className='material-symbols-rounded search-icon' style={{ fontSize: '20px' }}>
+              search
+            </span>
           </div>
           <div className='friends-count'>
             {filter} — {displayFriends.length}
@@ -178,7 +205,7 @@ export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: Frien
                             ? friend.type === 3
                               ? 'Incoming Friend Request'
                               : 'Outgoing Friend Request'
-                            : ''}
+                            : (friend.status ?? 'Offline')}
                         </span>
                       </div>
                     )}
@@ -224,11 +251,38 @@ export const FriendsList = ({ friends, onRequestUpdate, onRequestDelete }: Frien
                       );
                     }
 
+                    if (friend.type === 1) {
+                      return (
+                        <>
+                          <button className='icon-action-btn'>
+                            <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
+                              chat_bubble
+                            </span>
+                          </button>
+                          <button className='icon-action-btn'>
+                            <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
+                              more_vert
+                            </span>
+                          </button>
+                        </>
+                      );
+                    }
+
                     return null;
                   })()}
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+        <div className='active-now-column'>
+          <h3 className='active-now-header'>Active now</h3>
+          <div className='active-now-empty'>
+            <h4>Hello? Is anybody on?</h4>
+            <p>
+              Well, I guess nobody is on. If someone starts an activity, those activities will be
+              shown here!
+            </p>
           </div>
         </div>
       </div>

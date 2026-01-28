@@ -13,6 +13,10 @@
   pointer-events: auto;
 }
 
+.modal-backdrop.transparent-backdrop {
+  background: transparent;
+}
+
 .modal-container {
   z-index: 1;
   position: relative;

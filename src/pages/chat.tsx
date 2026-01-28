@@ -7,23 +7,16 @@ import type { Guild } from '@/types/guilds';
 import type { Relationship } from '@/types/relationship';
 
 import ChannelSidebar from '../components/chat/channelSidebar';
-import ChatArea from '../components/chat/chatArea';
 import { FriendsList } from '../components/chat/friendsList';
 import GuildSidebar from '../components/chat/guildSidebar';
-import MemberList from '../components/chat/memberList';
+import MainContent from '../components/chat/mainContent';
 import Settings from '../components/chat/settings';
 import { useGateway } from '../context/gatewayContext';
 import LoadingScreen from './loading';
 
 const ChatApp = (): JSX.Element => {
-  const {
-    isReady,
-    guilds,
-    user,
-    user_settings,
-    relationships,
-    requestMembers,
-  }: GatewayContextSchema = useGateway();
+  const { isReady, guilds, user, relationships, requestMembers }: GatewayContextSchema =
+    useGateway();
   const { guildId, channelId } = useParams();
   const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
@@ -114,6 +107,18 @@ const ChatApp = (): JSX.Element => {
     setLocalFriends((prev) => prev.map((f) => (f.id === updatedFriend.id ? updatedFriend : f)));
   };
 
+  useEffect(() => {
+    const handleOpenSettings = () => {
+      setShowSettings(true);
+    };
+
+    window.addEventListener('ui_open_settings', handleOpenSettings);
+
+    return () => {
+      window.removeEventListener('ui_open_settings', handleOpenSettings);
+    };
+  }, []);
+
   if (!isReady) {
     return <LoadingScreen />;
   }
@@ -151,16 +156,14 @@ const ChatApp = (): JSX.Element => {
             selectedGuild={selectedGuild}
             selectedChannel={selectedChannel}
             onSelectChannel={handleSelectChannel}
-            user={user}
             onSettingsClicked={() => {
               setShowSettings(true);
             }}
-            status={user_settings?.status ?? 'online'}
             relationships={relationships}
           />
 
-          {selectedChannel ? (
-            <ChatArea selectedChannel={selectedChannel} />
+          {selectedChannel && selectedGuild ? (
+            <MainContent selectedChannel={selectedChannel} selectedGuild={selectedGuild} />
           ) : !selectedGuild ? (
             <FriendsList
               friends={localFriends}
@@ -168,13 +171,8 @@ const ChatApp = (): JSX.Element => {
               onRequestDelete={handleManualRemoveFriend}
             />
           ) : (
-            <></>
+            <div className='empty-chat-state' />
           )}
-          <MemberList
-            key={selectedChannel?.id}
-            selectedGuild={selectedGuild}
-            selectedChannel={selectedChannel}
-          />
         </div>
       )}
     </div>

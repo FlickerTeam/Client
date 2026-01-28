@@ -1,6 +1,6 @@
 import './serverProfile.css';
 
-import type { JSX } from 'react';
+import { type JSX } from 'react';
 
 import type { Member } from '@/types/guilds';
 
@@ -34,7 +34,7 @@ export const ServerProfileModal = ({ member }: { member: Member }): JSX.Element 
   };
 
   const bannerUrl = member.user.banner
-    ? `url('${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.user.id}/${member.user.banner ?? ''}.png')`
+    ? `url('${localStorage.getItem('selectedCdnUrl') ?? ''}/banners/${member.user.id}/${member.user.banner ?? ''}.png')`
     : 'none';
 
   return (

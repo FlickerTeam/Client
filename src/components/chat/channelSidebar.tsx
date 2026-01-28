@@ -4,9 +4,7 @@ import { type JSX, useState } from 'react';
 
 import type { Channel } from '@/types/channel';
 import type { Guild } from '@/types/guilds';
-import type { StatusEnum } from '@/types/presences';
 import type { Relationship } from '@/types/relationship';
-import type { User } from '@/types/users';
 
 import CurrentUser from './currentUser';
 
@@ -14,17 +12,13 @@ const ChannelSidebar = ({
   selectedGuild,
   selectedChannel,
   onSelectChannel,
-  user,
   relationships,
-  status,
   onSettingsClicked,
 }: {
   selectedGuild?: Guild | null;
   selectedChannel?: Channel | null;
   onSelectChannel: (channel: Channel | null) => void;
-  user: User | null;
   relationships: Relationship[];
-  status: StatusEnum;
   onSettingsClicked: () => void;
 }): JSX.Element => {
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
@@ -32,21 +26,44 @@ const ChannelSidebar = ({
   if (!selectedGuild) {
     return (
       <div id='channels-column'>
-        <header className='header-base'>Direct Messages</header>
+        <div className='sidebar-header-search'>
+          <div className='search-bar-fake'>
+            <span className='search-text'>Find or start a conversation</span>
+          </div>
+        </div>
+
         <div className='scroller'>
           <button
-            className={`channel-item ${!selectedChannel ? 'active' : ''}`}
+            className={`friends-button ${!selectedChannel ? 'active' : ''}`}
             onClick={() => {
               onSelectChannel(null);
             }}
           >
-            <span className='channel-hash'>
-              ({relationships.filter((x: Relationship) => x.type === 1).length})
-            </span>
+            <div className='icon-wrapper'>
+              <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
+                group
+              </span>
+            </div>
             <span className='channel-name'>Friends</span>
           </button>
+
+          <div className='dm-section'>
+            <div className='dm-header'>
+              <span className='dm-header-text'>Direct Messages</span>
+              <button className='dm-add-btn'>
+                <span className='material-symbols-rounded' style={{ fontSize: '16px' }}>
+                  add
+                </span>
+              </button>
+            </div>
+            <div className='dm-list'>
+              <span className='dm-placeholder'>
+                ({relationships.filter((x: Relationship) => x.type === 1).length}) Friends
+              </span>
+            </div>
+          </div>
         </div>
-        <CurrentUser user={user} onSettingsClicked={onSettingsClicked} status={status} />
+        <CurrentUser onSettingsClicked={onSettingsClicked} />
       </div>
     );
   }
@@ -64,7 +81,11 @@ const ChannelSidebar = ({
         onSelectChannel(channel);
       }}
     >
-      <span className='channel-hash'>{channel.type === 2 ? '' : '#'}</span>
+      <div className='channel-icon'>
+        <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
+          {channel.type === 2 ? 'volume_up' : 'tag'}
+        </span>
+      </div>
       <span className='channel-name'>{channel.name}</span>
     </button>
   );
@@ -76,9 +97,25 @@ const ChannelSidebar = ({
     }));
   };
 
+  const bannerUrl = selectedGuild.banner
+    ? `${localStorage.getItem('selectedCdnUrl') ?? ''}/banners/${selectedGuild.id}/${selectedGuild.banner}.png`
+    : null;
+
   return (
     <div id='channels-column'>
-      <header className='header-base'>{selectedGuild.name}</header>
+      <div className='sidebar-header-guild'>
+        <div className='header-bg'>
+          {bannerUrl && <img src={bannerUrl} alt='' className='header-image' />}
+          <div className='header-gradient'></div>
+        </div>
+        <div className='header-content'>
+          <span className='guild-name'>{selectedGuild.name}</span>
+          <span className='material-symbols-rounded header-arrow' style={{ fontSize: '24px' }}>
+            expand_more
+          </span>
+        </div>
+      </div>
+
       <div className='scroller'>
         {categoryChannels
           .sort((a: Channel, b: Channel) => (a.position ?? 0) - (b.position ?? 0))
@@ -97,9 +134,11 @@ const ChannelSidebar = ({
                   }}
                   style={{ cursor: 'pointer' }}
                 >
-                  <span className={`arrow ${isCollapsed ? '' : 'expanded'}`}>
-                    {isCollapsed ? '›' : '⌄'}
-                  </span>
+                  <div className={`arrow-icon ${isCollapsed ? 'collapsed' : ''}`}>
+                    <span className='material-symbols-rounded' style={{ fontSize: '12px' }}>
+                      expand_more
+                    </span>
+                  </div>
                   {category.name?.toUpperCase()}
                 </button>
                 {!isCollapsed && (
@@ -116,7 +155,7 @@ const ChannelSidebar = ({
         ))}
       </div>
 
-      <CurrentUser user={user} onSettingsClicked={onSettingsClicked} status={status} />
+      <CurrentUser onSettingsClicked={onSettingsClicked} />
     </div>
   );
 };

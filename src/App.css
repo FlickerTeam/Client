@@ -1,6 +1,7 @@
 :root {
   --bg-main: #1a1b26;
   --bg-sidebar: #16161e;
+  --bg-sidebar-secondary: #272736;
   --bg-panel: #1f2335;
   --accent-primary: #bb9af7;
   --accent-secondary: #7aa2f7;
@@ -168,9 +169,6 @@ body,
   overflow-y: auto;
   background-color: var(--bg-sidebar);
   width: 100px;
-  margin: 8px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
 }
 
 ::-webkit-scrollbar {
@@ -208,9 +206,6 @@ body,
 #channels-column {
   background-color: var(--bg-sidebar);
   flex-direction: column;
-  margin: 8px 8px 8px 0;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
   width: 240px;
   min-width: 240px;
   max-width: 320px;
@@ -240,11 +235,7 @@ body,
 
 .chat-main {
   flex: 1;
-  margin: 8px 8px 8px 0;
   background-color: var(--bg-panel);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px rgb(0 0 0 / 30%); /* Var */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -252,10 +243,7 @@ body,
 
 .members-column {
   max-width: 400px;
-  margin: 8px 8px 8px 0;
-  background-color: var(--bg-sidebar);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-sidebar-secondary);
   min-width: 250px;
 }
 

@@ -1,27 +1,209 @@
-.home-btn {
-  margin-top: 10px;
+#guilds-column {
+  width: 98px;
+  height: 100vh;
+  background-color: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 0;
+  flex-shrink: 0;
+  overflow: hidden auto;
+}
+
+.home-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.home-btn a {
-  font-size: 15px;
-  text-decoration: underline dotted;
-  color: var(--accent-primary);
+.guild-icon-wrapper.home-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
-.home-btn a:hover {
-  color: rgb(227 132 253); /* Make this a var */
+.home-btn-link {
+  display: block;
 }
 
-.separator {
-  margin-top: 20px;
-  width: 70%;
+.icon-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.shadow-container {
+  box-shadow: 0 0 32px 0 rgb(0 0 0 / 50%);
+  border-radius: 15px;
+}
+
+.home-icon {
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgb(187 154 247 / 20%);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.home-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.online-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.9;
+}
+
+.stat-text {
+  color: #949ba4;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-line {
+  width: 50px;
+  height: 1px;
+  background-color: rgb(187 154 247 / 20%);
+  background-size: cover;
+}
+
+.server-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.guild-icon-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.selected-indicator-bg {
+  position: absolute;
+  left: 13px;
+  top: 6px;
+  width: 84px;
+  height: 38px;
+  background-color: #854fbb;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.selected-gradient {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  width: 70px;
+  height: 38px;
+  background-image: linear-gradient(90.21deg, rgb(133 79 187 / 0%) 0%, rgb(187 154 247) 99.9%);
+}
+
+.guild-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  object-fit: cover;
+  transition: border-radius 0.2s ease;
+  border: 1px solid rgb(187 154 247 / 20%);
 }
 
 .guild-icon.active {
-  border-radius: 30%;
-  transform: translateY(-2px);
-  background-color: var(--accent-primary);
-  color: var(--bg-main);
-  border-left: 6px solid #854fbb; /* Make this a var */
+  border-radius: 15px;
+  border: 1px solid rgb(187 154 247 / 20%);
+}
+
+.guild-icon.no-icon {
+  background-color: #1f2335;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Inter, sans-serif;
+}
+
+.add-icon {
+  background-color: #1f2335;
+  border: 1px solid rgb(187 154 247 / 20%);
+}
+
+.add-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.guild-context-menu {
+  position: fixed;
+  z-index: 9999;
+}
+
+.user-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.user-icon-container {
+  position: relative;
+  border: 5px solid rgb(187 154 247 / 20%);
+  box-sizing: content-box;
+  width: 50px;
+  height: 50px;
+}
+
+.guild-user-avatar-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.guild-user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.user-status-indicator img {
+  width: 100%;
+  height: 100%;
 }

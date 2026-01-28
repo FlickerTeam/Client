@@ -9,7 +9,7 @@ import type { Guild, Member, Role } from '@/types/guilds';
 import { useAssetsUrl } from '../../context/assetsUrl';
 import { useContextMenu } from '../../context/contextMenuContext';
 import { useGateway } from '../../context/gatewayContext';
-import { useModal } from '../../context/modalContext';
+import { usePopup } from '../../context/popupContext';
 import { getDefaultAvatar } from '../../utils/avatar';
 
 const MemberListItem = ({
@@ -21,8 +21,8 @@ const MemberListItem = ({
   isTyping: boolean;
   roles?: Role[];
 }): JSX.Element => {
-  const { openContextMenu, closeContextMenu } = useContextMenu();
-  const { openModal } = useModal();
+  const { openContextMenu } = useContextMenu();
+  const { openPopup } = usePopup();
 
   const status = member.presence?.status ?? 'offline';
 
@@ -63,132 +63,20 @@ const MemberListItem = ({
     );
   };
 
-  const handleProfileOpen = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    closeContextMenu();
-
-    setTimeout(() => {
-      openModal('SERVER_PROFILE', {
-        member: member,
-      });
-    }, 0);
-  };
-
-  const getRoleColor = (colorDecimal: number) => {
-    if (!colorDecimal || colorDecimal === 0) {
-      return 'rgba(185, 187, 190, 0.2)';
-    }
-
-    return `#${colorDecimal.toString(16).padStart(6, '0')}`;
-  };
-
   const showProfilePopout = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + 30;
-    const y = rect.top - 10;
+    const x = rect.left - 310;
+    const y = rect.top;
 
-    const bannerUrl =
-      member.user.banner && localStorage.getItem('selectedCdnUrl')
-        ? `url('${localStorage.getItem('selectedCdnUrl') ?? ''}/avatars/${member.user.id}/${member.user.banner}.png')`
-        : 'none';
-
-    openContextMenu(
+    openPopup('USER_PROFILE_POPOUT', {
       x,
       y,
-      <div className='profile-popout-container'>
-        {member.user.banner && (
-          <div
-            className='popout-banner'
-            style={{
-              backgroundImage: bannerUrl,
-            }}
-          />
-        )}
-        <div className='profile-popout-content'>
-          <div className='popout-header'>
-            <button
-              className={`avatar-wrapper-centered ${member.user.banner ? 'overlap' : ''}`}
-              onMouseOver={(e) => {
-                e.currentTarget.classList.add('avatar-img-text');
-              }}
-              onFocus={(e) => {
-                e.currentTarget.classList.add('avatar-img-text');
-              }}
-              onBlur={(e) => {
-                e.currentTarget.classList.remove('avatar-img-text');
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.classList.remove('avatar-img-text');
-              }}
-              onClick={(e) => {
-                handleProfileOpen(e);
-              }}
-            >
-              <MemberAvatar member={member} className='avatar-img-large' />
-              <div className={`status-dot-large ${status}`} title={status}></div>
-            </button>
-            <div className='user-details-centered'>
-              <span className='username'>{member.user.username}</span>
-              <span className='discriminator'>#{member.user.discriminator || '0000'}</span>
-            </div>
-            {member.user.pronouns && (
-              <div className='pronouns-row'>
-                <span className='pronouns' title={`${member.user.username}'s pronouns`}>
-                  {member.user.pronouns}
-                </span>
-              </div>
-            )}
-          </div>
-          {member.user.bio && (
-            <>
-              <hr className='popout-separator' />
-              <div className='popout-section'>
-                <span className='section-title'>ABOUT ME</span>
-                <div className='about-me-container'>
-                  <p>{member.user.bio}</p>
-                </div>
-              </div>
-            </>
-          )}
-          <hr className='popout-separator' />
-          <div className='popout-section'>
-            <span className='section-title'>ROLES</span>
-            <div className='roles-container'>
-              {member.roles.map((roleId: string) => {
-                const role = roles?.find((r: Role) => r.id === roleId);
-
-                if (!role) return null;
-
-                const color = getRoleColor(role.color);
-
-                return (
-                  <>
-                    <div
-                      className='role-pill role-emphasis-border'
-                      style={{
-                        borderColor: color,
-                      }}
-                    >
-                      <span className='role-removal-btn'>×</span> {role.name}
-                    </div>
-                  </>
-                );
-              })}
-              <div className='add-role-btn'>+</div>
-            </div>
-          </div>
-          <div className='popout-section'>
-            <span className='section-title'>NOTE</span>
-            <textarea className='note-input' placeholder='Click to add a note' />
-          </div>
-        </div>
-      </div>,
-    );
+      member,
+      roles: roles ?? [],
+    });
   };
 
   return (
@@ -291,10 +179,11 @@ const MemberList = ({
           }
 
           if (item.member) {
+            const memberWithGuild = { ...item.member, guild_id: selectedGuild?.id };
             return (
               <MemberListItem
                 key={`${item.member.user.id}-${index.toString()}`}
-                member={item.member}
+                member={memberWithGuild}
                 isTyping={!!currentChannelTyping?.[item.member.user.id]}
                 roles={selectedGuild?.roles}
               />
