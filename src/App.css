@@ -81,7 +81,7 @@ body {
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--accent-primary);
-  border: 1px dashed var(--accent-primary);
+  border: 1px solid rgb(187 154 247 / 20%);
   padding: 5px;
 }
 
@@ -169,6 +169,7 @@ body,
   overflow-y: auto;
   background-color: var(--bg-sidebar);
   width: 100px;
+  border-right: 1px solid rgb(187 154 247 / 20%);
 }
 
 ::-webkit-scrollbar {
@@ -195,6 +196,10 @@ body,
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.material-symbols-rounded {
+  color: #989898;
 }
 
 .scroller {
@@ -264,8 +269,7 @@ body,
 .header-base {
   color: var(--accent-primary);
   padding: 20px;
-  border-bottom: 1px dashed #9b75e1f5; /* Var */
-  background: var(--bg-main);
+  border-bottom: 1px solid rgb(187 154 247 / 20%); /* Var */
   display: flex;
   justify-content: space-between;
 }

@@ -13,9 +13,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  border-bottom: 1px dashed var(--accent-primary);
-  background-color: var(--bg-header-alt);
-  box-shadow: 0 4px 32px 0 rgb(162 116 244 / 20%);
+  border-bottom: 1px solid rgb(187 154 247 / 20%);
+  background-color: var(--bg-main);
+
+  /* box-shadow: 0 4px 32px 0 rgb(162 116 244 / 20%); */
   flex-shrink: 0;
   z-index: 2;
 }
@@ -271,14 +272,12 @@
 }
 
 .add-icon-circle {
-  width: 24px;
-  height: 24px;
-  background-color: #949ba4;
+  width: 30px;
+  height: 30px;
   border-radius: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(187 154 247 / 20%);
 }
 
 .add-icon-circle img {
@@ -341,17 +340,18 @@
   justify-content: flex-end;
   padding: 16px;
   padding-bottom: 20px;
+  text-align: center;
 }
 
 .no-messages h1 {
-  color: var(--text-normal);
+  color: var(--text-muted);
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 
 .no-messages p {
-  color: var(--text-muted);
+  color: var(--text-alt);
   font-size: 16px;
 }
 

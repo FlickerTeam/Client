@@ -4,7 +4,6 @@ import { type JSX, useState } from 'react';
 
 import type { Channel } from '@/types/channel';
 import type { Guild } from '@/types/guilds';
-import type { Relationship } from '@/types/relationship';
 
 import CurrentUser from './currentUser';
 
@@ -12,13 +11,11 @@ const ChannelSidebar = ({
   selectedGuild,
   selectedChannel,
   onSelectChannel,
-  relationships,
   onSettingsClicked,
 }: {
   selectedGuild?: Guild | null;
   selectedChannel?: Channel | null;
   onSelectChannel: (channel: Channel | null) => void;
-  relationships: Relationship[];
   onSettingsClicked: () => void;
 }): JSX.Element => {
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
@@ -56,11 +53,7 @@ const ChannelSidebar = ({
                 </span>
               </button>
             </div>
-            <div className='dm-list'>
-              <span className='dm-placeholder'>
-                ({relationships.filter((x: Relationship) => x.type === 1).length}) Friends
-              </span>
-            </div>
+            <div className='dm-list'></div>
           </div>
         </div>
         <CurrentUser onSettingsClicked={onSettingsClicked} />

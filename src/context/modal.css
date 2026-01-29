@@ -61,7 +61,7 @@
 
 .context-menu-out {
   background: var(--bg-alt);
-  border: 1px dashed var(--accent-primary);
+  border: 1px solid rgb(187 154 247 / 20%);
   border-radius: 10px;
 }
 

@@ -207,12 +207,9 @@ const GuildSidebar = ({
                 <UserAvatar />
               </div>
               <div className='user-status-indicator'>
-                <span
-                  className='material-symbols-rounded'
-                  style={{ fontSize: '16px', color: '#23a559' }}
-                >
-                  circle
-                </span>
+                <div className='status-indicator-wrapper'>
+                  <div className='status-dot-large online'></div>
+                </div>
               </div>
             </div>
           </div>

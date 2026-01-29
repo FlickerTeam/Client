@@ -159,7 +159,6 @@ const ChatApp = (): JSX.Element => {
             onSettingsClicked={() => {
               setShowSettings(true);
             }}
-            relationships={relationships}
           />
 
           {selectedChannel && selectedGuild ? (

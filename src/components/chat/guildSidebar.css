@@ -28,6 +28,7 @@
 
 .home-btn-link {
   display: block;
+  text-decoration: none;
 }
 
 .icon-container {
@@ -171,7 +172,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 .user-icon-container {
@@ -201,6 +202,10 @@
   right: 0;
   width: 20px;
   height: 20px;
+}
+
+.user-status-indicator span {
+  color: var(--user-status);
 }
 
 .user-status-indicator img {

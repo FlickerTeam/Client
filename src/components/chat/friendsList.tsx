@@ -177,9 +177,7 @@ export const FriendsList = ({
                 setSearchQuery(e.target.value);
               }}
             />
-            <span className='material-symbols-rounded search-icon' style={{ fontSize: '20px' }}>
-              search
-            </span>
+            <span className='material-symbols-rounded search-icon'>search</span>
           </div>
           <div className='friends-count'>
             {filter} — {displayFriends.length}

@@ -454,12 +454,7 @@ const MainContent = ({ selectedChannel, selectedGuild }: MainContentProps): JSX.
           </button>
           <div className='search-bar'>
             <input type='text' placeholder='Search' />
-            <span
-              className='material-symbols-rounded search-icon'
-              style={{ fontSize: '20px', position: 'absolute', right: '4px' }}
-            >
-              search
-            </span>
+            <span className='material-symbols-rounded search-icon'>search</span>
           </div>
           <div className='vertical-divider'></div>
           <button className='icon-btn'>
