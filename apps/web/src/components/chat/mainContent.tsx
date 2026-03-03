@@ -789,8 +789,34 @@ const MainContent = ({
     if (allMessages.length === 0) {
       if (firstLoad)
         return (
-          <div className='no-messages'>
-            <h1>Loading...</h1>
+          <div className='no-messages chat-loading-skeleton' aria-live='polite'>
+            <div className='skeleton-message-group'>
+              <div className='skeleton-avatar' />
+              <div className='skeleton-message-content'>
+                <div className='skeleton-line skeleton-line-name' />
+                <div className='skeleton-line skeleton-line-short' />
+                <div className='skeleton-line skeleton-line-medium' />
+                <div className='skeleton-line skeleton-line-long' />
+                <div className='skeleton-attachment skeleton-attachment-large' />
+              </div>
+            </div>
+            <div className='skeleton-message-group'>
+              <div className='skeleton-avatar' />
+              <div className='skeleton-message-content'>
+                <div className='skeleton-line skeleton-line-name' />
+                <div className='skeleton-line skeleton-line-medium' />
+                <div className='skeleton-line skeleton-line-short' />
+                <div className='skeleton-attachment skeleton-attachment-small' />
+              </div>
+            </div>
+            <div className='skeleton-message-group'>
+              <div className='skeleton-avatar' />
+              <div className='skeleton-message-content'>
+                <div className='skeleton-line skeleton-line-name' />
+                <div className='skeleton-line skeleton-line-long' />
+                <div className='skeleton-line skeleton-line-medium' />
+              </div>
+            </div>
           </div>
         );
       else

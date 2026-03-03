@@ -342,6 +342,128 @@
   font-size: 16px;
 }
 
+.chat-loading-skeleton {
+  justify-content: flex-start;
+  text-align: left;
+  gap: 24px;
+  padding-top: 18px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.skeleton-message-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: #323740;
+}
+
+.skeleton-message-content {
+  width: min(820px, 100%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 8px;
+}
+
+.skeleton-line,
+.skeleton-avatar,
+.skeleton-attachment {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-line::after,
+.skeleton-avatar::after,
+.skeleton-attachment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0%) 0%,
+    rgb(255 255 255 / 7%) 45%,
+    rgb(255 255 255 / 15%) 50%,
+    rgb(255 255 255 / 7%) 55%,
+    rgb(255 255 255 / 0%) 100%
+  );
+  animation: skeleton-shimmer 1.7s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 8px;
+  background-color: #323740;
+}
+
+.skeleton-line-name {
+  width: 88px;
+}
+
+.skeleton-line-short {
+  width: 90px;
+}
+
+.skeleton-line-medium {
+  width: 150px;
+}
+
+.skeleton-line-long {
+  width: 230px;
+}
+
+.skeleton-attachment {
+  border-radius: 8px;
+  background-color: #323740;
+}
+
+.skeleton-attachment-large {
+  margin-top: 2px;
+  width: 300px;
+  height: 136px;
+}
+
+.skeleton-attachment-small {
+  margin-top: 2px;
+  width: 210px;
+  height: 90px;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (width <= 640px) {
+  .chat-loading-skeleton {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .skeleton-line-long {
+    width: 180px;
+  }
+
+  .skeleton-attachment-large {
+    width: 210px;
+    height: 96px;
+  }
+
+  .skeleton-attachment-small {
+    width: 170px;
+    height: 74px;
+  }
+}
+
 .message-attachments {
   display: flex;
   flex-wrap: wrap;
