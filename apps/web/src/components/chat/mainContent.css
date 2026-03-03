@@ -538,6 +538,7 @@
   display: flex;
   align-content: center;
   align-items: center;
+  gap: 5px;
 }
 
 .reply-content > img {
