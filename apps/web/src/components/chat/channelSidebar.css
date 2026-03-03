@@ -39,7 +39,7 @@
 
 .sidebar-header-banner {
   width: 100%;
-  aspect-ratio: 16/9;
+  aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -203,7 +203,7 @@
   box-shadow: -2px 0 0 0 var(--accent-primary);
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   .sidebar-btn.active {
     background-color: #d9d9d9;
   }
@@ -321,7 +321,7 @@
 }
 
 .sidebar-btn.unread::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -4px;
   width: 7px;

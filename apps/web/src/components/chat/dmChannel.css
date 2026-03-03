@@ -35,7 +35,7 @@
   transition: 0.7s all;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   .dm-card:hover {
     background: #e9e5e5;
   }

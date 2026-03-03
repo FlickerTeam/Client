@@ -3,8 +3,8 @@ import type { GuildMemberListGroup, GuildMemberListOperationItem } from './gatew
 import type { Guild, Member, VoiceState } from './guilds';
 import type { Presence, Session } from './presences';
 import type { Relationship } from './relationship';
-import type { User } from './users';
 import type { UserSettings } from './userSettings';
+import type { User } from './users';
 
 export interface GuildMemberListState {
   id: string;

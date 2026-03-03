@@ -144,8 +144,8 @@ const RegisterForm = ({
         <div className='agreement'>
           <input type='checkbox' id='terms' />
           <label htmlFor='terms'>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- Add a link to the instance's T&C later*/}
-            I have read the <a href='#'>Terms and Conditions</a> of this instance.
+            {/* biome-ignore lint/a11y/useValidAnchor: Add a link to the instance's T&C later*/}I
+            have read the <a href='#'>Terms and Conditions</a> of this instance.
           </label>
         </div>
         <div className='actions'>

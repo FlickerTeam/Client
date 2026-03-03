@@ -1,4 +1,4 @@
-@import url('overlayscrollbars/overlayscrollbars.css');
+@import url("overlayscrollbars/overlayscrollbars.css");
 
 :root {
   --bg-main: #1a1b26;
@@ -78,7 +78,7 @@ body {
   gap: 5px;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   --bg-main: #f2f3f5;
   --bg-sidebar: #ebedef;
   --bg-sidebar-secondary: #e3e5e8;
@@ -313,7 +313,7 @@ body,
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
 }
 
 .popout-console-titlebar {

@@ -1,26 +1,34 @@
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import type { Channel, ChannelReadState } from 'shared';
-import type { GatewayContextSchema } from 'shared';
-import type { Relationship } from 'shared';
-import type { User } from 'shared';
-import type { UserSettings } from 'shared';
-import { useUserStore } from 'shared';
+import type {
+  Channel,
+  ChannelReadState,
+  GatewayContextSchema,
+  Relationship,
+  User,
+  UserSettings,
+} from 'shared';
 import {
   GatewayPayloadSchema,
+  type Guild,
   type GuildMemberListOperationItem,
   GuildMemberListUpdateSchema,
   HelloSchema,
+  logger,
+  type Member,
   MessageCreateSchema,
   MessageDeleteSchema,
   MessageUpdateSchema,
+  type Presence,
   PresenceUpdateSchema,
   ReadyEventSchema,
+  type Session,
+  SessionListSchema,
   TypingStartSchema,
   UserUpdateSchema,
+  useUserStore,
+  type VoiceState,
+  VoiceStateSchema,
 } from 'shared';
-import { type Guild, type Member, type VoiceState, VoiceStateSchema } from 'shared';
-import { type Presence, type Session, SessionListSchema } from 'shared';
-import { logger } from 'shared';
 
 import { GatewayContext } from './gatewayContext';
 
@@ -71,7 +79,7 @@ export const GatewayProvider = ({ children }: GatewayProviderProps) => {
   const sessionId = useRef<string | null>(null);
   const lastSequence = useRef<number | null>(null);
   const resumeGatewayUrl = useRef<string | null>(null);
-  const [reconnectCounter, setReconnectTrigger] = useState(0);
+  const [_reconnectCounter, setReconnectTrigger] = useState(0);
 
   const sendOp = useCallback((op: number, d: unknown) => {
     if (socket.current?.readyState === WebSocket.OPEN) {
@@ -278,7 +286,6 @@ export const GatewayProvider = ({ children }: GatewayProviderProps) => {
           setTypingUsers((prev) => {
             const channelTyping = { ...prev[parsed.channel_id] };
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Yeah I know and this is completely needed, just shut up about it.
             const { [parsed.author.id ?? '']: _, ...remainingTyping } = channelTyping;
             return { ...prev, [parsed.channel_id]: remainingTyping };
           });
@@ -675,7 +682,7 @@ export const GatewayProvider = ({ children }: GatewayProviderProps) => {
     return () => {
       cleanup();
     };
-  }, [connect, reconnectCounter]);
+  }, [connect]);
 
   const gatewayProps: GatewayContextSchema = {
     isReady,

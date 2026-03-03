@@ -9,7 +9,7 @@
 
 .popout-banner {
   width: 100%;
-  aspect-ratio: 680/240;
+  aspect-ratio: 680 / 240;
   background-size: cover;
   background-position: center;
 }
@@ -203,7 +203,7 @@
 }
 
 .avatar-img-text::after {
-  content: 'VIEW PROFILE';
+  content: "VIEW PROFILE";
   white-space: pre-wrap;
   position: absolute;
   top: 50%;

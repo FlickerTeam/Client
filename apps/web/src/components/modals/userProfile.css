@@ -18,7 +18,7 @@
 
 .profile-banner {
   width: 100%;
-  aspect-ratio: 680/240;
+  aspect-ratio: 680 / 240;
   background-color: var(--bg-sidebar-secondary);
   background-size: cover;
   background-position: center;

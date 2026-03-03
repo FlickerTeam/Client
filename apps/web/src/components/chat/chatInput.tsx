@@ -16,7 +16,7 @@ const ChatInput = ({ value, onChange, onSubmit, disabled, ...props }: ChatInputP
 
     el.style.height = '1em';
     el.style.height = `${String(el.scrollHeight)}px`;
-  }, [value]);
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (disabled) return;

@@ -4,14 +4,8 @@ import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { GatewayContextSchema } from 'shared';
-import type { Guild } from 'shared';
-import type { Relationship } from 'shared';
-import type { User } from 'shared';
-import { useGuildChannelMemoryStore } from 'shared';
-import { post } from 'shared';
-import { type LogEntry, logger } from 'shared';
+import type { Channel, GatewayContextSchema, Guild, Relationship, User } from 'shared';
+import { type LogEntry, logger, post, useGuildChannelMemoryStore } from 'shared';
 
 import ChannelSidebar from '@/components/chat/channelSidebar';
 import { FriendsList } from '@/components/chat/friendsList';
@@ -389,7 +383,6 @@ const ChatApp = (): JSX.Element => {
     navigate,
     privateChannels,
     selectedChannel?.id,
-    selectedGuild,
     updateReadState,
     user,
   ]);

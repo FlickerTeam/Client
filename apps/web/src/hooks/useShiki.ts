@@ -37,7 +37,7 @@ export function useShiki() {
   const nextId = useRef(0);
 
   const highlight = useCallback(
-    async (text: string, language?: string, theme = 'flicker-shiki-dark'): Promise<string> => {
+    (text: string, language?: string, theme = 'flicker-shiki-dark'): Promise<string> => {
       return new Promise((resolve) => {
         const id = `shiki-${String(nextId.current)}`;
         nextId.current += 1;

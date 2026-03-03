@@ -27,7 +27,7 @@ export const ConfirmationLeaveModal = ({
     }
   };
 
-  const leavePlace = async (id: string, type: string) => {
+  const leavePlace = (id: string, type: string) => {
     if (type === 'server') {
       return leaveGuild(id);
     } //handle group dms, cuz like how else would you leave something

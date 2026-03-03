@@ -11,5 +11,5 @@
     "verbatimModuleSyntax": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "eslint.config.mts"]
+  "include": ["vite.config.ts"]
 }

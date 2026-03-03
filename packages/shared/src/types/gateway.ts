@@ -5,8 +5,8 @@ import { GuildSchema, MemberSchema, VoiceStateSchema } from './guilds';
 import { MessageSchema } from './messages';
 import { PresenceSchema, SessionSchema } from './presences';
 import { RelationshipSchema } from './relationship';
-import { UserSchema } from './users';
 import { UserSettingsSchema } from './userSettings';
+import { UserSchema } from './users';
 
 export const GuildMemberListGroupSchema = z.object({
   id: z.string(),

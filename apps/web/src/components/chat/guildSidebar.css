@@ -36,7 +36,7 @@
   background: var(--bg-offline);
   width: 35px;
   height: 40px;
-  content: '';
+  content: "";
   position: absolute;
   left: -5px;
   z-index: -1;
@@ -63,7 +63,7 @@
   background: var(--bg-dnd);
   width: 35px;
   height: 40px;
-  content: '';
+  content: "";
   position: absolute;
   left: -5px;
   z-index: -1;
@@ -174,7 +174,7 @@
 }
 
 .user-icon-container.active::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -10px;
   z-index: -1;
@@ -226,7 +226,7 @@
   font-family: Inter, sans-serif;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   .guild-icon.no-icon {
     background: #e3e5e8;
     color: gray;

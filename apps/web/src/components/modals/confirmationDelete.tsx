@@ -1,7 +1,5 @@
 import type { JSX } from 'react';
-import { useGuildChannelMemoryStore } from 'shared';
-import { del, post } from 'shared';
-import { logger } from 'shared';
+import { del, logger, post, useGuildChannelMemoryStore } from 'shared';
 
 import { useModal } from '@/layering/modalContext';
 
@@ -43,7 +41,7 @@ export const ConfirmationDeleteModal = ({
     }
   };
 
-  const deletePlace = async (id: string, type: string) => {
+  const deletePlace = (id: string, type: string) => {
     if (type === 'server') {
       return deleteGuild(id);
     } //handle group dms, cuz like how else would you leave something

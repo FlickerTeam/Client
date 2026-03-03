@@ -23,7 +23,7 @@
 
 .profile-modal-header {
   width: 100%;
-  aspect-ratio: 680/240;
+  aspect-ratio: 680 / 240;
   background-color: var(--bg-header);
   background-size: cover;
   background-position: center;
@@ -122,7 +122,7 @@
 }
 
 .tab.selected::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -20px;
   left: 0;

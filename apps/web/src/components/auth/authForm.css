@@ -78,7 +78,7 @@
 }
 
 .status-msg .checking::after {
-  content: '';
+  content: "";
   width: 3px;
   height: 3px;
   background-color: currentcolor;

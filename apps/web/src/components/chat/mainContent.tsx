@@ -2,21 +2,39 @@ import './mainContent.css';
 
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Channel } from 'shared';
-import type { Command } from 'shared';
-import type { EmojiChooserEmoji } from 'shared';
-import type { MessageCreate, MessageDelete, MessageUpdate } from 'shared';
-import type { GifCategory, GifResult, GifTrendingResponse, RawGifResponse } from 'shared';
-import type { User } from 'shared';
-import { useUserStore } from 'shared';
-import { EmojiSchema, type Guild, type Member } from 'shared';
-import { type Message, MessageListSchema, MessageSchema } from 'shared';
-import { type Suggestion, type SuggestionsTrigger, SuggestionsType } from 'shared';
-import { get, patch, post, request } from 'shared';
-import { localBlobCache } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { formatTimestamp } from 'shared';
-import { logger } from 'shared';
+import type {
+  Channel,
+  Command,
+  EmojiChooserEmoji,
+  GifCategory,
+  GifResult,
+  GifTrendingResponse,
+  MessageCreate,
+  MessageDelete,
+  MessageUpdate,
+  RawGifResponse,
+  User,
+} from 'shared';
+import {
+  EmojiSchema,
+  formatTimestamp,
+  type Guild,
+  get,
+  getDefaultAvatar,
+  localBlobCache,
+  logger,
+  type Member,
+  type Message,
+  MessageListSchema,
+  MessageSchema,
+  patch,
+  post,
+  request,
+  type Suggestion,
+  type SuggestionsTrigger,
+  SuggestionsType,
+  useUserStore,
+} from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';
@@ -303,11 +321,11 @@ const MainContent = ({
 
   useEffect(() => {
     if (autoScroll.current) scrollToBottom();
-  }, [messages]);
+  }, [scrollToBottom]);
 
   useEffect(() => {
     setSelectedIndex(0);
-  }, [filteredSuggestions]);
+  }, []);
 
   useEffect(() => {
     if (popupType === 'GIF_PICKER') {
@@ -345,7 +363,7 @@ const MainContent = ({
     return () => {
       window.removeEventListener('paste', handlePaste);
     };
-  }, []);
+  }, [addFiles]);
 
   const fetchMessages = useCallback(
     async (limit: number, before?: string) => {
@@ -727,7 +745,7 @@ const MainContent = ({
       window.removeEventListener('gateway_message_update', handleUpdateMessage);
       window.removeEventListener('gateway_message_delete', handleDeleteMessage);
     };
-  }, [selectedChannel.id]);
+  }, [selectedChannel.id, scrollToBottom]);
 
   const scrollToMessage = async (messageId: string) => {
     //Check if we already have it in the silly dom

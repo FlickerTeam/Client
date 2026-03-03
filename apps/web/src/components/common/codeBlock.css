@@ -45,9 +45,9 @@
 .message-codeblock-html .shiki code {
   display: block;
   font-family:
-    'Source Code Pro', Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
-    'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
-    'Nimbus Mono L', Monaco, 'Courier New', Courier, monospace;
+    "Source Code Pro", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",
+    "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono",
+    "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
   line-height: 1.4;
   white-space: pre !important;
 }

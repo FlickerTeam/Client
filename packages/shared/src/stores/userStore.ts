@@ -56,11 +56,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
       };
     });
   },
-  getUser: async (userId: string) => {
+  getUser: (userId: string) => {
     const { users, upsertUsers } = get();
 
     if (users[userId]) {
-      return users[userId];
+      return Promise.resolve(users[userId] ?? null);
     }
 
     const pending = pendingQueries[userId];

@@ -42,7 +42,7 @@
   position: relative;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   .settings-sidebar-wrapper {
     background: #fff;
   }
@@ -252,7 +252,7 @@
   border-radius: 8px;
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
   appearance: none;
   width: 20px;
   height: 20px;
@@ -265,7 +265,7 @@ input[type='checkbox'] {
   vertical-align: middle;
 }
 
-input[type='checkbox']:checked {
+input[type="checkbox"]:checked {
   background: var(--accent-primary);
 }
 

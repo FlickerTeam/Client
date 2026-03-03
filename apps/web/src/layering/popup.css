@@ -46,7 +46,7 @@
   transform-origin: left center;
 }
 
-.popup-wrapper:not([class*='dir-']) {
+.popup-wrapper:not([class*="dir-"]) {
   animation: fade-in-top 0.15s cubic-bezier(0.1, 0.9, 0.2, 1);
   transform-origin: bottom center;
 }

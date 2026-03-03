@@ -155,7 +155,7 @@ export const VideoPlayer = ({
     if (video.readyState >= 1) {
       setDuration(video.duration);
     }
-  }, [src]);
+  }, []);
 
   const MAX_FILENAME_LENGTH = 40;
 

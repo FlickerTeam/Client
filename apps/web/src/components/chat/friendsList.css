@@ -42,7 +42,7 @@
   margin-bottom: 20px;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   .friends-search-bar {
     background: #fff;
   }
