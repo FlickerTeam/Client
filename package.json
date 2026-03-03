@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "npm run emoji:generate && tsc -b && vite build",
-    "dev": "npm run emoji:generate && vite",
-    "emoji:generate": "node scripts/generateEmojiMap.mjs",
     "eslint": "npx eslint .",
     "eslint:fix": "npx eslint --fix .",
     "lint": "run-s -c eslint stylelint prettier",
@@ -17,18 +18,6 @@
     "stylelint": "npx stylelint -o \"stylelint.log\" \"**/*.css\"",
     "stylelint:fix": "npx stylelint -o \"stylelint.log\" --fix \"**/*.css\""
   },
-  "dependencies": {
-    "@twemoji/api": "^17.0.2",
-    "html-react-parser": "^5.2.17",
-    "overlayscrollbars": "^2.14.0",
-    "overlayscrollbars-react": "^0.5.6",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.1",
-    "shiki": "^4.0.0",
-    "zod": "^4.3.6",
-    "zustand": "^5.0.11"
-  },
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
@@ -36,13 +25,6 @@
     "@eslint/js": "^9.39.3",
     "@eslint/json": "^1.0.1",
     "@eslint/markdown": "^7.5.1",
-    "@types/eslint-plugin-jsx-a11y": "^6.10.1",
-    "@types/node": "^25.3.2",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@unicode/unicode-17.0.0": "^1.6.16",
-    "@vitejs/plugin-react": "^5.1.4",
-    "emojibase-data": "^17.0.0",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -58,10 +40,6 @@
     "prettier": "^3.8.1",
     "stylelint": "^17.4.0",
     "stylelint-config-standard": "^40.0.0",
-    "typescript-eslint": "^8.56.1",
-    "vite": "npm:rolldown-vite@latest"
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@latest"
+    "typescript-eslint": "^8.56.1"
   }
 }

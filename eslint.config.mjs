@@ -13,7 +13,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['**/node_modules/**', 'dist/**', 'build/**', '**/package-lock.json']),
+  globalIgnores(['**/node_modules/**', '**/dist/**', '**/build/**', '**/package-lock.json']),
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}'],
     extends: [js.configs.recommended],
@@ -47,6 +47,12 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
+    },
+  },
+  {
+    files: ['**/*.{test,spec}.{ts,tsx,mts,cts}'],
+    rules: {
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
   {

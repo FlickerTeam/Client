@@ -1,0 +1,13 @@
+{
+  "name": "mobile-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.tsx",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-native": "*",
+    "react-router-dom": "^7.13.1",
+    "shared": "*"
+  }
+}
