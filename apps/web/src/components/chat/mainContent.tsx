@@ -165,7 +165,7 @@ const MainContent = ({
     unreads,
   ]);
 
-  const addFiles = (files: File[]) => {
+  const addFiles = useCallback((files: File[]) => {
     const newAttachments: MediaAttachment[] = files.map((file) => {
       const preview = URL.createObjectURL(file);
 
@@ -179,7 +179,7 @@ const MainContent = ({
     });
 
     setAttachments((prev) => [...prev, ...newAttachments]);
-  };
+  }, []);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -226,7 +226,7 @@ const MainContent = ({
     });
   };
 
-  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     if (scrollerRef.current) {
       scrollerRef.current.scrollTo({
         top: scrollerRef.current.scrollHeight,
@@ -235,7 +235,7 @@ const MainContent = ({
 
       setIsScrolledUp(false);
     }
-  };
+  }, []);
 
   const clearReplyingMsg = (e: React.MouseEvent, msg: Message) => {
     e.preventDefault();

@@ -2,8 +2,7 @@ import './emojiChooser.css';
 
 import parse from 'html-react-parser';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { EmojiChooserEmoji } from 'shared';
-import type { Guild } from 'shared';
+import type { EmojiChooserEmoji, Guild } from 'shared';
 
 import Scroller from '@/components/common/scroller';
 import { useConfig } from '@/context/configContext';

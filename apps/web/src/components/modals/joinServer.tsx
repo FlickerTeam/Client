@@ -2,12 +2,14 @@ import './joinServer.css';
 
 import { type JSX, useState } from 'react';
 import {
+  ApiError,
   type ErrorResponse,
   ErrorResponseSchema,
+  get,
   type InviteResponse,
   InviteResponseSchema,
+  post,
 } from 'shared';
-import { ApiError, get, post } from 'shared';
 
 import { useModal } from '@/layering/modalContext';
 

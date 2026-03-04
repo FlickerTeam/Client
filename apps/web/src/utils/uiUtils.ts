@@ -1,8 +1,6 @@
 import type React from 'react';
 import type { Guild, Member, Role } from 'shared';
-import { type UserWithPresence, useUserStore } from 'shared';
-import { get } from 'shared';
-import { logger } from 'shared';
+import { get, logger, type UserWithPresence, useUserStore } from 'shared';
 
 import { type ServerProfileProps } from '@/components/modals/serverProfile';
 import { useGateway } from '@/context/gatewayContext';

@@ -2,8 +2,7 @@ import './memberList.css';
 
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useCallback, useEffect, useState } from 'react';
-import type { Channel } from 'shared';
-import type { Guild, Member, Role } from 'shared';
+import type { Channel, Guild, Member, Role } from 'shared';
 import { getDefaultAvatar } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';

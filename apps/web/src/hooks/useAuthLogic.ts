@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
-import { type Instance, InstanceSchema } from 'shared';
-import { DomainsResponseSchema, WellKnownResponseSchema } from 'shared';
+import {
+  DomainsResponseSchema,
+  type Instance,
+  InstanceSchema,
+  WellKnownResponseSchema,
+} from 'shared';
 
 export function useAuthLogic(instance: Instance | string | undefined, customInstance: string) {
   const [instances, setInstances] = useState<Instance[] | []>([]);

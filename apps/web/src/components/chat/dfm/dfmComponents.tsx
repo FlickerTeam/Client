@@ -2,12 +2,8 @@ import './dfm.css';
 
 import { type JSX, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { Guild, Member, Role } from 'shared';
-import type { User } from 'shared';
-import { useUserStore } from 'shared';
-import { get, post } from 'shared';
-import { logger } from 'shared';
+import type { Channel, Guild, Member, Role, User } from 'shared';
+import { get, logger, post, useUserStore } from 'shared';
 
 import { useConfig } from '@/context/configContext';
 import { useGateway } from '@/context/gatewayContext';

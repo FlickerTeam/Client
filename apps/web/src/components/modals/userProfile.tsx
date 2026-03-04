@@ -2,8 +2,7 @@ import './userProfile.css';
 
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { type JSX, useMemo, useState } from 'react';
-import type { Member } from 'shared';
-import type { User } from 'shared';
+import type { Member, User } from 'shared';
 import { getDefaultAvatar } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';

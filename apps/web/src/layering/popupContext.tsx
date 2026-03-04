@@ -1,7 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import type { GifCategory, GifResult } from 'shared';
-import type { Emoji, Guild, Member, Role } from 'shared';
-import type { EmojiChooserEmoji } from 'shared';
+import type { Emoji, EmojiChooserEmoji, GifCategory, GifResult, Guild, Member, Role } from 'shared';
 
 export type PopupDirection = 'top' | 'bottom' | 'left' | 'right';
 

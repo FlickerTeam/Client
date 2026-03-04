@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Attachment, Message } from 'shared';
-import { localBlobCache } from 'shared';
-import { formatTimestamp } from 'shared';
+import { formatTimestamp, localBlobCache } from 'shared';
 
 import { useModal } from '@/layering/modalContext';
 

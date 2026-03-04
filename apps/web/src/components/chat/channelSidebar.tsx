@@ -3,13 +3,8 @@ import './channelSidebar.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useEffect, useMemo, useState } from 'react';
 import { type NavigateFunction, useNavigate } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { Guild, VoiceState } from 'shared';
-import { useUserStore } from 'shared';
-import { del } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { logger } from 'shared';
-import { Snowflake } from 'shared';
+import type { Channel, Guild, VoiceState } from 'shared';
+import { del, getDefaultAvatar, logger, Snowflake, useUserStore } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';

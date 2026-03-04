@@ -2,11 +2,8 @@ import './popoutProfile.css';
 
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { Member, Role } from 'shared';
-import { post } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { logger } from 'shared';
+import type { Channel, Member, Role } from 'shared';
+import { getDefaultAvatar, logger, post } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';

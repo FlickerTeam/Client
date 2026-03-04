@@ -3,9 +3,7 @@ import './settings.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useEffect, useRef, useState } from 'react';
 import type { User } from 'shared';
-import { patch } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { logger } from 'shared';
+import { getDefaultAvatar, logger, patch } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';

@@ -3,10 +3,8 @@ import './guildSidebar.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { Guild } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { webAssets } from 'shared';
+import type { Channel, Guild } from 'shared';
+import { getDefaultAvatar, webAssets } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';

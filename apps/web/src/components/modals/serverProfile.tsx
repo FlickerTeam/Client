@@ -3,11 +3,8 @@ import './serverProfile.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Guild, Member } from 'shared';
-import type { User } from 'shared';
-import { get } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { logger } from 'shared';
+import type { Guild, Member, User } from 'shared';
+import { get, getDefaultAvatar, logger } from 'shared';
 
 import { MutualItem } from '@/components/chat/mutualItem';
 import { useAssetsUrl } from '@/context/assetsUrl';

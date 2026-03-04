@@ -1,7 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import type { Channel } from 'shared';
-import type { Guild, Member } from 'shared';
-import type { User } from 'shared';
+import type { Channel, Guild, Member, User } from 'shared';
 
 import type { ImagePreviewProps } from '@/components/modals/imagePreview';
 import type { ConnectedAccount } from '@/components/modals/serverProfile';

@@ -13,5 +13,5 @@ export * from './relationship';
 export * from './requests';
 export * from './responses';
 export * from './suggestions';
-export * from './users';
 export * from './userSettings';
+export * from './users';

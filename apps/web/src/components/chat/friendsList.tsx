@@ -3,11 +3,8 @@ import './friendsList.css';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Channel } from 'shared';
-import type { Relationship } from 'shared';
-import { del, post, put } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { logger } from 'shared';
+import type { Channel, Relationship } from 'shared';
+import { del, getDefaultAvatar, logger, post, put } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';

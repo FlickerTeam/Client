@@ -2,10 +2,7 @@ import './pinnedMessagesShelf.css';
 
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useEffect, useState } from 'react';
-import { type Message, MessageListSchema } from 'shared';
-import { get } from 'shared';
-import { getDefaultAvatar } from 'shared';
-import { formatTimestamp } from 'shared';
+import { formatTimestamp, get, getDefaultAvatar, type Message, MessageListSchema } from 'shared';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';
