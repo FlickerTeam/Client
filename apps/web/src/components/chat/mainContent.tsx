@@ -367,7 +367,9 @@ const MainContent = ({
 
   const fetchMessages = useCallback(
     async (limit: number, before?: string) => {
-      const url = `/channels/${selectedChannel.id}/messages?limit=${String(limit)}${before ? `&before=${before}` : ''}`;
+      const url = `/channels/${selectedChannel.id}/messages?limit=${String(
+        limit,
+      )}${before ? `&before=${before}` : ''}`;
 
       try {
         const response = await get(url);
@@ -783,7 +785,10 @@ const MainContent = ({
             //lets try again
 
             if (newElement) {
-              newElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              newElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+              });
               newElement.classList.add('message-highlight');
 
               setTimeout(() => {
@@ -932,7 +937,9 @@ const MainContent = ({
       const msgContent = (
         <>
           <div
-            className={`message-content ${msg.state === MESSAGE_STATE.FAILED ? 'message-failed' : ''} ${msg.content?.includes('@someone') ? 'april-fools' : ''}`}
+            className={`message-content ${
+              msg.state === MESSAGE_STATE.FAILED ? 'message-failed' : ''
+            } ${msg.content?.includes('@someone') ? 'april-fools' : ''}`}
           >
             <div
               className={`msg-text-contents`}
@@ -1657,7 +1664,9 @@ const MainContent = ({
 
           <OverlayScrollbarsComponent
             element='div'
-            options={{ scrollbars: { theme: 'os-theme-dark', autoHide: 'scroll' } }}
+            options={{
+              scrollbars: { theme: 'os-theme-dark', autoHide: 'scroll' },
+            }}
             className='messages-scroller scroller'
             ref={(os) => {
               if (os) {
@@ -1693,7 +1702,9 @@ const MainContent = ({
               {attachments.length > 0 && (
                 <OverlayScrollbarsComponent
                   element='div'
-                  options={{ scrollbars: { theme: 'os-theme-dark', autoHide: 'scroll' } }}
+                  options={{
+                    scrollbars: { theme: 'os-theme-dark', autoHide: 'scroll' },
+                  }}
                   className='attachment-shelf-scroll'
                 >
                   <div className='attachment-shelf'>
@@ -1748,7 +1759,11 @@ const MainContent = ({
                       : selectedChannel.name
                         ? `Message #${selectedChannel.name}`
                         : selectedChannel.recipients?.[0]
-                          ? `Message @${selectedChannel.recipients[0].global_name ?? selectedChannel.recipients[0].username ?? 'someone'}`
+                          ? `Message @${
+                              selectedChannel.recipients[0].global_name ??
+                              selectedChannel.recipients[0].username ??
+                              'someone'
+                            }`
                           : 'Message...'
                   }
                   value={chatMessage}
@@ -1765,7 +1780,9 @@ const MainContent = ({
                     <div className='input-icons'>
                       <button
                         type='button'
-                        className={`input-icon-btn ${popupType === 'GIF_PICKER' ? 'active-input-btn' : ''}`}
+                        className={`input-icon-btn ${
+                          popupType === 'GIF_PICKER' ? 'active-input-btn' : ''
+                        }`}
                         title={`Search gifs`}
                         onClick={(e) => {
                           if (popupType === 'GIF_PICKER') {
@@ -1806,7 +1823,9 @@ const MainContent = ({
                       </button>
                       <button
                         type='button'
-                        className={`input-icon-btn ${popupType === 'EMOJI_PICKER' ? 'active-input-btn' : ''}`}
+                        className={`input-icon-btn ${
+                          popupType === 'EMOJI_PICKER' ? 'active-input-btn' : ''
+                        }`}
                         title={`Search emojis`}
                         onClick={(e) => {
                           if (popupType === 'EMOJI_PICKER') {
