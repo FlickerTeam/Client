@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { clientPreviewImages, webAssets } from 'shared';
 
-interface MobileLandingProps {
+interface LandingProps {
   onOpenClient: () => void;
   onOpenGithub: () => void;
   onOpenRegister: () => void;
@@ -27,7 +27,7 @@ const patternDots = Array.from({ length: 260 }).map((_, index) => {
   };
 });
 
-export function MobileLanding({ onOpenClient, onOpenGithub, onOpenRegister }: MobileLandingProps) {
+export function Landing({ onOpenClient, onOpenGithub, onOpenRegister }: LandingProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const previews = clientPreviewImages.length > 0 ? clientPreviewImages : [webAssets.flickerLogo];
   const isNative = Platform.OS !== 'web';

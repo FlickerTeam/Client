@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { Instance } from 'shared';
 
-export interface MobileRegisterProps {
+export interface RegisterProps {
   instances: Instance[];
   selectedInstanceUrl: string;
   customInstance: string;
@@ -31,7 +31,7 @@ const patternDots = Array.from({ length: 180 }).map((_, index) => {
   };
 });
 
-export function MobileRegister({
+export function Register({
   instances,
   selectedInstanceUrl,
   customInstance,
@@ -47,7 +47,7 @@ export function MobileRegister({
   onSubmit,
   onOpenLogin,
   status,
-}: MobileRegisterProps) {
+}: RegisterProps) {
   const [isInstanceMenuOpen, setIsInstanceMenuOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);

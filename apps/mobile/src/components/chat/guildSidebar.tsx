@@ -1,8 +1,8 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import type { Guild } from 'shared';
 
-import { styles } from './mobileHomeStyles';
-import { renderMaterialIcon, resolveGuildIconUrl } from './mobileHomeUtils';
+import { styles } from '../../pages/chatStyles';
+import { renderMaterialIcon, resolveGuildIconUrl } from '../../utils/chatUtils';
 
 interface MobileGuildSidebarProps {
   guilds: Guild[];

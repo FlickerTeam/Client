@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import type { Channel, Guild } from 'shared';
-
+import { styles } from '../../pages/chatStyles';
+import { type DmEntry, renderMaterialIcon } from '../../utils/chatUtils';
 import { MobileDmChannel } from './dmChannel';
-import { styles } from './mobileHomeStyles';
-import { type DmEntry, renderMaterialIcon } from './mobileHomeUtils';
 
 interface MobileChannelSidebarProps {
   selectedGuild?: Guild | null;

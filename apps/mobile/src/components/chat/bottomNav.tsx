@@ -1,8 +1,8 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { sharedAssets, type User } from 'shared';
 
-import { styles } from './mobileHomeStyles';
-import { renderMaterialIcon } from './mobileHomeUtils';
+import { styles } from '../../pages/chatStyles';
+import { renderMaterialIcon } from '../../utils/chatUtils';
 
 interface MobileBottomNavProps {
   user?: User | null;

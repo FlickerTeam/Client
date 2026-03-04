@@ -2,14 +2,14 @@ import { useRef, useState } from 'react';
 import { type GestureResponderEvent, Pressable, View } from 'react-native';
 import type { Channel, Guild, Relationship, User } from 'shared';
 
-import { MobileBottomNav } from './chat/bottomNav';
-import { MobileChannelSidebar } from './chat/channelSidebar';
-import { MobileGuildSidebar } from './chat/guildSidebar';
-import { MobileMainContent } from './chat/mainContent';
-import { styles } from './chat/mobileHomeStyles';
-import { type DmEntry, getCdnUrl, resolveAvatarUrl } from './chat/mobileHomeUtils';
+import { MobileBottomNav } from '../components/chat/bottomNav';
+import { MobileChannelSidebar } from '../components/chat/channelSidebar';
+import { MobileGuildSidebar } from '../components/chat/guildSidebar';
+import { MobileMainContent } from '../components/chat/mainContent';
+import { type DmEntry, getCdnUrl, resolveAvatarUrl } from '../utils/chatUtils';
+import { styles } from './chatStyles';
 
-export interface MobileHomeProps {
+export interface ChatAppProps {
   guilds?: Guild[];
   relationships?: Relationship[];
   privateChannels?: Channel[];
@@ -20,7 +20,7 @@ export interface MobileHomeProps {
   onSelectChannel?: (channel: Channel | null) => void;
 }
 
-export const MobileHome = ({
+export const ChatApp = ({
   guilds = [],
   relationships = [],
   privateChannels = [],
@@ -29,7 +29,7 @@ export const MobileHome = ({
   selectedChannelId,
   onSelectGuild,
   onSelectChannel,
-}: MobileHomeProps) => {
+}: ChatAppProps) => {
   const cdnUrl = getCdnUrl();
   const isHomeSelected = !selectedGuildId || selectedGuildId === '@me';
   const selectedGuild = guilds.find((guild) => guild.id === selectedGuildId) ?? null;

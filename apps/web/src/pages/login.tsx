@@ -1,6 +1,4 @@
-import { MobileLogin } from 'mobile-ui';
 import { type JSX, useEffect, useRef, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
   APP_ROUTES,
@@ -10,11 +8,12 @@ import {
   LoginResponseSchema,
   post,
 } from 'shared';
-
 import LoginForm from '@/components/auth/loginForm';
 import Brand from '@/components/common/brand';
 import Footer from '@/components/common/footer';
+import { useIsMobileWeb } from '@/context/mobileWebContext';
 import { useAuthLogic } from '@/hooks/useAuthLogic';
+import { Login as MobileLogin } from '../../../mobile/src/pages/login';
 
 const normalizeHost = (rawValue: string): string => {
   const withProtocol = /^https?:\/\//.test(rawValue) ? rawValue : `https://${rawValue}`;
@@ -27,8 +26,8 @@ const normalizeHost = (rawValue: string): string => {
 };
 
 function Login(): JSX.Element {
+  const isMobileWeb = useIsMobileWeb();
   const navigate = useNavigate();
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 800px)' });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [customInstance, setCustomInstance] = useState('');
@@ -131,14 +130,14 @@ function Login(): JSX.Element {
     return null;
   };
 
-  if (isTabletOrMobile) {
+  if (isMobileWeb) {
     return (
       <MobileLogin
         instances={instances}
         selectedInstanceUrl={typeof instance === 'object' ? instance.url : instance}
         customInstance={customInstance}
         instanceStatus={mapInstanceStatus(instanceStatus)}
-        onSelectInstance={(url) => {
+        onSelectInstance={(url: string) => {
           const fullInstance = instances.find((i) => i.url === url);
           setInstance(fullInstance ?? url);
           void checkInstance(url);

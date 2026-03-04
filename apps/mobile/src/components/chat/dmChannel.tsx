@@ -1,7 +1,7 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-import { styles } from './mobileHomeStyles';
-import { getStatusColor, renderMaterialIcon } from './mobileHomeUtils';
+import { styles } from '../../pages/chatStyles';
+import { getStatusColor, renderMaterialIcon } from '../../utils/chatUtils';
 
 interface MobileDmChannelProps {
   icon?: string;

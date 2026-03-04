@@ -1,25 +1,24 @@
 import './landing.css';
 
-import { MobileLanding } from 'mobile-ui';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useRef, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { Link, useNavigate } from 'react-router-dom';
 import { APP_ROUTES, clientPreviewImages, webAssets } from 'shared';
-
+import { useIsMobileWeb } from '@/context/mobileWebContext';
 import { useModal } from '@/layering/modalContext';
+import { Landing as MobileLanding } from '../../../mobile/src/pages/landing';
 
 const PREVIEW_IMAGES = [...clientPreviewImages];
 
 const Landing = (): JSX.Element => {
+  const isMobileWeb = useIsMobileWeb();
   const { openModal } = useModal();
   const navigate = useNavigate();
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 800px)' });
   const containerRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [currentImg, setCurrentImg] = useState(0);
 
-  if (isTabletOrMobile) {
+  if (isMobileWeb) {
     return (
       <MobileLanding
         onOpenClient={() => {

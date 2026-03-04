@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { Instance } from 'shared';
 
-export interface MobileLoginProps {
+export interface LoginProps {
   instances: Instance[];
   selectedInstanceUrl: string;
   customInstance: string;
@@ -29,7 +29,7 @@ const patternDots = Array.from({ length: 180 }).map((_, index) => {
   };
 });
 
-export function MobileLogin({
+export function Login({
   instances,
   selectedInstanceUrl,
   customInstance,
@@ -43,7 +43,7 @@ export function MobileLogin({
   onSubmit,
   onOpenRegister,
   status,
-}: MobileLoginProps) {
+}: LoginProps) {
   const [isInstanceMenuOpen, setIsInstanceMenuOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

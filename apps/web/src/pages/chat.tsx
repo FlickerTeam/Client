@@ -1,12 +1,9 @@
-import { MobileHome } from 'mobile-ui';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useMediaQuery } from 'react-responsive';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Channel, GatewayContextSchema, Guild, Relationship, User } from 'shared';
 import { type LogEntry, logger, post, useGuildChannelMemoryStore } from 'shared';
-
 import ChannelSidebar from '@/components/chat/channelSidebar';
 import { FriendsList } from '@/components/chat/friendsList';
 import GuildSidebar from '@/components/chat/guildSidebar';
@@ -14,8 +11,10 @@ import MainContent from '@/components/chat/mainContent';
 import NoTextChannels from '@/components/chat/noTextChannels';
 import Settings from '@/components/chat/settings';
 import { useGateway } from '@/context/gatewayContext';
+import { useIsMobileWeb } from '@/context/mobileWebContext';
 import { useVoice } from '@/hooks/useVoice';
 import { useModal } from '@/layering/modalContext';
+import { ChatApp as MobileChatApp } from '../../../mobile/src/pages/chat';
 
 import LoadingScreen from './loading';
 
@@ -65,6 +64,7 @@ const getDeveloperSettings = (): DeveloperSettings => {
 };
 
 const ChatApp = (): JSX.Element => {
+  const isMobileWeb = useIsMobileWeb();
   const {
     isReady,
     guilds,
@@ -568,22 +568,17 @@ const ChatApp = (): JSX.Element => {
     }
   };
 
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 800px)' });
-
   if (!isReady) {
     return <LoadingScreen />;
   }
 
-  const settingsPortal =
-    typeof document !== 'undefined' ? document.getElementById('secondary-layer-portal') : null;
-
-  if (isTabletOrMobile) {
+  if (isMobileWeb) {
     return (
       <div
         className='page-wrapper'
         style={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}
       >
-        <MobileHome
+        <MobileChatApp
           guilds={passedGuilds}
           relationships={localFriends}
           privateChannels={newPrivateChannels}
@@ -596,6 +591,9 @@ const ChatApp = (): JSX.Element => {
       </div>
     );
   }
+
+  const settingsPortal =
+    typeof document !== 'undefined' ? document.getElementById('secondary-layer-portal') : null;
 
   return (
     <div className='page-wrapper'>

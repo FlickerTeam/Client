@@ -1,6 +1,4 @@
-import { MobileRegister } from 'mobile-ui';
 import { type JSX, useEffect, useRef, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
   APP_ROUTES,
@@ -11,11 +9,12 @@ import {
   RegisterResponseSchema,
   RegistrationFieldErrorsSchema,
 } from 'shared';
-
 import RegisterForm from '@/components/auth/registerForm';
 import Brand from '@/components/common/brand';
 import Footer from '@/components/common/footer';
+import { useIsMobileWeb } from '@/context/mobileWebContext';
 import { useAuthLogic } from '@/hooks/useAuthLogic';
+import { Register as MobileRegister } from '../../../mobile/src/pages/register';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -31,8 +30,8 @@ const normalizeHost = (rawValue: string): string => {
 };
 
 function Register(): JSX.Element {
+  const isMobileWeb = useIsMobileWeb();
   const navigate = useNavigate();
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 800px)' });
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -150,14 +149,14 @@ function Register(): JSX.Element {
     return null;
   };
 
-  if (isTabletOrMobile) {
+  if (isMobileWeb) {
     return (
       <MobileRegister
         instances={instances}
         selectedInstanceUrl={typeof instance === 'object' ? instance.url : instance}
         customInstance={customInstance}
         instanceStatus={mapInstanceStatus(instanceStatus)}
-        onSelectInstance={(url) => {
+        onSelectInstance={(url: string) => {
           const fullInstance = instances.find((i) => i.url === url);
           setInstance(fullInstance ?? url);
           void checkInstance(url);

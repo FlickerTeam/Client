@@ -3,8 +3,8 @@ import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import type { Channel, Guild, User } from 'shared';
 import { get, type Message, MessageListSchema, post } from 'shared';
 
-import { styles } from './mobileHomeStyles';
-import { renderMaterialIcon } from './mobileHomeUtils';
+import { styles } from '../../pages/chatStyles';
+import { renderMaterialIcon } from '../../utils/chatUtils';
 
 interface MobileMessage {
   id: string;
