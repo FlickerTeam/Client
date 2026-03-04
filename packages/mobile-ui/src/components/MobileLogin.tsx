@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { Instance } from 'shared';
 
@@ -17,6 +18,17 @@ export interface MobileLoginProps {
   status?: string | null;
 }
 
+const patternDots = Array.from({ length: 180 }).map((_, index) => {
+  const columns = 12;
+  const col = index % columns;
+  const row = Math.floor(index / columns);
+  return {
+    id: `dot-${index.toString()}`,
+    left: 14 + col * 32,
+    top: 12 + row * 44,
+  };
+});
+
 export function MobileLogin({
   instances,
   selectedInstanceUrl,
@@ -32,33 +44,63 @@ export function MobileLogin({
   onOpenRegister,
   status,
 }: MobileLoginProps) {
+  const [isInstanceMenuOpen, setIsInstanceMenuOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const selectedInstanceLabel = useMemo(() => {
+    if (selectedInstanceUrl === 'custom-instance') return 'Custom Instance';
+    return instances.find((instance) => instance.url === selectedInstanceUrl)?.name ?? 'Select';
+  }, [instances, selectedInstanceUrl]);
+
+  const resolveStatusTone = (message: string | null | undefined) => {
+    if (!message) return null;
+    const lowered = message.toLowerCase();
+    if (lowered.includes('invalid') || lowered.includes('error') || lowered.includes('network')) {
+      return styles.statusError;
+    }
+    if (lowered.includes('online') || lowered.includes('valid')) {
+      return styles.statusValid;
+    }
+    return styles.statusNeutral;
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.bottomShape} />
-      <View style={styles.brand}>
-        <Text style={styles.brandText}>FLICKER</Text>
+      <View style={styles.patternLayer} pointerEvents='none'>
+        {patternDots.map((dot) => (
+          <View key={dot.id} style={[styles.dot, { top: dot.top, left: dot.left }]} />
+        ))}
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        <View style={styles.card}>
-          <Text style={styles.title}>Login to an account</Text>
-          <Text style={styles.label}>Instance</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.instanceList}>
+        <Text style={styles.title}>Login to an account</Text>
+
+        <Text style={styles.label}>Instance</Text>
+        <TouchableOpacity
+          style={styles.selectTrigger}
+          onPress={() => {
+            setIsInstanceMenuOpen((prev) => !prev);
+          }}
+        >
+          <Text style={styles.selectTriggerText}>{selectedInstanceLabel}</Text>
+          <Text style={styles.selectTriggerIcon}>{isInstanceMenuOpen ? '▴' : '▾'}</Text>
+        </TouchableOpacity>
+
+        {isInstanceMenuOpen ? (
+          <View style={styles.selectMenu}>
             {instances.map((instance) => (
               <TouchableOpacity
                 key={instance.url}
-                style={[
-                  styles.instanceChip,
-                  selectedInstanceUrl === instance.url ? styles.instanceChipActive : null,
-                ]}
+                style={styles.selectOption}
                 onPress={() => {
                   onSelectInstance(instance.url);
+                  setIsInstanceMenuOpen(false);
                 }}
               >
                 <Text
                   style={[
-                    styles.instanceChipText,
-                    selectedInstanceUrl === instance.url ? styles.instanceChipTextActive : null,
+                    styles.selectOptionText,
+                    selectedInstanceUrl === instance.url ? styles.selectOptionTextActive : null,
                   ]}
                 >
                   {instance.name}
@@ -66,77 +108,83 @@ export function MobileLogin({
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              style={[
-                styles.instanceChip,
-                selectedInstanceUrl === 'custom-instance' ? styles.instanceChipActive : null,
-              ]}
+              style={styles.selectOption}
               onPress={() => {
                 onSelectInstance('custom-instance');
+                setIsInstanceMenuOpen(false);
               }}
             >
               <Text
                 style={[
-                  styles.instanceChipText,
-                  selectedInstanceUrl === 'custom-instance' ? styles.instanceChipTextActive : null,
+                  styles.selectOptionText,
+                  selectedInstanceUrl === 'custom-instance' ? styles.selectOptionTextActive : null,
                 ]}
               >
                 Custom Instance
               </Text>
             </TouchableOpacity>
-          </ScrollView>
-          {selectedInstanceUrl === 'custom-instance' ? (
-            <>
-              <Text style={styles.label}>Instance URL</Text>
-              <TextInput
-                value={customInstance}
-                onChangeText={onChangeCustomInstance}
-                autoCapitalize='none'
-                placeholder='example.com'
-                placeholderTextColor='#6D7280'
-                style={styles.input}
-              />
-            </>
-          ) : null}
-          {instanceStatus ? <Text style={styles.status}>{instanceStatus}</Text> : null}
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            value={email}
-            onChangeText={onChangeEmail}
-            autoCapitalize='none'
-            keyboardType='email-address'
-            placeholder='Email'
-            placeholderTextColor='#6D7280'
-            style={styles.input}
-          />
-          <Text style={styles.label}>Password</Text>
+          </View>
+        ) : null}
+
+        {selectedInstanceUrl === 'custom-instance' ? (
+          <>
+            <Text style={styles.label}>Instance URL</Text>
+            <TextInput
+              value={customInstance}
+              onChangeText={onChangeCustomInstance}
+              autoCapitalize='none'
+              placeholder='example.com'
+              placeholderTextColor='#777C87'
+              style={styles.input}
+            />
+          </>
+        ) : null}
+
+        {instanceStatus ? (
+          <Text style={[styles.status, resolveStatusTone(instanceStatus)]}>{instanceStatus}</Text>
+        ) : null}
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          value={email}
+          onChangeText={onChangeEmail}
+          autoCapitalize='none'
+          keyboardType='email-address'
+          placeholder='Email'
+          placeholderTextColor='#777C87'
+          style={styles.input}
+        />
+
+        <Text style={styles.label}>Password</Text>
+        <View style={styles.passwordRow}>
           <TextInput
             value={password}
             onChangeText={onChangePassword}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             placeholder='Password'
-            placeholderTextColor='#6D7280'
-            style={styles.input}
+            placeholderTextColor='#777C87'
+            style={styles.passwordInput}
           />
-          {status ? <Text style={styles.status}>{status}</Text> : null}
-          <TouchableOpacity style={styles.primaryButton} onPress={onSubmit}>
-            <Text style={styles.primaryButtonText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.linkButton} onPress={onOpenRegister}>
-            <Text style={styles.linkText}>Don&apos;t have an account?</Text>
+          <TouchableOpacity
+            style={styles.passwordToggle}
+            onPress={() => {
+              setShowPassword((prev) => !prev);
+            }}
+          >
+            <Text style={styles.passwordToggleText}>{showPassword ? 'Hide' : 'Show'}</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerLine}>
-          <Text style={styles.footerDark}>© 2026 - </Text>
-          <Text style={styles.footerBright}>The Flicker Team</Text>
-        </Text>
-        <Text style={styles.footerLine}>
-          <Text style={styles.footerDark}>Spacebar server code written by the </Text>
-          <Text style={styles.footerBright}>Spacebar Team</Text>
-        </Text>
-      </View>
+        {status ? <Text style={[styles.status, resolveStatusTone(status)]}>{status}</Text> : null}
+
+        <TouchableOpacity style={styles.primaryButton} onPress={onSubmit}>
+          <Text style={styles.primaryButtonText}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.linkButton} onPress={onOpenRegister}>
+          <Text style={styles.linkText}>Don&apos;t have an account?</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -144,125 +192,166 @@ export function MobileLogin({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#16161E',
+    backgroundColor: '#363A44',
+    alignSelf: 'stretch',
+    width: '100%',
+    minHeight: '100%',
   },
-  bottomShape: {
+  patternLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  dot: {
     position: 'absolute',
-    left: -120,
-    right: -120,
-    bottom: -200,
-    height: 340,
-    backgroundColor: '#BB9AF7',
-    transform: [{ rotate: '-12deg' }],
-  },
-  brand: {
-    marginTop: 20,
-    marginLeft: 16,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#BB9AF7',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-  },
-  brandText: {
-    color: '#BB9AF7',
-    letterSpacing: 3,
-    fontWeight: '800',
-    fontSize: 11,
-    fontFamily: 'Inter',
+    width: 2,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: '#7E8492',
+    opacity: 0.24,
   },
   scroll: {
     flex: 1,
   },
   content: {
     minHeight: '100%',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-    paddingBottom: 100,
-    paddingTop: 20,
-  },
-  card: {
-    backgroundColor: '#323449',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#BB9AF7',
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingTop: 18,
-    paddingBottom: 14,
-    shadowColor: '#A274F4',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 18,
-    elevation: 8,
+    paddingHorizontal: 12,
+    paddingTop: 72,
+    paddingBottom: 28,
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 16,
+    fontSize: 30,
+    fontWeight: '800',
+    lineHeight: 34,
     textAlign: 'center',
     fontFamily: 'Inter',
   },
+  subtitle: {
+    color: '#C2C6CF',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 22,
+    fontFamily: 'Inter',
+  },
   label: {
-    color: '#C3C6D0',
+    color: '#D0D4DD',
     fontSize: 12,
     fontWeight: '700',
     marginBottom: 6,
     marginTop: 2,
     fontFamily: 'Inter',
   },
-  instanceList: {
+  selectTrigger: {
+    height: 44,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#2A2E36',
+    backgroundColor: '#1F2228',
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     marginBottom: 12,
   },
-  instanceChip: {
-    borderWidth: 1,
-    borderColor: '#2E3140',
-    borderRadius: 999,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginRight: 8,
-  },
-  instanceChipActive: {
-    borderColor: '#BB9AF7',
-    backgroundColor: '#2A2538',
-  },
-  instanceChipText: {
-    color: '#9FA4B3',
-    fontSize: 12,
+  selectTriggerText: {
+    color: '#E3E5EA',
+    fontSize: 13,
     fontFamily: 'Inter',
   },
-  instanceChipTextActive: {
+  selectTriggerIcon: {
+    color: '#9AA0AD',
+    fontFamily: 'Inter',
+  },
+  selectMenu: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#2A2E36',
+    backgroundColor: '#1F2228',
+    marginTop: -4,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  selectOption: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2B303A',
+  },
+  selectOptionText: {
+    color: '#9FA4B3',
+    fontFamily: 'Inter',
+  },
+  selectOptionTextActive: {
     color: '#E3D6FA',
   },
   input: {
-    backgroundColor: '#1E1F22',
+    backgroundColor: '#1F2228',
     borderWidth: 1,
-    borderColor: '#2E3140',
-    color: '#E3E4E8',
-    borderRadius: 8,
+    borderColor: '#2A2E36',
+    color: '#E7E9EE',
+    borderRadius: 6,
     height: 44,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     marginBottom: 12,
-    opacity: 0.85,
+    fontFamily: 'Inter',
+  },
+  passwordRow: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  passwordInput: {
+    flex: 1,
+    backgroundColor: '#1F2228',
+    borderWidth: 1,
+    borderColor: '#2A2E36',
+    borderRadius: 6,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    color: '#E7E9EE',
+    height: 44,
+    paddingHorizontal: 12,
+    fontFamily: 'Inter',
+  },
+  passwordToggle: {
+    width: 62,
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderColor: '#2A2E36',
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#282C35',
+  },
+  passwordToggleText: {
+    color: '#A9AFBC',
+    fontSize: 11,
+    fontWeight: '700',
     fontFamily: 'Inter',
   },
   status: {
-    color: '#949BA4',
     marginBottom: 10,
     fontSize: 12,
     fontFamily: 'Inter',
   },
+  statusNeutral: {
+    color: '#A7ACB9',
+  },
+  statusError: {
+    color: '#F17070',
+  },
+  statusValid: {
+    color: '#7FD88B',
+  },
   primaryButton: {
     backgroundColor: '#BB9AF7',
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: 'center',
     paddingVertical: 12,
     marginTop: 6,
   },
   primaryButtonText: {
-    color: '#16161E',
+    color: '#1A1D24',
     fontWeight: '700',
     fontSize: 15,
     fontFamily: 'Inter',
@@ -274,26 +363,6 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#7AA2F7',
     fontSize: 13,
-    fontFamily: 'Inter',
-  },
-  footer: {
-    position: 'absolute',
-    left: 10,
-    right: 10,
-    bottom: 12,
-    alignItems: 'center',
-    gap: 6,
-  },
-  footerLine: {
-    fontSize: 11,
-    fontFamily: 'Inter',
-  },
-  footerDark: {
-    color: '#16161E',
-  },
-  footerBright: {
-    color: '#E5E4D9',
-    fontWeight: '600',
     fontFamily: 'Inter',
   },
 });

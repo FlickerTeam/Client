@@ -1,5 +1,5 @@
 import { MobileRegister } from 'mobile-ui';
-import { type JSX, useEffect, useMemo, useState } from 'react';
+import { type JSX, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +20,16 @@ import { useAuthLogic } from '@/hooks/useAuthLogic';
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
+const normalizeHost = (rawValue: string): string => {
+  const withProtocol = /^https?:\/\//.test(rawValue) ? rawValue : `https://${rawValue}`;
+
+  try {
+    return new URL(withProtocol).host;
+  } catch {
+    return rawValue.replace(/^https?:\/\//, '').split('/')[0] ?? rawValue;
+  }
+};
+
 function Register(): JSX.Element {
   const navigate = useNavigate();
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 800px)' });
@@ -32,16 +42,13 @@ function Register(): JSX.Element {
   const [passwordStatus, setPasswordStatus] = useState<string | null>(null);
   const [emailStatus, setEmailStatus] = useState<string | null>(null);
   const [miscError, setMiscError] = useState<string | null>(null);
+  const didHydrateInstance = useRef(false);
 
   const {
     instances,
     status: instanceStatus,
     checkInstance,
   } = useAuthLogic(instance, customInstance);
-  const fallbackMobileInstance = useMemo(
-    () => (isTabletOrMobile && instance === 'custom-instance' ? instances[0] : undefined),
-    [instance, instances, isTabletOrMobile],
-  );
 
   const handleInstanceSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedUrl = e.target.value;
@@ -51,9 +58,30 @@ function Register(): JSX.Element {
   };
 
   useEffect(() => {
-    if (!fallbackMobileInstance) return;
-    void checkInstance(fallbackMobileInstance.url);
-  }, [checkInstance, fallbackMobileInstance]);
+    if (didHydrateInstance.current || instances.length === 0) return;
+
+    const savedInstanceUrl = localStorage.getItem('selectedInstanceUrl');
+    if (!savedInstanceUrl) {
+      didHydrateInstance.current = true;
+      return;
+    }
+
+    const savedHost = normalizeHost(savedInstanceUrl);
+    const matchedInstance = instances.find(
+      (candidate) => normalizeHost(candidate.url) === savedHost,
+    );
+
+    if (matchedInstance) {
+      setInstance(matchedInstance);
+      void checkInstance(matchedInstance.url);
+    } else {
+      setInstance('custom-instance');
+      setCustomInstance(savedHost);
+      void checkInstance(savedHost);
+    }
+
+    didHydrateInstance.current = true;
+  }, [checkInstance, instances]);
 
   if (localStorage.getItem('selectedAuthorization')) return <Navigate to={buildMeRoute()} />;
 
@@ -126,10 +154,7 @@ function Register(): JSX.Element {
     return (
       <MobileRegister
         instances={instances}
-        selectedInstanceUrl={
-          fallbackMobileInstance?.url ??
-          (typeof instance === 'object' ? instance.url : (instance ?? 'custom-instance'))
-        }
+        selectedInstanceUrl={typeof instance === 'object' ? instance.url : instance}
         customInstance={customInstance}
         instanceStatus={mapInstanceStatus(instanceStatus)}
         onSelectInstance={(url) => {

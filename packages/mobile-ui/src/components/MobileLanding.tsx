@@ -1,4 +1,13 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import {
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { clientPreviewImages, webAssets } from 'shared';
 
 interface MobileLandingProps {
@@ -7,87 +16,141 @@ interface MobileLandingProps {
   onOpenRegister: () => void;
 }
 
+const patternDots = Array.from({ length: 260 }).map((_, index) => {
+  const columns = 14;
+  const col = index % columns;
+  const row = Math.floor(index / columns);
+  return {
+    id: `dot-${index.toString()}`,
+    left: 10 + col * 30,
+    top: 6 + row * 34,
+  };
+});
+
 export function MobileLanding({ onOpenClient, onOpenGithub, onOpenRegister }: MobileLandingProps) {
-  const heroPreview = clientPreviewImages[0];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const previews = clientPreviewImages.length > 0 ? clientPreviewImages : [webAssets.flickerLogo];
+  const isNative = Platform.OS !== 'web';
+
+  useEffect(() => {
+    if (!isNative || previews.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % previews.length);
+    }, 3800);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isNative, previews.length]);
+
+  if (!isNative) {
+    return (
+      <View style={styles.webContainer}>
+        <View style={styles.webBottomShape} />
+
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.webContent}>
+          <View style={styles.navbar}>
+            <View style={styles.brandRow}>
+              <Image source={{ uri: webAssets.flickerLogo }} style={styles.logo} />
+              <Text style={styles.brandText}>FLICKER</Text>
+            </View>
+            <View style={styles.navIcons}>
+              <TouchableOpacity style={styles.iconBtn} onPress={onOpenClient}>
+                <Image source={{ uri: webAssets.arrow }} style={styles.navIcon} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconBtn} onPress={onOpenGithub}>
+                <Image source={{ uri: webAssets.github }} style={styles.navIcon} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.hero}>
+            <Image
+              source={{ uri: previews[activeIndex] ?? '' }}
+              style={styles.preview}
+              resizeMode='cover'
+            />
+            <View style={styles.heroWords}>
+              <Text style={styles.wordMuted}>SLEEK</Text>
+              <Text style={styles.wordAccent}>FAST</Text>
+              <Text style={styles.wordMain}>MODERN</Text>
+            </View>
+            <Text style={styles.tagline}>THE ONLY CLIENT YOU NEED</Text>
+            <Text style={styles.subtitle}>
+              Flicker is designed to be a drop in daily driver for those wishing to jump ship from
+              Discord to Spacebar/Oldcord instances.
+            </Text>
+          </View>
+
+          <TouchableOpacity style={styles.primaryButton} onPress={onOpenClient}>
+            <Text style={styles.primaryButtonText}>OPEN CLIENT</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.secondaryButton} onPress={onOpenRegister}>
+            <Text style={styles.secondaryButtonText}>TRY IT HERE</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.bottomShape} />
+    <View style={styles.nativeContainer}>
+      <View style={styles.nativePatternLayer} pointerEvents='none'>
+        {patternDots.map((dot) => (
+          <View key={dot.id} style={[styles.patternDot, { top: dot.top, left: dot.left }]} />
+        ))}
+      </View>
 
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        <View style={styles.navbar}>
-          <View style={styles.brandRow}>
-            <Image source={{ uri: webAssets.flickerLogo }} style={styles.logo} />
-            <Text style={styles.brandText}>FLICKER</Text>
-          </View>
-          <View style={styles.navIcons}>
-            <TouchableOpacity style={styles.iconBtn} onPress={onOpenClient}>
-              <Image source={{ uri: webAssets.arrow }} style={styles.navIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconBtn} onPress={onOpenGithub}>
-              <Image source={{ uri: webAssets.github }} style={styles.navIcon} />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.nativeHeader}>
+        <Image source={{ uri: webAssets.flickerLogo }} style={styles.nativeLogo} />
+        <Text style={styles.nativeBrandText}>FLICKER</Text>
+      </View>
 
-        <View style={styles.hero}>
-          {heroPreview ? (
-            <Image source={{ uri: heroPreview }} style={styles.preview} resizeMode='cover' />
-          ) : null}
-          <View style={styles.heroWords}>
-            <Text style={styles.wordMuted}>SLEEK</Text>
-            <Text style={styles.wordAccent}>FAST</Text>
-            <Text style={styles.wordMain}>MODERN</Text>
+      <View style={styles.nativeHeroWrap}>
+        <View style={styles.nativeHero}>
+          <Image
+            source={{ uri: previews[activeIndex] ?? '' }}
+            style={styles.nativePreview}
+            resizeMode='cover'
+          />
+          <View style={styles.nativeDots}>
+            {previews.map((_, idx) => (
+              <View
+                key={`slide-dot-${idx.toString()}`}
+                style={[styles.nativeDot, idx === activeIndex ? styles.nativeDotActive : null]}
+              />
+            ))}
           </View>
-          <Text style={styles.tagline}>THE ONLY CLIENT YOU NEED</Text>
-          <Text style={styles.subtitle}>
-            Flicker is designed to be a drop in daily driver for those wishing to jump ship from
-            Discord to Spacebar/Oldcord instances.
+          <Text style={styles.nativeTagline}>The only client you need</Text>
+          <Text style={styles.nativeSubtitle}>
+            Flicker is a modern drop-in daily driver for Spacebar and Oldcord instances.
           </Text>
         </View>
+      </View>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={onOpenClient}>
-          <Text style={styles.primaryButtonText}>OPEN CLIENT</Text>
+      <View style={styles.nativeActions}>
+        <TouchableOpacity style={styles.nativePrimaryBtn} onPress={onOpenClient}>
+          <Text style={styles.nativePrimaryBtnText}>Login</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.secondaryButton} onPress={onOpenRegister}>
-          <Text style={styles.secondaryButtonText}>TRY IT HERE</Text>
+        <TouchableOpacity style={styles.nativeGhostBtn} onPress={onOpenRegister}>
+          <Text style={styles.nativeGhostBtnText}>Register</Text>
         </TouchableOpacity>
-
-        <View style={styles.featuresPanel}>
-          <Text style={styles.featuresTitle}>WANT FEATURES? WE GOT EM.</Text>
-          <View style={styles.featureCard}>
-            <Text style={styles.featureIcon}>✓</Text>
-            <Text style={styles.featureText}>Direct Messaging</Text>
-          </View>
-          <View style={styles.featureCard}>
-            <Text style={styles.featureIcon}>✓</Text>
-            <Text style={styles.featureText}>Voice (Confirmed on Oldcord)</Text>
-          </View>
-          <View style={styles.featureCard}>
-            <Text style={styles.featureIcon}>✓</Text>
-            <Text style={styles.featureText}>Emoji, role, user, mention auto-complete</Text>
-          </View>
-          <View style={styles.featureCard}>
-            <Text style={styles.featureIcon}>✓</Text>
-            <Text style={styles.featureText}>Account, Instance Switching</Text>
-          </View>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>© 2026 Flicker Team. Licensed under GPLv3.</Text>
-        </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
+    flex: 1,
+  },
+  webContainer: {
     flex: 1,
     backgroundColor: '#16161E',
   },
-  bottomShape: {
+  webBottomShape: {
     position: 'absolute',
     left: -120,
     right: -120,
@@ -96,10 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#BB9AF7',
     transform: [{ rotate: '-12deg' }],
   },
-  scroll: {
-    flex: 1,
-  },
-  content: {
+  webContent: {
     padding: 16,
     paddingTop: 20,
     paddingBottom: 90,
@@ -231,51 +291,123 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Inter',
   },
-  featuresPanel: {
-    marginTop: 4,
-    borderRadius: 8,
+  nativeContainer: {
+    flex: 1,
+    backgroundColor: '#1B1E2A',
+    paddingTop: 20,
+  },
+  nativePatternLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  patternDot: {
+    position: 'absolute',
+    width: 2,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: '#4A5263',
+    opacity: 0.22,
+  },
+  nativeHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 8,
+    marginBottom: 10,
+  },
+  nativeLogo: {
+    width: 64,
+    height: 64,
+    marginBottom: 6,
+  },
+  nativeBrandText: {
+    color: '#FFFFFF',
+    fontSize: 26,
+    fontWeight: '900',
+    letterSpacing: 2.2,
+    fontFamily: 'Inter',
+  },
+  nativeHeroWrap: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  nativeHero: {
+    flex: 1,
+    backgroundColor: '#2F3340',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#3A3852',
-    backgroundColor: '#1F2335',
-    padding: 14,
+    borderColor: '#454A58',
+    padding: 12,
+  },
+  nativePreview: {
+    width: '100%',
+    height: 186,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#444B5B',
+  },
+  nativeDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: 10,
+  },
+  nativeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#586074',
+  },
+  nativeDotActive: {
+    backgroundColor: '#BB9AF7',
+    width: 14,
+  },
+  nativeTagline: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: '800',
+    lineHeight: 28,
+    textAlign: 'center',
+    marginTop: 10,
+    fontFamily: 'Inter',
+  },
+  nativeSubtitle: {
+    color: '#C5CAD5',
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 4,
+    fontFamily: 'Inter',
+  },
+  nativeActions: {
+    marginTop: 10,
+    marginHorizontal: 12,
+    marginBottom: 16,
     gap: 10,
   },
-  featuresTitle: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0.8,
+  nativePrimaryBtn: {
+    backgroundColor: '#BB9AF7',
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  nativePrimaryBtnText: {
+    color: '#1B1E2A',
+    fontSize: 15,
+    fontWeight: '700',
     fontFamily: 'Inter',
   },
-  featureCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#272A3B',
-    borderRadius: 6,
+  nativeGhostBtn: {
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#34374A',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-  },
-  featureIcon: {
-    color: '#3BA55C',
-    fontSize: 14,
-    marginRight: 10,
-    fontFamily: 'Inter',
-  },
-  featureText: {
-    color: '#D5D7DF',
-    fontSize: 13,
-    fontFamily: 'Inter',
-  },
-  footer: {
-    marginTop: 20,
+    borderColor: '#4A5161',
+    backgroundColor: 'rgba(24, 28, 38, 0.55)',
     alignItems: 'center',
+    paddingVertical: 11,
   },
-  footerText: {
-    color: '#B8BAC3',
-    fontSize: 12,
-    textAlign: 'center',
+  nativeGhostBtnText: {
+    color: '#E3E6ED',
+    fontSize: 14,
+    fontWeight: '600',
     fontFamily: 'Inter',
   },
 });
