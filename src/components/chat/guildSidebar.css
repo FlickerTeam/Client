@@ -233,6 +233,10 @@
   }
 }
 
+.home-btn-link {
+  text-decoration: none;
+}
+
 .active .guild-icon {
   border-radius: 30%;
   outline: 1px solid rgb(187 154 247 / 20%);

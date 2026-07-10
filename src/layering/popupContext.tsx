@@ -14,6 +14,11 @@ export interface PopupDataMap {
     roles: Role[] | null;
     direction?: PopupDirection;
   };
+  SET_STATUS: {
+    x: number;
+    y: number;
+    direction?: PopupDirection;
+  };
   CURRENT_USER_PROFILE: { x: number; y: number; direction?: PopupDirection };
   EMOJI_DETAILS_POPOUT: {
     x: number;
@@ -52,25 +57,26 @@ export interface PopupDataMap {
 
 export type PopupType = keyof PopupDataMap;
 
+export interface PopupInstance {
+  popupType: PopupType;
+  popupData: PopupDataMap[PopupType];
+}
+
 interface PopupContextType {
-  popupType: PopupType | null;
-  popupData: PopupDataMap[PopupType] | null;
-  openPopup: <T extends PopupType>(
-    ...args: PopupDataMap[T] extends undefined ? [type: T] : [type: T, data: PopupDataMap[T]]
-  ) => void;
-  updatePopup: <T extends PopupType>(data: Partial<PopupDataMap[T]>) => void;
-  closePopup: () => void;
+  popups: Record<string, PopupInstance>;
+  openPopup: <T extends PopupType>(type: T, data: PopupDataMap[T]) => void;
+  updatePopup: <T extends PopupType>(type: T, data: Partial<PopupDataMap[T]>) => void;
+  closePopup: (type?: PopupType) => void;
 }
 
 interface PopupState {
-  popupType: PopupType | null;
-  popupData: PopupDataMap[PopupType] | null;
+  popups: Record<string, PopupInstance>;
 }
 
 const listeners = new Set<() => void>();
+
 let state: PopupState = {
-  popupType: null,
-  popupData: null,
+  popups: {},
 };
 
 const getSnapshot = (): PopupState => state;
@@ -88,44 +94,52 @@ const emit = () => {
   });
 };
 
-const openPopup: PopupContextType['openPopup'] = (...args) => {
-  const [type, data] = args;
+const openPopup: PopupContextType['openPopup'] = (type, data) => {
   state = {
-    popupType: type,
-    popupData: (data ?? null) as PopupDataMap[PopupType] | null,
+    popups: {
+      ...state.popups,
+      [type]: { popupType: type, popupData: data },
+    },
   };
   emit();
 };
 
-const updatePopup: PopupContextType['updatePopup'] = (data) => {
-  if (!state.popupData || typeof state.popupData !== 'object') {
+const updatePopup: PopupContextType['updatePopup'] = (type, data) => {
+  const targetPopup = state.popups[type];
+  if (!targetPopup || !targetPopup.popupData || typeof targetPopup.popupData !== 'object') {
     return;
   }
 
   state = {
-    ...state,
-    popupData: {
-      ...state.popupData,
-      ...(data as object),
-    } as PopupDataMap[PopupType],
+    popups: {
+      ...state.popups,
+      [type]: {
+        ...targetPopup,
+        popupData: {
+          ...targetPopup.popupData,
+          ...(data as object),
+        } as PopupDataMap[PopupType],
+      },
+    },
   };
   emit();
 };
 
-const closePopup = () => {
-  state = {
-    popupType: null,
-    popupData: null,
-  };
+const closePopup = (type?: PopupType) => {
+  if (type) {
+    const nextPopups = { ...state.popups };
+    delete nextPopups[type];
+    state = { popups: nextPopups };
+  } else {
+    state = { popups: {} };
+  }
   emit();
 };
 
 export const usePopup = (): PopupContextType => {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-
   return {
-    popupType: snapshot.popupType,
-    popupData: snapshot.popupData,
+    popups: snapshot.popups,
     openPopup,
     updatePopup,
     closePopup,

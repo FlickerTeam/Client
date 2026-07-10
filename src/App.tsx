@@ -72,6 +72,13 @@ function App(): JSX.Element {
         return;
       }
 
+      const hasCachedDomains =
+        localStorage.getItem('selectedGatewayUrl') && localStorage.getItem('selectedCdnUrl');
+      if (hasCachedDomains) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const metadataCheck = await get(`/policies/instance/domains`);
 

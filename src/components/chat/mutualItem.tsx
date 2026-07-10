@@ -1,21 +1,23 @@
 import './mutualItem.css';
 
-import { type JSX } from 'react';
-
 export const MutualItem = ({
   icon,
   title,
   subtitle,
   onClick,
 }: {
-  icon: string | JSX.Element;
   title: string;
   subtitle?: string;
+  icon?: string;
   onClick: () => void;
 }) => (
   <div className='mutual-card' onClick={onClick}>
     <div className='mutual-card-icon'>
-      {typeof icon === 'string' ? <img src={icon} alt='' /> : icon}
+      {icon && icon != '' ? (
+        <img src={icon} alt={`${title}'s Icon`} />
+      ) : (
+        <div className={'mutual-icon no-icon guild-icon no-icon no-hover-pls'}>{title[0]}</div>
+      )}
     </div>
     <div className='mutual-card-info'>
       <div className='mutual-card-title'>{title}</div>

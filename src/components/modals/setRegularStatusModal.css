@@ -1,0 +1,110 @@
+.set-status-modal {
+  width: 220px;
+  background-color: var(--bg-main);
+  border-radius: 8px;
+  padding: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  outline: 1px solid var(--accent-primary);
+  box-shadow: var(--shadow-main);
+  box-sizing: border-box;
+}
+
+.status-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  box-sizing: border-box;
+  transition: background 0.15s ease;
+}
+
+.status-option:last-child {
+  margin-bottom: 0;
+}
+
+.status-option:hover {
+  background: var(--bg-alt);
+  cursor: pointer;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.status-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-main);
+}
+
+.status-description {
+  font-size: 11px;
+  line-height: 14px;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.set-status-modal .divider {
+  margin: 4px 0;
+  border-bottom: 1px solid var(--bg-alt);
+}
+
+.status-indicator-wrapper-alt {
+  height: 100%;
+}
+
+.action-status-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.action-status-icon .status-indicator-wrapper {
+  position: relative;
+  inset: unset;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.action-status-icon .status-dot {
+  position: static;
+  inset: unset;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.status-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  box-sizing: border-box;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}

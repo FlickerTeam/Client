@@ -5,6 +5,7 @@ import { type JSX, useMemo, useState } from 'react';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useGateway } from '@/context/gatewayContext';
+import { useModal } from '@/layering/modalContext';
 import { usePopup } from '@/layering/popupContext';
 import type { Member } from '@/types/guilds';
 import type { User } from '@/types/users';
@@ -13,7 +14,8 @@ import { useUiUtilityActions } from '@/utils/uiUtils';
 
 export const UserProfileModal = (): JSX.Element => {
   const { user, sessions, getPresence } = useGateway();
-  const { closePopup } = usePopup();
+  const { openModal } = useModal();
+  const { closePopup, openPopup } = usePopup();
   const { openFullProfile } = useUiUtilityActions(null);
 
   const { url: defaultAvatarUrl, rollover } = useAssetsUrl(`/assets/${getDefaultAvatar(user)}.png`);
@@ -55,6 +57,27 @@ export const UserProfileModal = (): JSX.Element => {
       closePopup();
       void navigator.clipboard.writeText(user.id);
     }
+  };
+
+  const handleSetCustomStatus = () => {
+    openModal('SET_STATUS');
+    closePopup();
+  };
+
+  const handleSetStatus = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const x = rect.right + 8;
+    const y = rect.top - 120;
+
+    openPopup('SET_STATUS', {
+      x,
+      y,
+      direction: 'right',
+    });
   };
 
   const handleOpenSettings = () => {
@@ -186,8 +209,8 @@ export const UserProfileModal = (): JSX.Element => {
       </div>
 
       <div className='profile-actions'>
-        <div className='action-row'>
-          <div className='action-content'>
+        <div className='action-row clickable'>
+          <div className='action-content action' onClick={handleSetCustomStatus}>
             <div className='action-icon'>
               <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
                 add_reaction
@@ -195,22 +218,33 @@ export const UserProfileModal = (): JSX.Element => {
             </div>
             <p className='action-text'>Set a custom status</p>
           </div>
-          <div className='action-status-icon'>
-            <div className='status-indicator-wrapper'>
-              <div className={`status-dot ${status}`} />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              gap: '5px',
+            }}
+            className='action'
+            onClick={(e) => handleSetStatus(e)}
+          >
+            <div className='action-status-icon'>
+              <div className='status-indicator-wrapper'>
+                <div className={`status-dot ${status}`} />
+              </div>
             </div>
-          </div>
-          <div className='icon-btn-small'>
-            <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
-              chevron_right
-            </span>
+            <div className='icon-btn-small'>
+              <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
+                chevron_right
+              </span>
+            </div>
           </div>
         </div>
 
         <div className='divider' style={{ borderBottom: '1px solid var(--bg-alt)' }} />
 
         <button className='action-row centered clickable' onClick={handleOpenSettings}>
-          <div className='action-content'>
+          <div className='action-content action'>
             <div className='action-icon'>
               <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
                 settings
@@ -221,7 +255,7 @@ export const UserProfileModal = (): JSX.Element => {
         </button>
 
         <button className='action-row centered clickable' onClick={handleCopyUserId}>
-          <div className='action-content'>
+          <div className='action-content action'>
             <div className='action-icon'>
               <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
                 account_box

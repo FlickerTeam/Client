@@ -4,7 +4,6 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { type JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import imgFlickerLogo from '@/assets/flickerLogo.png';
 import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';
 import { useGateway } from '@/context/gatewayContext';
@@ -38,7 +37,7 @@ const GuildSidebar = ({
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openContextMenu } = useMenuOverlay();
-  const { openPopup, popupType } = usePopup();
+  const { openPopup, popups } = usePopup();
 
   const handleLeaveServer = (guild_name: string, guild_id: string) => {
     openModal('CONFIRMATION_LEAVE', { name: guild_name, id: guild_id, type: 'server' });
@@ -142,7 +141,7 @@ const GuildSidebar = ({
     );
   };
 
-  const isUserPopupOpen = popupType === 'CURRENT_USER_PROFILE';
+  const isUserPopupOpen = 'CURRENT_USER_PROFILE' in popups;
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.style.display = 'none';
@@ -179,7 +178,14 @@ const GuildSidebar = ({
             <div
               className={`icon-container shadow-container ${isHomeSelected && !isUserPopupOpen ? 'active' : ''}`}
             >
-              <img className={`guild-icon home-icon-inner`} src={imgFlickerLogo} alt='Home' />
+              <span
+                className={`material-symbols-rounded guild-icon home-icon-inner`}
+                style={{
+                  fontSize: '30px',
+                }}
+              >
+                home
+              </span>
             </div>
           </Link>
         </button>

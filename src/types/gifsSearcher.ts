@@ -14,7 +14,7 @@ export interface GifResult {
 export interface RawGifResponse {
   id: string;
   title: string;
-  gif_src: string;
+  src: string;
   width: number;
   height: number;
 }

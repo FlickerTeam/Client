@@ -18,16 +18,17 @@ import { JoinServerModal } from '@/components/modals/joinServer';
 import { PopoutEmoji } from '@/components/modals/popoutEmoji';
 import { PopoutProfile } from '@/components/modals/popoutProfile';
 import { ServerProfileModal } from '@/components/modals/serverProfile';
+import { SetRegularStatusModal } from '@/components/modals/setRegularStatusModal';
+import { SetStatusModal } from '@/components/modals/setStatus';
 import { UserProfileModal } from '@/components/modals/userProfile';
 import { useGuildChannelMemoryStore } from '@/stores/gncMemoryStore';
 import type { Emoji } from '@/types/guilds';
-
 import { type ModalDataMap, useModal } from './modalContext';
-import { type PopupDataMap, type PopupDirection, usePopup } from './popupContext';
+import { type PopupDataMap, type PopupDirection, type PopupType, usePopup } from './popupContext';
 
 export const LayerPortals = (): JSX.Element | null => {
   const { modalType, modalData, closeModal } = useModal();
-  const { popupType, popupData, closePopup } = usePopup();
+  const { popups, closePopup } = usePopup();
   const currentGuildId = useGuildChannelMemoryStore((s) => s.currentGuildId);
 
   const modalPortal = document.getElementById('modal-portal');
@@ -61,6 +62,8 @@ export const LayerPortals = (): JSX.Element | null => {
         return <JoinOrCreateServerModal />;
       case 'CREATE_SERVER':
         return <CreateServerModal />;
+      case 'SET_STATUS':
+        return <SetStatusModal />;
       case 'JOIN_SERVER':
         return <JoinServerModal />;
       case 'CLEAR_SELECTED_INSTANCE':
@@ -116,7 +119,7 @@ export const LayerPortals = (): JSX.Element | null => {
     return deltaY < 0 ? 'top' : 'bottom';
   };
 
-  const renderPopup = () => {
+  const renderSinglePopup = (popupType: PopupType, popupData: unknown) => {
     if (!popupType || !popupData) return null;
 
     let content: JSX.Element | null = null;
@@ -209,6 +212,20 @@ export const LayerPortals = (): JSX.Element | null => {
         );
         break;
       }
+      case 'SET_STATUS': {
+        const data = popupData as PopupDataMap['SET_STATUS'];
+        const popoutHeight = 240;
+        const popoutWidth = 220;
+        const pos = clampPosition(data.x, data.y, popoutWidth, popoutHeight);
+
+        fixedX = pos.x;
+        fixedY = pos.y;
+        currentWidth = '220px';
+        direction = 'right';
+
+        content = <SetRegularStatusModal />;
+        break;
+      }
       case 'EMOJI_PICKER': {
         const data = popupData as PopupDataMap['EMOJI_PICKER'];
         const popoutHeight = 440;
@@ -267,8 +284,8 @@ export const LayerPortals = (): JSX.Element | null => {
           );
         content = (
           <GifSearcher
-            gifCategories={data.gifCategories}
-            gifs={data.gifs}
+            gifCategories={data.gifCategories ?? []}
+            gifs={data.gifs ?? []}
             onSearch={data.onSearch}
             onSelectGif={data.onSelectGif}
             onClose={closePopup}
@@ -293,16 +310,17 @@ export const LayerPortals = (): JSX.Element | null => {
   const isProfile = modalType === 'SERVER_PROFILE';
   const isImagePreview = modalType === 'IMAGE_PREVIEW';
   const modalContents = renderModal();
-  const popupContents = renderPopup();
+
+  const hasPopups = Object.keys(popups).length > 0;
 
   return (
     <>
-      {popupType &&
+      {hasPopups &&
         createPortal(
           <div className='popup-layer'>
             <div
               className='popup-backdrop'
-              onClick={closePopup}
+              onClick={() => closePopup()}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') closePopup();
               }}
@@ -310,7 +328,9 @@ export const LayerPortals = (): JSX.Element | null => {
               tabIndex={0}
               aria-label='Close popup'
             />
-            {popupContents}
+            {Object.entries(popups).map(([_type, instance]) =>
+              renderSinglePopup(instance.popupType, instance.popupData),
+            )}
           </div>,
           modalPortal,
         )}

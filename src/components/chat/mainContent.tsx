@@ -85,7 +85,7 @@ const MainContent = ({
   const { openUserProfile, openFullProfile } = useUiUtilityActions(selectedGuild);
   const { openContextMenu } = useMenuOverlay();
   const { openModal } = useModal();
-  const { popupType, openPopup, updatePopup, closePopup } = usePopup();
+  const { popups, openPopup, updatePopup, closePopup } = usePopup();
 
   const [suggestionsTrigger, setSuggestionTrigger] = useState<SuggestionsTrigger | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -310,27 +310,24 @@ const MainContent = ({
     setSelectedIndex(0);
   }, []);
 
-  useEffect(() => {
-    if (popupType === 'GIF_PICKER') {
-      updatePopup<'GIF_PICKER'>({ gifs, gifCategories });
-    }
-  }, [gifs, gifCategories, popupType, updatePopup]);
+  const isGifPickerOpen = 'GIF_PICKER' in popups;
 
   useEffect(() => {
-    if (popupType === 'GIF_PICKER' && gifSearchQuery === '') {
+    if (isGifPickerOpen && gifSearchQuery === '') {
       const fetchTrending = async () => {
         try {
           const data = await get<GifTrendingResponse>('/gifs/trending?locale=en');
 
           setGifCategories(data.categories);
+          updatePopup('GIF_PICKER', { gifCategories: data.categories });
         } catch (err) {
-          logger.error(`MAIN_CONTENT`, `Failed to metch trending gifs`, err);
+          logger.error(`MAIN_CONTENT`, `Failed to fetch trending gifs`, err);
         }
       };
 
       void fetchTrending();
     }
-  }, [popupType, gifSearchQuery]);
+  }, [isGifPickerOpen, gifSearchQuery, updatePopup]);
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -1106,21 +1103,27 @@ const MainContent = ({
 
     setGifs([]);
 
+    updatePopup('GIF_PICKER', { gifs: [] });
+
     if (!term.trim()) return;
 
     try {
       const data = await get<RawGifResponse[]>(
         `/gifs/search?locale=en&q=${encodeURIComponent(term)}&limit=50`,
       );
-      const mappedGifs: GifResult[] = data.map((g) => ({
-        id: g.id,
-        title: g.title,
-        previewUrl: g.gif_src,
-        fullUrl: g.gif_src,
-        aspectRatio: g.width / g.height,
-      }));
+      const mappedGifs: GifResult[] = data.map((g) => {
+        return {
+          id: g.id,
+          title: g.title ?? '',
+          previewUrl: g.src,
+          fullUrl: g.src,
+          aspectRatio: g.width / g.height,
+        };
+      });
 
       setGifs(mappedGifs);
+
+      updatePopup('GIF_PICKER', { gifs: mappedGifs });
     } catch (error) {
       logger.error(`MAIN_CONTENT`, `Failed to search gifs for term: ${term}`, error);
     }
@@ -1673,7 +1676,7 @@ const MainContent = ({
               void handleSendMessage(e);
             }}
           >
-            {suggestionsTrigger && filteredSuggestions.length > 0 && popupType !== 'GIF_PICKER' && (
+            {suggestionsTrigger && filteredSuggestions.length > 0 && !('GIF_PICKER' in popups) && (
               <SuggestionsBar
                 suggestionsTrigger={suggestionsTrigger}
                 filteredSuggestions={filteredSuggestions}
@@ -1765,11 +1768,11 @@ const MainContent = ({
                       <button
                         type='button'
                         className={`input-icon-btn ${
-                          popupType === 'GIF_PICKER' ? 'active-input-btn' : ''
+                          'GIF_PICKER' in popups ? 'active-input-btn' : ''
                         }`}
                         title={`Search gifs`}
                         onClick={(e) => {
-                          if (popupType === 'GIF_PICKER') {
+                          if ('GIF_PICKER' in popups) {
                             closePopup();
                           } else {
                             const rect = e.currentTarget.getBoundingClientRect();
@@ -1808,11 +1811,11 @@ const MainContent = ({
                       <button
                         type='button'
                         className={`input-icon-btn ${
-                          popupType === 'EMOJI_PICKER' ? 'active-input-btn' : ''
+                          'EMOJI_PICKER' in popups ? 'active-input-btn' : ''
                         }`}
                         title={`Search emojis`}
                         onClick={(e) => {
-                          if (popupType === 'EMOJI_PICKER') {
+                          if ('EMOJI_PICKER' in popups) {
                             closePopup();
                           } else {
                             const rect = e.currentTarget.getBoundingClientRect();

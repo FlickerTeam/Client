@@ -9,6 +9,7 @@ import type { User } from '@/types/users';
 export interface ModalDataMap {
   JOIN_SERVER: undefined;
   CREATE_SERVER: undefined;
+  SET_STATUS: undefined;
   WHATS_IT_GONNA_BE: undefined;
   CONFIRMATION_LEAVE: { name: string; id: string; type: string };
   CLEAR_SELECTED_INSTANCE: undefined;
