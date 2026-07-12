@@ -2,6 +2,40 @@ import * as z from 'zod';
 
 import { UserSchema } from './users';
 
+export interface EmbedField {
+  name: string;
+  value: string;
+  inline?: boolean;
+}
+
+export interface EmbedData {
+  title?: string;
+  description?: string;
+  url?: string;
+  color?: number;
+  timestamp?: string;
+  footer?: { text: string; icon_url?: string };
+  image?: { url: string; height: number; width: number };
+  thumbnail?: { url: string; height: number; width: number };
+  author?: { name: string; url?: string; icon_url?: string };
+  fields?: EmbedField[];
+}
+
+export enum MessageType {
+  DEFAULT = 0,
+  ADD_TO_GROUP = 1,
+  REMOVE_FROM_GROUP = 2,
+  CALL = 3,
+  CHANNEL_NAME_CHANGE = 4,
+  CHANNEL_ICON_CHANGE = 5,
+  PIN = 6,
+  GUILD_MEMBER_JOIN = 7,
+  GUILD_SUBSCRIPTION = 8,
+  GUILD_SUBSCRIPTION_TIER_1 = 9,
+  GUILD_SUBSCRIPTION_TIER_2 = 10,
+  GUILD_SUBSCRIPTION_TIER_3 = 11,
+}
+
 export const AttachmentSchema = z.object({
   id: z.string(),
   filename: z.string(),

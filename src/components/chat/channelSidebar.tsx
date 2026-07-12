@@ -8,14 +8,15 @@ import { useAssetsUrl } from '@/context/assetsUrl';
 import { useConfig } from '@/context/configContext';
 import { useGateway } from '@/context/gatewayContext';
 import { useMenuOverlay } from '@/layering/menuOverlayStore';
+import { usePopup } from '@/layering/popupContext';
 import { useUserStore } from '@/stores/userStore';
 import type { Channel } from '@/types/channel';
 import type { Guild, VoiceState } from '@/types/guilds';
 import { del } from '@/utils/api';
 import { getDefaultAvatar } from '@/utils/avatar';
+import { formatChannelName } from '@/utils/channelUtils';
 import { logger } from '@/utils/logger';
 import { Snowflake } from '@/utils/snowflake';
-
 import { DmChannel } from './dmChannel';
 import VoiceActivityControls from './voiceActivityControls';
 
@@ -52,16 +53,12 @@ const PrivateChannelItem = ({
   const recipient = channel.recipients?.[0];
   const { url: defaultAvatarUrl } = useAssetsUrl(`/assets/${getDefaultAvatar(recipient)}.png`);
 
-  const channelName =
-    channel.name || recipient?.global_name || recipient?.username || 'Unknown User';
-  const avatarUrl = recipient?.avatar
+  let channelName = channel.name || recipient?.global_name || recipient?.username || 'Unknown User';
+  let avatarUrl = recipient?.avatar
     ? `${cdnUrl ?? ''}/avatars/${recipient.id ?? ''}/${recipient.avatar}.png`
     : defaultAvatarUrl;
 
-  const status = getPresence(recipient?.id)?.status ?? 'offline';
-  const recipientId = recipient?.id;
-  const isTyping = !!(recipientId && typingUsers[channel.id]?.[recipientId]);
-
+  let isGroupDmFallback = false;
   let subTitle = ``;
 
   if (channel.last_message_id) {
@@ -70,12 +67,43 @@ const PrivateChannelItem = ({
     subTitle = `Last Message ${snowflake.format()}`;
   }
 
+  if (channel.type === 3) {
+    if (!channel.name && channel.recipients) {
+      channelName = formatChannelName(channel);
+    }
+
+    if (channel.icon) {
+      avatarUrl = channel.icon;
+    } else {
+      isGroupDmFallback = true;
+    }
+
+    subTitle = `${(channel.recipients?.length ?? 0) + 1} member(s)`;
+  }
+
+  const status = getPresence(recipient?.id)?.status ?? 'offline';
+  const recipientId = recipient?.id;
+  const isTyping = !!(recipientId && typingUsers[channel.id]?.[recipientId]);
+
   return (
     <DmChannel
       key={channel.id}
       title={channelName}
       subtitle={subTitle !== '' ? subTitle : undefined}
-      icon={avatarUrl}
+      icon={
+        isGroupDmFallback ? (
+          <div className='group-dm-icon-placeholder'>
+            <span
+              className='material-symbols-rounded'
+              style={{ fontSize: '40px', borderRadius: '12px' }}
+            >
+              groups
+            </span>
+          </div>
+        ) : (
+          avatarUrl
+        )
+      }
       isTyping={isTyping}
       selected={selected}
       status={status}
@@ -151,6 +179,7 @@ const ChannelSidebar = ({
   const [closedChannelIds, setClosedChannelIds] = useState<string[]>([]);
   const navigate = useNavigate();
   const { cdnUrl } = useConfig();
+  const { openPopup, closePopup } = usePopup();
   const validClosedChannelIds = useMemo(
     () => closedChannelIds.filter((id) => globalPrivateChannels.some((c) => c.id === id)),
     [closedChannelIds, globalPrivateChannels],
@@ -285,8 +314,21 @@ const ChannelSidebar = ({
       e.clientX,
       e.clientY,
       <div className='context-menu-out guild-context-menu'>
-        <div className='button'>Mark as read</div>
-        <div className='button'>Make invite</div>
+        <div className='button'>Mark As Read</div>
+        <div className='button'>Edit Channel</div>
+        <hr />
+        <div className='button'>Make Invite</div>
+        <div className='button'>Clone Channel</div>
+        <div className='button'>Create Channel</div>
+        <hr />
+        <div
+          className='button'
+          style={{
+            color: 'var(--bg-dnd)',
+          }}
+        >
+          Delete Channel
+        </div>
         <hr />
         <div
           className='button'
@@ -353,13 +395,65 @@ const ChannelSidebar = ({
     }));
   };
 
+  const onContextMenuGuild = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    openContextMenu(
+      e.clientX,
+      e.clientY,
+      <div className='context-menu-out guild-context-menu'>
+        <div className='button'>Mark as read</div>
+        <div className='button text-brand'>Invite People</div>
+        <hr />
+        <div className='button'>Server Settings</div>
+        <hr />
+        <div className='button'>Create Channel</div>
+        <div className='button'>Create Category</div>
+        <hr />
+        <div className='button'>Notification Settings</div>
+        <div className='button'>Privacy Settings</div>
+        <div className='button'>Change Nickname</div>
+        <hr />
+        <div
+          className='button'
+          onClick={() => {
+            if (selectedGuild.id) {
+              closeContextMenu();
+              void navigator.clipboard.writeText(selectedGuild.id);
+            }
+          }}
+        >
+          Copy ID
+        </div>
+      </div>,
+    );
+  };
+
+  const onClickGuild = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    openPopup('GUILD_ACTIONS_DROPDOWN', {
+      x: rect.left,
+      y: rect.bottom,
+      width: rect.width,
+      guild: selectedGuild,
+      onClose: () => closePopup('GUILD_ACTIONS_DROPDOWN'),
+    });
+  };
+
   const bannerUrl = selectedGuild.banner
     ? `${cdnUrl ?? ''}/banners/${selectedGuild.id}/${selectedGuild.banner}.png`
     : null;
 
   return (
     <div id='channels-column'>
-      <div className={`sidebar-header ${bannerUrl != null ? 'sidebar-header-banner' : ''}`}>
+      <div
+        className={`sidebar-header ${bannerUrl != null ? 'sidebar-header-banner' : ''}`}
+        onContextMenu={(e) => onContextMenuGuild(e)}
+        onClick={(e) => onClickGuild(e)}
+      >
         {bannerUrl != null && (
           <div className='sidebar-header-banner-bg'>
             <img
@@ -373,7 +467,11 @@ const ChannelSidebar = ({
           </div>
         )}
         <div className='sidebar-header-content'>
-          <span className='guild-name'>{selectedGuild.name}</span>
+          <span className='guild-name' title={selectedGuild.name}>
+            {selectedGuild.name.length > 20
+              ? selectedGuild.name.substring(0, 20) + '...'
+              : selectedGuild.name}
+          </span>
           <span
             className='material-symbols-rounded sidebar-header-arrow'
             style={{ fontSize: '24px' }}

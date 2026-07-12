@@ -1,0 +1,60 @@
+.system-message-content {
+  color: var(--text-main);
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}
+
+.system-message-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 20px;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.system-msg-icon {
+  font-size: 20px;
+}
+
+.system-message-row .inline-msg-mention {
+  color: var(--text-dim);
+  text-decoration: 0.5px dotted underline;
+  background: none;
+  transition: 0.3s;
+}
+
+.system-message-row .inline-msg-mention:hover {
+  color: var(--text-bright);
+}
+
+.boost-icon {
+  background: linear-gradient(45deg, #ff007f, #ff7300, #9dff00, #00e1ff, #7f00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+.call-icon {
+  color: #43b5af;
+}
+.join-icon {
+  color: #43b581;
+}
+.pin-icon {
+  color: #faa61a;
+}
+.leave-icon {
+  color: #c91919;
+}
+
+.channel-edit-icon,
+.channel-icon-change-icon {
+  color: var(--text-muted, #72767d);
+}
+
+.channel-edit-icon:hover {
+  color: var(--text-normal, #dcddde);
+}

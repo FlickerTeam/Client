@@ -43,9 +43,11 @@ export interface InviteData {
 export const MemberMention = ({
   guild_id,
   user_id,
+  fallback_user_object,
 }: {
   guild_id: string | undefined;
   user_id: string;
+  fallback_user_object?: User;
 }): JSX.Element => {
   const { getMember, guilds, getPresence } = useGateway();
   const getUser = useUserStore((state) => state.getUser);
@@ -73,7 +75,12 @@ export const MemberMention = ({
     };
   }, [user_id, getUser]);
 
-  const name: string = member?.nick || fetchedUser?.global_name || fetchedUser?.username || '...';
+  const name: string =
+    member?.nick ||
+    fetchedUser?.global_name ||
+    fetchedUser?.username ||
+    fallback_user_object?.username ||
+    '...';
 
   let fakeMemberObj: Member = {
     id: user_id,

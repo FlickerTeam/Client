@@ -59,6 +59,7 @@ const BOUNDARY = '\0';
 
 const DELIMITERS: {
   URL: Delimiter;
+  MASKED_LINK: Delimiter;
   CODEBLOCK: Delimiter;
   CODE1: Delimiter;
   CODE2: Delimiter;
@@ -102,6 +103,34 @@ const DELIMITERS: {
             {innerText}
           </a>
           {group && <InviteMention code={group} />}
+        </>
+      );
+    },
+  },
+  MASKED_LINK: {
+    start: ['['],
+    end: [')'],
+    render: (_render, innerText, _openingDelimiter, guild_id?) => {
+      const splitIndex = innerText.lastIndexOf('](');
+
+      if (splitIndex === -1) {
+        return <>[{innerText})</>;
+      }
+
+      const displayText = innerText.substring(0, splitIndex);
+      const url = innerText.substring(splitIndex + 2);
+
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return <>[{innerText})</>;
+      }
+
+      const filteredHoverText = displayText.replace(/[^a-zA-Z0-9]/g, '');
+
+      return (
+        <>
+          <a title={filteredHoverText} href={url} target='_blank' rel='noreferrer'>
+            {renderDfm(displayText, guild_id)}
+          </a>
         </>
       );
     },
@@ -301,6 +330,7 @@ const KEYWORDS: {
 
 const PARSING_ORDER: Terminal[] = [
   DELIMITERS.URL,
+  DELIMITERS.MASKED_LINK,
   DELIMITERS.CODEBLOCK,
   DELIMITERS.CODE1,
   DELIMITERS.CODE2,

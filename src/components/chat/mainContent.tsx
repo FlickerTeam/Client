@@ -23,24 +23,26 @@ import type {
   RawGifResponse,
 } from '@/types/gifsSearcher';
 import { EmojiSchema, type Guild, type Member } from '@/types/guilds';
-import { type Message, MessageListSchema, MessageSchema } from '@/types/messages';
+import { type EmbedData, type Message, MessageListSchema, MessageSchema } from '@/types/messages';
 import { type Suggestion, type SuggestionsTrigger, SuggestionsType } from '@/types/suggestions';
 import type { User } from '@/types/users';
 import { get, patch, post, request } from '@/utils/api';
 import { localBlobCache } from '@/utils/attachmentCache';
 import { getDefaultAvatar } from '@/utils/avatar';
+import { formatChannelName } from '@/utils/channelUtils';
 import { formatTimestamp } from '@/utils/dateUtils';
 import { logger } from '@/utils/logger';
 import { useUiUtilityActions } from '@/utils/uiUtils';
-
 import { ChatAttachment } from './chatAttachment';
 import ChatInput from './chatInput';
 import renderDfm from './dfm/dfmRenderer';
 import MemberList from './memberList';
+import { MessageEmbed } from './messageEmbed';
 import { MessageEditInput } from './messageeditinput';
 import { PinnedMessagesShelf } from './pinnedMessagesShelf';
 import { ReplyPreview } from './replyPreview';
 import { SuggestionsBar } from './suggestionsBar';
+import { SystemMessage } from './systemMessage';
 import { UploadProgressCircle } from './uploadProgressCircle';
 
 interface MemberListItem {
@@ -873,11 +875,16 @@ const MainContent = ({
     };
 
     return allMessages.map((msg: LocalMessage, index: number) => {
+      if (msg.type !== undefined && msg.type !== 0) {
+        return <SystemMessage key={msg.id} msg={msg} guildId={selectedGuild?.id} />;
+      }
+
       const messageKey = msg.nonce || msg.id;
       const prevMsg = allMessages[index - 1];
 
       const isNewGroup =
         msg.message_reference ||
+        (prevMsg?.type !== undefined && prevMsg?.type !== 0) ||
         prevMsg?.author.id !== msg.author.id ||
         new Date(msg.timestamp).getTime() - new Date(prevMsg?.timestamp ?? '').getTime() > 420000;
 
@@ -965,6 +972,17 @@ const MainContent = ({
                       );
                     },
                   )}
+                </div>
+              )}
+              {!isEditing && msg.embeds.length > 0 && (
+                <div className='message-embeds-wrapper'>
+                  {msg.embeds.map((embed, index) => (
+                    <MessageEmbed
+                      key={index}
+                      embed={embed as EmbedData}
+                      guildId={selectedGuild?.id}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -1499,7 +1517,7 @@ const MainContent = ({
         <div className='header-left'>
           <div className='header-icon'>
             <span className='material-symbols-rounded' style={{ fontSize: '24px' }}>
-              {selectedGuild ? 'tag' : 'alternate_email'}
+              {selectedGuild ? 'tag' : selectedChannel.type === 3 ? 'groups' : 'alternate_email'}
             </span>
           </div>
           <span
@@ -1537,7 +1555,7 @@ const MainContent = ({
                 : {}
             }
           >
-            {selectedChannel.name || selectedChannel.recipients?.[0]?.username || 'Direct Message'}
+            {formatChannelName(selectedChannel)}
           </span>
           {selectedChannel.topic && (
             <>

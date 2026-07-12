@@ -78,6 +78,14 @@
   align-items: center;
   padding: 10px;
   z-index: 1;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+  user-select: none;
+}
+
+.sidebar-header-content:hover {
+  background: var(--bg-main);
 }
 
 .guild-name {
@@ -342,4 +350,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.popup-wrapper.dir-bottom {
+  margin-top: 2px;
+  z-index: 99;
+}
+
+.guild-context-menu.static-dropdown {
+  width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  background-color: var(--bg-main);
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 6px;
+}
+
+.guild-context-menu .button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  box-sizing: border-box;
+}
+
+.guild-context-menu .button .material-symbols-rounded {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }

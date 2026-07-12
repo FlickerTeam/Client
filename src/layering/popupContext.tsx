@@ -53,6 +53,13 @@ export interface PopupDataMap {
     onSelectGif: (url: string) => void;
     direction?: PopupDirection;
   };
+  GUILD_ACTIONS_DROPDOWN: {
+    x: number;
+    y: number;
+    width: number;
+    guild: Guild;
+    onClose: () => void;
+  };
 }
 
 export type PopupType = keyof PopupDataMap;

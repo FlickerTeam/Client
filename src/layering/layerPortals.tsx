@@ -226,6 +226,54 @@ export const LayerPortals = (): JSX.Element | null => {
         content = <SetRegularStatusModal />;
         break;
       }
+      case 'GUILD_ACTIONS_DROPDOWN': {
+        const data = popupData as PopupDataMap['GUILD_ACTIONS_DROPDOWN'];
+
+        fixedX = data.x;
+        fixedY = data.y;
+        currentWidth = `${data.width}px`;
+        direction = 'bottom';
+
+        content = (
+          <div className='context-menu-out guild-context-menu static-dropdown'>
+            <div className='button text-brand'>
+              <span className='material-symbols-rounded icon-left'>person_add</span>
+              Invite People
+            </div>
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>settings</span>
+              Server Settings
+            </div>
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>add_circle</span>
+              Create Channel
+            </div>
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>create_new_folder</span>
+              Create Category
+            </div>
+            <hr />
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>notifications</span>
+              Notification Settings
+            </div>
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>shield</span>
+              Privacy Settings
+            </div>
+            <hr />
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>edit</span>
+              Change Nickname
+            </div>
+            <div className='button'>
+              <span className='material-symbols-rounded icon-left'>visibility_off</span>
+              Hide Muted Channels
+            </div>
+          </div>
+        );
+        break;
+      }
       case 'EMOJI_PICKER': {
         const data = popupData as PopupDataMap['EMOJI_PICKER'];
         const popoutHeight = 440;
