@@ -1,6 +1,9 @@
 import './mainContent.css';
 
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import {
+  OverlayScrollbarsComponent,
+  type OverlayScrollbarsComponentRef,
+} from 'overlayscrollbars-react';
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAssetsUrl } from '@/context/assetsUrl';
@@ -68,7 +71,6 @@ const MESSAGE_STATE = Object.freeze({
   PENDING: 0,
   SENT: 1,
   FAILED: -1,
-
   0: 'Pending',
   1: 'Sent',
   '-1': 'Failed',
@@ -104,10 +106,14 @@ const MainContent = ({
   const [stickernatorActive, setStickernatorActive] = useState(false);
   const [channelPinsVisible, setChannelPinsVisible] = useState(false);
   const [memberListVisible, setMemberListVisible] = useState(true);
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<OverlayScrollbarsComponentRef>(null);
   const { typingUsers, user, getMember, getMemberColor, getPresence, memberLists, guilds } =
     useGateway();
   const [messages, setMessages] = useState<LocalMessage[]>([]);
+
+  const localCacheRef = useRef<LocalMessage[]>([]);
+  const isShifting = useRef(false);
+
   const messageMap = useMemo(() => {
     return new Map(messages.map((m) => [m.id, m]));
   }, [messages]);
@@ -213,8 +219,8 @@ const MainContent = ({
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     if (scrollerRef.current) {
-      scrollerRef.current.scrollTo({
-        top: scrollerRef.current.scrollHeight,
+      scrollerRef.current.getElement()?.scrollTo({
+        top: scrollerRef.current.getElement()?.scrollHeight,
         behavior,
       });
 
@@ -226,7 +232,9 @@ const MainContent = ({
     e.preventDefault();
     e.stopPropagation();
 
-    const element = scrollerRef.current?.querySelector(`[data-message-id="${msg.id}"]`);
+    const element = scrollerRef.current
+      ?.getElement()
+      ?.querySelector(`[data-message-id="${msg.id}"]`);
 
     if (element) {
       element.classList.remove('message-highlight-no-anim');
@@ -240,7 +248,9 @@ const MainContent = ({
     e.preventDefault();
     e.stopPropagation();
 
-    const element = scrollerRef.current?.querySelector(`[data-message-id="${msg.id}"]`);
+    const element = scrollerRef.current
+      ?.getElement()
+      ?.querySelector(`[data-message-id="${msg.id}"]`);
     const isLastMessage = messages[messages.length - 1]?.id === msg.id;
 
     if (element) {
@@ -563,7 +573,9 @@ const MainContent = ({
     setReplyingMgID(null);
 
     if (replyingMsgID) {
-      const el = scrollerRef.current?.querySelector(`[data-message-id="${replyingMsgID}"]`);
+      const el = scrollerRef.current
+        ?.getElement()
+        ?.querySelector(`[data-message-id="${replyingMsgID}"]`);
       el?.classList.remove('move-msg-up', 'message-highlight-no-anim');
     }
 
@@ -602,53 +614,147 @@ const MainContent = ({
   };
 
   const handleScroll = async () => {
-    const container = scrollerRef.current;
-    if (!container) return;
+    const instance = scrollerRef.current?.osInstance();
 
-    const distanceFromBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight;
+    if (!instance) return;
 
-    if (distanceFromBottom > 2000) {
-      setIsScrolledUp(true);
-    } else {
-      setIsScrolledUp(false);
-    }
+    const { scrollOffsetElement: scroller } = instance.elements();
 
-    const scroller = scrollerRef.current;
+    if (!scroller || messages.length === 0 || isloadingMore.current || isShifting.current) return;
 
-    if (!scroller || messages.length === 0 || isloadingMore.current) return;
+    const currentScrollTop = scroller.scrollTop;
+    const currentScrollHeight = scroller.scrollHeight;
+    const currentClientHeight = scroller.clientHeight;
 
-    if (scroller.scrollTop === 0) {
+    const distanceFromBottom = currentScrollHeight - currentScrollTop - currentClientHeight;
+
+    setIsScrolledUp(distanceFromBottom > 2000);
+
+    console.log(currentScrollTop);
+
+    if (currentScrollTop <= 5) {
+      //If the scrollbar is at the very top (console reports <= 5 when it is), get the next messages older than the first msg in our local msg array, get an older message, sort it by time, set messages to the next <= 150 messages to show.
+      //Then scroll back to what the hell is relevant to those <= 150 messages. Otherwise, load more messages by fetching with before_id and do the same <= 150 sort logic for where to scroll and what order of time to sort the new msgs by so it logically makes sense.
+      //Else if nothing, loading more is false and is shifting is false, something is wrong.
+      //If the distance from the bottom is under 500 (aka going to newer msgs), repeat the same logic for the 150 msgs but with the most current msgs in the channel.
+      //This logic is pretty convulted but it's better than a whole virtualized list library or a custom element.
+
+      isShifting.current = true;
+
+      const firstMsgTimestamp = new Date(messages[0]?.timestamp ?? 0).getTime();
+      const olderLocalMsg = localCacheRef.current.filter(
+        (m) => new Date(m.timestamp).getTime() < firstMsgTimestamp,
+      );
+
+      if (olderLocalMsg.length > 0) {
+        const sortedCache = [...olderLocalMsg].sort(
+          (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+        );
+
+        const nextBatch = sortedCache.slice(-50);
+        const prevHeight = scroller.scrollHeight;
+
+        setMessages((prev) => {
+          const base = [...nextBatch, ...prev];
+          const uniqueMap = new Map(base.map((m) => [m.id, m]));
+          const uniqueList = Array.from(uniqueMap.values());
+
+          return uniqueList.length > 150 ? uniqueList.slice(0, 150) : uniqueList;
+        });
+
+        requestAnimationFrame(() => {
+          scroller.scrollTop = scroller.scrollTop + (scroller.scrollHeight - prevHeight);
+
+          if (scroller.scrollTop <= 0) {
+            scroller.scrollTop = 2;
+          }
+
+          isShifting.current = false;
+        });
+        return;
+      }
+
       isloadingMore.current = true;
 
       const oldestMsgId = messages[0]?.id;
       const prevHeight = scroller.scrollHeight;
-
       const olderMessages = await fetchMessages(50, oldestMsgId);
 
       if (olderMessages.length > 0) {
         const reversedOlder = olderMessages.reverse();
 
-        setMessages((prev) => [...reversedOlder, ...prev]);
+        setMessages((prev) => {
+          const base = [...reversedOlder, ...prev];
+          const uniqueMap = new Map(base.map((m) => [m.id, m]));
+          const uniqueList = Array.from(uniqueMap.values());
+          return uniqueList.length > 150 ? uniqueList.slice(0, 150) : uniqueList;
+        });
 
         requestAnimationFrame(() => {
-          if (scrollerRef.current) {
-            const newHeight = scrollerRef.current.scrollHeight;
-            const heightDifference = newHeight - prevHeight;
-
-            scrollerRef.current.scrollTop = heightDifference;
-
-            setTimeout(() => {
-              isloadingMore.current = false;
-            }, 150);
+          scroller.scrollTop = scroller.scrollTop + (scroller.scrollHeight - prevHeight);
+          if (scroller.scrollTop <= 0) {
+            scroller.scrollTop = 2;
           }
+          setTimeout(() => {
+            isloadingMore.current = false;
+            isShifting.current = false;
+          }, 150);
         });
       } else {
         isloadingMore.current = false;
+        isShifting.current = false;
+      }
+      return;
+    }
+
+    if (distanceFromBottom < 500) {
+      const lastMsgTimestamp = new Date(messages[messages.length - 1]?.timestamp ?? 0).getTime();
+
+      const activeIds = new Set(messages.map((m) => m.id));
+      const newerLocalMsg = localCacheRef.current.filter(
+        (m) => new Date(m.timestamp).getTime() > lastMsgTimestamp && !activeIds.has(m.id),
+      );
+
+      if (newerLocalMsg.length > 0) {
+        isShifting.current = true;
+        const sortedCache = [...newerLocalMsg].sort(
+          (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+        );
+        const nextBatch = sortedCache.slice(0, 50);
+
+        const prevHeight = scroller.scrollHeight;
+        setMessages((prev) => {
+          const base = [...prev, ...nextBatch];
+          const uniqueMap = new Map(base.map((m) => [m.id, m]));
+          const uniqueList = Array.from(uniqueMap.values());
+          return uniqueList.length > 150 ? uniqueList.slice(-150) : uniqueList;
+        });
+
+        requestAnimationFrame(() => {
+          scroller.scrollTop = scroller.scrollTop + (scroller.scrollHeight - prevHeight);
+          isShifting.current = false;
+        });
       }
     }
-    autoScroll.current = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight;
+
+    autoScroll.current = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 50;
   };
+
+  //Add our fetched messages to the local cache ref so we can do the scrolly scrolly virtualization logic
+  useEffect(() => {
+    if (messages.length > 0) {
+      const existingIds = new Set(localCacheRef.current.map((m) => m.id));
+      const itemsToAdd = messages.filter((m) => !existingIds.has(m.id));
+      if (itemsToAdd.length > 0) {
+        localCacheRef.current = [...localCacheRef.current, ...itemsToAdd];
+      }
+    }
+  }, [messages]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: let me clear the local msgs cache on new channel load ok
+  useEffect(() => {
+    localCacheRef.current = [];
+  }, [selectedChannel?.id]);
 
   useEffect(() => {
     if (!selectedChannel.id) {
@@ -669,6 +775,23 @@ const MainContent = ({
       setFirstLoad(false);
     });
   }, [selectedChannel.id, fetchMessages]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: just shut the fuck up and let me move the scrollabr down
+  useEffect(() => {
+    const instance = scrollerRef.current?.osInstance();
+
+    if (instance) {
+      const { scrollOffsetElement } = instance.elements();
+
+      if (!scrollOffsetElement) return;
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          scrollOffsetElement.scrollTop = scrollOffsetElement.scrollHeight;
+        });
+      });
+    }
+  }, [selectedChannel?.id, messages.length === 50]);
 
   useEffect(() => {
     const handleNewMessage = (event: CustomEvent<MessageCreate>) => {
@@ -734,7 +857,9 @@ const MainContent = ({
   const scrollToMessage = async (messageId: string) => {
     //Check if we already have it in the silly dom
 
-    const element = scrollerRef.current?.querySelector(`[data-message-id="${messageId}"]`);
+    const element = scrollerRef.current
+      ?.getElement()
+      ?.querySelector(`[data-message-id="${messageId}"]`);
 
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); //Everything else overflows it seems, pretty weird.
@@ -760,9 +885,9 @@ const MainContent = ({
           autoScroll.current = false; //make sure we dont scroll to the fucking bottom (owo)
 
           requestAnimationFrame(() => {
-            const newElement = scrollerRef.current?.querySelector(
-              `[data-message-id="${messageId}"]`,
-            );
+            const newElement = scrollerRef.current
+              ?.getElement()
+              ?.querySelector(`[data-message-id="${messageId}"]`);
 
             //lets try again
 
@@ -1501,6 +1626,58 @@ const MainContent = ({
     setFilteredSuggestions([]);
   };
 
+  const jumpToPresent = useCallback(async () => {
+    if (!selectedChannel?.id) return;
+
+    isloadingMore.current = true;
+    isShifting.current = true;
+
+    //Empty these messages so we dont blow up the computers ram
+
+    localCacheRef.current = [];
+
+    //Now I would clear the normal msgs here too but doing that results in the client showing "There's no messages here!" which frankly is just not true. So, leave whatevers in here until the new ones are loaded in for a more seemless experiene.
+
+    try {
+      const data = await fetchMessages(50);
+
+      if (data.length > 0) {
+        const reversed = [...data].reverse();
+
+        setMessages(reversed);
+
+        localCacheRef.current = reversed;
+        autoScroll.current = true;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const instance = scrollerRef.current?.osInstance();
+            const scroller = instance?.elements().scrollOffsetElement;
+
+            if (scroller) {
+              scroller.scrollTop = scroller.scrollHeight;
+            }
+
+            isloadingMore.current = false;
+            isShifting.current = false;
+          });
+        });
+      } else {
+        isloadingMore.current = false;
+        isShifting.current = false;
+      }
+    } catch (error) {
+      logger.error(
+        'MAIN_CONTENT',
+        "The time machine broke! We couldn't jump to the present! Quick! Call a scientist or something!!",
+        error,
+      );
+
+      isloadingMore.current = false;
+      isShifting.current = false;
+    }
+  }, [selectedChannel?.id, fetchMessages]);
+
   const canMessage = contextPerms.canMessage;
   const canSendAttachments = contextPerms.canSendAttachments;
   const replyingMsg = replyingMsgID != null && messages.find((x) => x.id === replyingMsgID);
@@ -1632,7 +1809,7 @@ const MainContent = ({
             <div
               className='jump-to-present-bar'
               onClick={() => {
-                scrollToBottom('smooth');
+                void jumpToPresent();
               }}
             >
               <span className='material-symbols-rounded'>arrow_downward</span>
@@ -1664,29 +1841,20 @@ const MainContent = ({
               </button>
             </div>
           )}
-
           <OverlayScrollbarsComponent
             element='div'
             options={{
               scrollbars: { theme: 'os-theme-dark', autoHide: 'scroll' },
+              overflow: { x: 'hidden', y: 'scroll' },
             }}
             className='messages-scroller scroller'
-            events={{
-              scroll: () => {
-                void handleScroll();
-              },
-            }}
-            ref={(os) => {
-              if (os) {
-                const instance = os.osInstance();
-                if (instance) {
-                  const { scrollOffsetElement } = instance.elements();
-                  (scrollerRef as { current: HTMLElement | null }).current = scrollOffsetElement;
-                }
-              }
-            }}
+            style={{ flex: 1, minHeight: 0, width: '100%', position: 'relative' }}
+            events={{ scroll: handleScroll }}
+            ref={scrollerRef}
           >
-            {renderMessages()}
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              {renderMessages()}
+            </div>
           </OverlayScrollbarsComponent>
           <form
             className='chat-input-area'
