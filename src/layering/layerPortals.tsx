@@ -20,6 +20,7 @@ import { PopoutProfile } from '@/components/modals/popoutProfile';
 import { ServerProfileModal } from '@/components/modals/serverProfile';
 import { SetRegularStatusModal } from '@/components/modals/setRegularStatusModal';
 import { SetStatusModal } from '@/components/modals/setStatus';
+import { SwitchAccountModal } from '@/components/modals/switchAccount';
 import { UserProfileModal } from '@/components/modals/userProfile';
 import { useGuildChannelMemoryStore } from '@/stores/gncMemoryStore';
 import type { Emoji } from '@/types/guilds';
@@ -64,6 +65,8 @@ export const LayerPortals = (): JSX.Element | null => {
         return <CreateServerModal />;
       case 'SET_STATUS':
         return <SetStatusModal />;
+      case 'SWITCH_ACCOUNT':
+        return <SwitchAccountModal />;
       case 'JOIN_SERVER':
         return <JoinServerModal />;
       case 'CLEAR_SELECTED_INSTANCE':

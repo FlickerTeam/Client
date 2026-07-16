@@ -54,12 +54,16 @@ function Login(): JSX.Element {
       localStorage.setItem('selectedAuthorization', data.token);
       localStorage.setItem('selectedEmail', email);
 
+      const instanceUrl = typeof instance === 'string' ? instance : instance.url;
+      const authString = btoa(`${data.token} ${email} ${instanceUrl}`);
+
       if (!localStorage.getItem('Authorizations')) {
-        localStorage.setItem('Authorizations', JSON.stringify([data.token]));
+        localStorage.setItem('Authorizations', JSON.stringify([authString]));
       } else {
         const currentAuths =
           (JSON.parse(localStorage.getItem('Authorizations') ?? '') as string[]) ?? [];
-        currentAuths.push(data.token);
+
+        currentAuths.push(authString);
 
         localStorage.setItem('Authorizations', JSON.stringify(currentAuths));
       }

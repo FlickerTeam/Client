@@ -22,10 +22,10 @@ export function useAuthLogic(instance: Instance | string | undefined, customInst
     return contentType?.includes('application/json');
   };
 
-  const checkInstance = async (url?: string) => {
+  const checkInstance = async (url?: string): Promise<{ success: boolean; apiUrl?: string }> => {
     if (!url || url === 'custom-instance') {
       setStatus(null);
-      return;
+      return { success: false };
     }
 
     setStatus('checking');
@@ -98,8 +98,10 @@ export function useAuthLogic(instance: Instance | string | undefined, customInst
       }
 
       setStatus('valid');
+      return { success: true, apiUrl };
     } catch {
       setStatus('error');
+      return { success: false };
     }
   };
 

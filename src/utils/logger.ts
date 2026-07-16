@@ -100,7 +100,7 @@ export const logger = {
     const timestamp = getTimestamp();
     logger._pushEntry('ERROR', source, message, error);
 
-    console.error(
+    const logArgs = [
       `%c${timestamp}%c %c ERROR %c %c[${source}]%c ${message}`,
       styles.timestamp,
       '',
@@ -108,7 +108,12 @@ export const logger = {
       '',
       styles.source,
       '',
-      error,
-    );
+    ];
+
+    if (error !== undefined) {
+      logArgs.push(error as string);
+    }
+
+    console.error(...logArgs);
   },
 };

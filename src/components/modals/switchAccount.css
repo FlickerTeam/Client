@@ -1,0 +1,131 @@
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--bg-alt);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.account-item:hover {
+  background: var(--bg-secondary);
+}
+
+.account-item.active {
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.account-email {
+  font-size: 15px;
+  color: var(--text-alt);
+  font-weight: 500;
+}
+
+.account-domain {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.current-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(var(--accent-primary-rgb, 88, 101, 242), 0.15);
+  color: var(--accent-primary);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.account-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.remove-account-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.remove-account-btn:hover {
+  background: #f23f43;
+  border-color: #f23f43;
+  color: #ffffff;
+}
+
+.center-form-wrapper {
+  padding: 10px;
+}
+
+.inline-form-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.secondary-text-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: opacity 0.15s ease;
+}
+
+.secondary-text-btn:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+  color: var(--text-bright);
+}
+
+.empty-accounts-hint {
+  padding: 20px 10px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.set-custom-status-modal .register-form {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.set-custom-status-modal .login-link {
+  display: none !important;
+}

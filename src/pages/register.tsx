@@ -59,12 +59,16 @@ function Register(): JSX.Element {
       localStorage.setItem('selectedAuthorization', parsed.token);
       localStorage.setItem('selectedEmail', email);
 
+      const instanceUrl = typeof instance === 'string' ? instance : instance.url;
+      const authString = btoa(`${parsed.token} ${email} ${instanceUrl}`);
+
       if (!localStorage.getItem('Authorizations')) {
-        localStorage.setItem('Authorizations', JSON.stringify([parsed.token]));
+        localStorage.setItem('Authorizations', JSON.stringify([authString]));
       } else {
         const currentAuths =
           (JSON.parse(localStorage.getItem('Authorizations') ?? '') as string[]) ?? [];
-        currentAuths.push(parsed.token);
+
+        currentAuths.push(authString);
 
         localStorage.setItem('Authorizations', JSON.stringify(currentAuths));
       }

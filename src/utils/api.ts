@@ -7,6 +7,7 @@ interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string>;
   onProgress?: (loaded: number, total: number) => void;
+  baseUrl?: string;
 }
 
 interface RateLimitResponse {
@@ -31,7 +32,7 @@ export const request = <T = unknown>(
   options: RequestOptions = {},
 ): Promise<T> => {
   //oh yeah its fucking .NET again
-  const baseUrl = localStorage.getItem('selectedInstanceUrl') ?? '';
+  const baseUrl = options.baseUrl || (localStorage.getItem('selectedInstanceUrl') ?? '');
   const version = localStorage.getItem('defaultApiVersion') ?? '';
   const token = localStorage.getItem('selectedAuthorization') ?? '';
   const cleanBase = baseUrl.replace(/\/+$/, '');
@@ -73,7 +74,7 @@ export const request = <T = unknown>(
       xhr.onload = () => {
         if (xhr.status === 429) {
           const data = JSON.parse(xhr.responseText) as RateLimitResponse;
-          const retryAfter = (data.retry_after ?? 1) * 1000;
+          const retryAfter = data.retry_after ?? 1000;
           logger.error(`API`, `Rate limited. Retrying after ${retryAfter.toString()}ms`);
           void sleep(retryAfter).then(() => {
             resolve(request<T>(endpoint, method, options));
@@ -135,7 +136,7 @@ export const request = <T = unknown>(
 
     if (response.status === 429) {
       const data = (await response.json()) as RateLimitResponse;
-      const retryAfter = (data.retry_after ?? 1) * 1000;
+      const retryAfter = data.retry_after ?? 1000;
 
       logger.error(`API`, `Rate limited. Retrying after ${retryAfter.toString()}ms`); //Should we visually show the user this?
 
@@ -172,12 +173,14 @@ export const post = <T = unknown>(
   endpoint: string,
   body: unknown,
   content_type = 'application/json',
+  options: RequestOptions = {},
 ): Promise<T> => {
   return request<T>(endpoint, 'POST', {
     headers: {
       'Content-Type': content_type,
     },
     body: body,
+    ...options,
   });
 };
 

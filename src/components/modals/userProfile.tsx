@@ -64,6 +64,11 @@ export const UserProfileModal = (): JSX.Element => {
     closePopup();
   };
 
+  const handleSwitchAccount = () => {
+    openModal('SWITCH_ACCOUNT');
+    closePopup();
+  };
+
   const handleSetStatus = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -164,7 +169,7 @@ export const UserProfileModal = (): JSX.Element => {
               </span>
             )}
           </div>
-          <div className='icon-btn-small' title='Switch account'>
+          <div className='icon-btn-small' title='Switch account' onClick={handleSwitchAccount}>
             <span className='material-symbols-rounded' style={{ fontSize: '20px' }}>
               switch_account
             </span>
