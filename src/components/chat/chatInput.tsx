@@ -32,24 +32,12 @@ const ChatInput = ({ value, onChange, onSubmit, disabled, ...props }: ChatInputP
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-
-    if (newValue.toLowerCase().includes('b1nzy')) {
-      window.open('https://takeb1nzyto.space/', '_blank');
-
-      return; //You're gonna get ratelimited.
-    }
-
-    onChange(e);
-  };
-
   return (
     <textarea
       {...props}
       ref={ref}
       value={value}
-      onChange={handleChange}
+      onChange={onChange}
       onKeyDown={handleKeyDown}
       disabled={disabled}
       className='chat-input'
