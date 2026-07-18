@@ -10,7 +10,6 @@
   resize: none;
   box-sizing: border-box;
   outline: none;
-  line-height: 1;
   min-height: 0;
   max-height: 150px;
 }

@@ -40,7 +40,7 @@ const ChatInput = ({ value, onChange, onSubmit, disabled, ...props }: ChatInputP
       onChange={onChange}
       onKeyDown={handleKeyDown}
       disabled={disabled}
-      className='chat-input'
+      className='message-content chat-input'
     />
   );
 };
