@@ -630,8 +630,6 @@ const MainContent = ({
 
     setIsScrolledUp(distanceFromBottom > 2000);
 
-    console.log(currentScrollTop);
-
     if (currentScrollTop <= 5) {
       //If the scrollbar is at the very top (console reports <= 5 when it is), get the next messages older than the first msg in our local msg array, get an older message, sort it by time, set messages to the next <= 150 messages to show.
       //Then scroll back to what the hell is relevant to those <= 150 messages. Otherwise, load more messages by fetching with before_id and do the same <= 150 sort logic for where to scroll and what order of time to sort the new msgs by so it logically makes sense.
