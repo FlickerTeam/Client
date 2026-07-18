@@ -10,14 +10,17 @@ interface ChatInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElemen
 
 const ChatInput = ({ value, onChange, onSubmit, disabled, ...props }: ChatInputProps) => {
   const ref = useRef<HTMLTextAreaElement>(null);
+
+  //Auto-resize
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
     el.style.height = '1em';
-    el.style.height = `${String(el.scrollHeight)}px`;
-  }, []);
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
 
+  //Enter to submit
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (disabled) return;
 
